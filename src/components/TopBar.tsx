@@ -1,21 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  Menu,
-  Bell,
-  BarChart3,
-  IdCard,
-  LogOut,
-  User,
-  X,
-  ImageIcon,
-} from "lucide-react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { motion } from "framer-motion";
+import { Menu, Bell, BarChart3, IdCard, LogOut, User, X, ImageIcon } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -61,10 +48,7 @@ export function TopBar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
 
     function handlePointerDown(e: MouseEvent) {
       const target = e.target as Node;
-      if (
-        panelRef.current?.contains(target) ||
-        triggerRef.current?.contains(target)
-      ) {
+      if (panelRef.current?.contains(target) || triggerRef.current?.contains(target)) {
         return;
       }
       setTrilhasOpen(false);
@@ -89,9 +73,13 @@ export function TopBar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
           <Menu className="size-5" />
         </button>
 
-        <button className="label-caps rounded-md bg-primary px-4 py-2 text-xs text-primary-foreground transition-opacity hover:opacity-90">
+        <Link
+          to="/hub"
+          className="label-caps rounded-md bg-primary px-4 py-2 text-xs text-primary-foreground transition-opacity hover:opacity-90"
+        >
           A3 Digital
-        </button>
+        </Link>
+
 
         <div className="flex-1" />
 
@@ -100,9 +88,7 @@ export function TopBar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
           onClick={() => setTrilhasOpen((v) => !v)}
           className={cn(
             "label-caps text-xs transition-colors",
-            trilhasOpen
-              ? "text-primary"
-              : "text-muted-foreground hover:text-primary",
+            trilhasOpen ? "text-primary" : "text-muted-foreground hover:text-primary",
           )}
         >
           Minhas Trilhas
@@ -145,9 +131,7 @@ export function TopBar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
             <span className="label-caps text-xs">Perfil</span>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuItem
-              onSelect={() => navigate({ to: "/minhas-estatisticas" })}
-            >
+            <DropdownMenuItem onSelect={() => navigate({ to: "/minhas-estatisticas" })}>
               <BarChart3 className="size-4 text-primary" /> Minhas estatísticas
             </DropdownMenuItem>
             <DropdownMenuItem>
@@ -162,18 +146,13 @@ export function TopBar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
 
       {trilhasOpen && (
         <>
-          <div
-            className="fixed inset-0 z-[45] bg-black/20"
-            onClick={() => setTrilhasOpen(false)}
-          />
+          <div className="fixed inset-0 z-[45] bg-black/20" onClick={() => setTrilhasOpen(false)} />
           <div
             ref={panelRef}
             className="fixed top-16 left-1/2 z-50 w-[calc(100%-2rem)] max-w-2xl -translate-x-1/2 rounded-xl border border-border bg-card p-6 shadow-[0_8px_30px_rgb(0_0_0_/_12%)]"
           >
             <div className="flex items-center justify-between">
-              <h2 className="label-caps text-sm text-foreground">
-                Minhas Trilhas
-              </h2>
+              <h2 className="label-caps text-sm text-foreground">Minhas Trilhas</h2>
               <button
                 onClick={() => setTrilhasOpen(false)}
                 aria-label="Fechar Minhas Trilhas"
@@ -230,74 +209,67 @@ function CourseCarousel({
 
   return (
     <div className="relative mt-6 h-72 overflow-hidden">
-      <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center">
-        <AnimatePresence initial={false}>
-          {courses.map((course, i) => {
-            let dist = i - index;
-            if (dist > len / 2) dist -= len;
-            if (dist < -len / 2) dist += len;
+      <div className="absolute inset-0 flex items-center justify-center">
+        {courses.map((course, i) => {
+          let dist = i - index;
+          if (dist > len / 2) dist -= len;
+          if (dist < -len / 2) dist += len;
 
-            const isActive = dist === 0;
-            const isVisible = Math.abs(dist) <= 1;
+          const isActive = dist === 0;
+          const isVisible = Math.abs(dist) <= 1;
+          const clamped = Math.max(-1, Math.min(1, dist));
 
-            if (!isVisible) return null;
-
-            return (
-              <motion.div
-                key={course.name}
-                className="absolute flex justify-center px-2"
-                style={{ width: cardWidth }}
-                initial={{ opacity: 0, scale: 0.7 }}
-                animate={{
-                  x: dist * (cardWidth + gap),
-                  scale: isActive ? 1 : 0.82,
-                  opacity: isActive ? 1 : 0.65,
-                  zIndex: isActive ? 10 : 0,
-                }}
-                exit={{ opacity: 0, scale: 0.7 }}
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                whileHover={{ scale: isActive ? 1.02 : 0.84 }}
-                whileTap={{ scale: isActive ? 0.98 : 0.8 }}
+          return (
+            <motion.div
+              key={i}
+              className={cn(
+                "absolute flex justify-center px-2",
+                !isVisible && "pointer-events-none",
+              )}
+              style={{ width: cardWidth }}
+              initial={false}
+              animate={{
+                x: clamped * (cardWidth + gap),
+                scale: isActive ? 1 : isVisible ? 0.82 : 0.7,
+                opacity: isActive ? 1 : isVisible ? 0.65 : 0,
+                zIndex: isActive ? 10 : isVisible ? 5 : 0,
+              }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              whileHover={isVisible ? { scale: isActive ? 1.02 : 0.84 } : {}}
+              whileTap={isVisible ? { scale: isActive ? 0.98 : 0.8 } : {}}
+            >
+              <button
+                onClick={() => setIndex(i)}
+                className="w-full cursor-pointer rounded-xl border border-border bg-card p-4 text-left shadow-[var(--shadow-card)] transition-shadow hover:shadow-md"
               >
-                <button
-                  onClick={() => setIndex(i)}
-                  className="w-full cursor-pointer rounded-xl border border-border bg-card p-4 text-left shadow-[var(--shadow-card)] transition-shadow hover:shadow-md"
+                <div className="flex aspect-[3/4] items-center justify-center rounded-md bg-muted">
+                  <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                    <ImageIcon className="size-10" />
+                    <span className="label-caps text-[10px]">Imagem do curso</span>
+                  </div>
+                </div>
+                <p className="label-caps mt-3 text-[10px] text-primary">Curso</p>
+                <p className="mt-1 line-clamp-2 text-sm font-medium text-foreground">
+                  {course.name}
+                </p>
+                <div
+                  className={cn(
+                    "transition-opacity duration-200",
+                    isActive ? "opacity-100" : "opacity-0",
+                  )}
                 >
-                  <div className="flex aspect-[3/4] items-center justify-center rounded-md bg-muted">
-                    <div className="flex flex-col items-center gap-2 text-muted-foreground">
-                      <ImageIcon className="size-10" />
-                      <span className="label-caps text-[10px]">
-                        Imagem do curso
-                      </span>
-                    </div>
+                  <p className="mt-3 text-xs text-muted-foreground">Progresso {course.progress}</p>
+                  <div className="mt-1 h-2 rounded-full bg-muted">
+                    <div
+                      className="h-2 rounded-full bg-primary"
+                      style={{ width: course.progress }}
+                    />
                   </div>
-                  <p className="label-caps mt-3 text-[10px] text-primary">
-                    Curso
-                  </p>
-                  <p className="mt-1 line-clamp-2 text-sm font-medium text-foreground">
-                    {course.name}
-                  </p>
-                  <div
-                    className={cn(
-                      "transition-opacity duration-200",
-                      isActive ? "opacity-100" : "opacity-0",
-                    )}
-                  >
-                    <p className="mt-3 text-xs text-muted-foreground">
-                      Progresso {course.progress}
-                    </p>
-                    <div className="mt-1 h-2 rounded-full bg-muted">
-                      <div
-                        className="h-2 rounded-full bg-primary"
-                        style={{ width: course.progress }}
-                      />
-                    </div>
-                  </div>
-                </button>
-              </motion.div>
-            );
-          })}
-        </AnimatePresence>
+                </div>
+              </button>
+            </motion.div>
+          );
+        })}
       </div>
     </div>
   );
