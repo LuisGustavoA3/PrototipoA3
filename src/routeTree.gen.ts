@@ -10,11 +10,24 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdministracaoRouteImport } from './routes/administracao'
+import { Route as HubRouteImport } from './routes/hub'
 import { Route as MinhasEstatisticasRouteImport } from './routes/minhas-estatisticas'
+import { Route as TreinamentosRouteImport } from './routes/treinamentos'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdministracaoRoute = AdministracaoRouteImport.update({
+  id: '/administracao',
+  path: '/administracao',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HubRoute = HubRouteImport.update({
+  id: '/hub',
+  path: '/hub',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MinhasEstatisticasRoute = MinhasEstatisticasRouteImport.update({
@@ -22,31 +35,55 @@ const MinhasEstatisticasRoute = MinhasEstatisticasRouteImport.update({
   path: '/minhas-estatisticas',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TreinamentosRoute = TreinamentosRouteImport.update({
+  id: '/treinamentos',
+  path: '/treinamentos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/administracao': typeof AdministracaoRoute
+  '/hub': typeof HubRoute
   '/minhas-estatisticas': typeof MinhasEstatisticasRoute
+  '/treinamentos': typeof TreinamentosRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/administracao': typeof AdministracaoRoute
+  '/hub': typeof HubRoute
   '/minhas-estatisticas': typeof MinhasEstatisticasRoute
+  '/treinamentos': typeof TreinamentosRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/administracao': typeof AdministracaoRoute
+  '/hub': typeof HubRoute
   '/minhas-estatisticas': typeof MinhasEstatisticasRoute
+  '/treinamentos': typeof TreinamentosRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/minhas-estatisticas'
+  fullPaths:
+    '/' | '/administracao' | '/hub' | '/minhas-estatisticas' | '/treinamentos'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/minhas-estatisticas'
-  id: '__root__' | '/' | '/minhas-estatisticas'
+  to: '/' | '/administracao' | '/hub' | '/minhas-estatisticas' | '/treinamentos'
+  id:
+    | '__root__'
+    | '/'
+    | '/administracao'
+    | '/hub'
+    | '/minhas-estatisticas'
+    | '/treinamentos'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdministracaoRoute: typeof AdministracaoRoute
+  HubRoute: typeof HubRoute
   MinhasEstatisticasRoute: typeof MinhasEstatisticasRoute
+  TreinamentosRoute: typeof TreinamentosRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -58,6 +95,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/administracao': {
+      id: '/administracao'
+      path: '/administracao'
+      fullPath: '/administracao'
+      preLoaderRoute: typeof AdministracaoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hub': {
+      id: '/hub'
+      path: '/hub'
+      fullPath: '/hub'
+      preLoaderRoute: typeof HubRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/minhas-estatisticas': {
       id: '/minhas-estatisticas'
       path: '/minhas-estatisticas'
@@ -65,12 +116,22 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MinhasEstatisticasRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/treinamentos': {
+      id: '/treinamentos'
+      path: '/treinamentos'
+      fullPath: '/treinamentos'
+      preLoaderRoute: typeof TreinamentosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdministracaoRoute: AdministracaoRoute,
+  HubRoute: HubRoute,
   MinhasEstatisticasRoute: MinhasEstatisticasRoute,
+  TreinamentosRoute: TreinamentosRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
