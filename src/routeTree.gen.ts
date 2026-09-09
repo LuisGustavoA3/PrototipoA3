@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdministracaoRouteImport } from './routes/administracao'
+import { Route as ConteudoRouteImport } from './routes/conteudo'
 import { Route as HubRouteImport } from './routes/hub'
 import { Route as MinhasEstatisticasRouteImport } from './routes/minhas-estatisticas'
 import { Route as TreinamentosRouteImport } from './routes/treinamentos'
@@ -23,6 +24,11 @@ const IndexRoute = IndexRouteImport.update({
 const AdministracaoRoute = AdministracaoRouteImport.update({
   id: '/administracao',
   path: '/administracao',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConteudoRoute = ConteudoRouteImport.update({
+  id: '/conteudo',
+  path: '/conteudo',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HubRoute = HubRouteImport.update({
@@ -44,6 +50,7 @@ const TreinamentosRoute = TreinamentosRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/administracao': typeof AdministracaoRoute
+  '/conteudo': typeof ConteudoRoute
   '/hub': typeof HubRoute
   '/minhas-estatisticas': typeof MinhasEstatisticasRoute
   '/treinamentos': typeof TreinamentosRoute
@@ -51,6 +58,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/administracao': typeof AdministracaoRoute
+  '/conteudo': typeof ConteudoRoute
   '/hub': typeof HubRoute
   '/minhas-estatisticas': typeof MinhasEstatisticasRoute
   '/treinamentos': typeof TreinamentosRoute
@@ -59,6 +67,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/administracao': typeof AdministracaoRoute
+  '/conteudo': typeof ConteudoRoute
   '/hub': typeof HubRoute
   '/minhas-estatisticas': typeof MinhasEstatisticasRoute
   '/treinamentos': typeof TreinamentosRoute
@@ -66,13 +75,25 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/administracao' | '/hub' | '/minhas-estatisticas' | '/treinamentos'
+    | '/'
+    | '/administracao'
+    | '/conteudo'
+    | '/hub'
+    | '/minhas-estatisticas'
+    | '/treinamentos'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/administracao' | '/hub' | '/minhas-estatisticas' | '/treinamentos'
+  to:
+    | '/'
+    | '/administracao'
+    | '/conteudo'
+    | '/hub'
+    | '/minhas-estatisticas'
+    | '/treinamentos'
   id:
     | '__root__'
     | '/'
     | '/administracao'
+    | '/conteudo'
     | '/hub'
     | '/minhas-estatisticas'
     | '/treinamentos'
@@ -81,6 +102,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdministracaoRoute: typeof AdministracaoRoute
+  ConteudoRoute: typeof ConteudoRoute
   HubRoute: typeof HubRoute
   MinhasEstatisticasRoute: typeof MinhasEstatisticasRoute
   TreinamentosRoute: typeof TreinamentosRoute
@@ -100,6 +122,13 @@ declare module '@tanstack/react-router' {
       path: '/administracao'
       fullPath: '/administracao'
       preLoaderRoute: typeof AdministracaoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/conteudo': {
+      id: '/conteudo'
+      path: '/conteudo'
+      fullPath: '/conteudo'
+      preLoaderRoute: typeof ConteudoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/hub': {
@@ -129,6 +158,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdministracaoRoute: AdministracaoRoute,
+  ConteudoRoute: ConteudoRoute,
   HubRoute: HubRoute,
   MinhasEstatisticasRoute: MinhasEstatisticasRoute,
   TreinamentosRoute: TreinamentosRoute,

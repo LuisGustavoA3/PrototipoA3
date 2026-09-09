@@ -10,6 +10,25 @@ Cada caractere enviado ao modelo e cada caractere retornado por ele consome toke
 
 ---
 
+## 🔎 Fluxo Obrigatório Antes de Alterações
+
+Antes de criar arquivos ou modificar código, o assistente deve:
+
+1. Investigar o pedido e localizar os arquivos, componentes ou rotas envolvidos.
+2. Fazer uma leitura breve do contexto necessário.
+3. Apresentar ao usuário:
+	- o que foi encontrado;
+	- a hipótese ou entendimento do problema;
+	- o plano de implementação;
+	- os arquivos que provavelmente serão alterados;
+	- como a alteração será validada.
+4. Aguardar a confirmação do usuário antes de editar arquivos.
+5. Após a confirmação, executar a implementação de forma incremental e validar cada etapa.
+
+Para tarefas simples, o plano pode ser curto. Para alterações maiores, o assistente deve dividir o trabalho em etapas claras e não criar arquivos ou escrever código antes da aprovação.
+
+---
+
 ## 🛠️ Divisão de Papéis (Copilot vs. Gemini)
 
 Para maximizar a eficiência, utilize a ferramenta certa para a tarefa certa:

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link, useLocation } from "@tanstack/react-router";
 import {
   LayoutDashboard,
   ListChecks,
@@ -23,11 +24,15 @@ import { useSidebarGroups } from "@/hooks/use-sidebar";
 type Item = {
   label: string;
   icon: React.ComponentType<{ className?: string }>;
-  children?: { label: string; icon: React.ComponentType<{ className?: string }> }[];
+  to?: "/";
+  children?: {
+    label: string;
+    icon: React.ComponentType<{ className?: string }>;
+  }[];
 };
 
 const items: Item[] = [
-  { label: "Dashboard", icon: LayoutDashboard },
+  { label: "Dashboard", icon: LayoutDashboard, to: "/" },
   {
     label: "Meu Desenvolvimento",
     icon: Sprout,
@@ -57,6 +62,7 @@ const items: Item[] = [
 export function AppSidebar({ open }: { open: boolean }) {
   const [active, setActive] = useState("Dashboard");
   const [openGroups, toggleGroup] = useSidebarGroups();
+  const location = useLocation();
 
   const isGroupActive = (item: Item) =>
     item.children?.some((child) => child.label === active) ?? false;
@@ -73,13 +79,43 @@ export function AppSidebar({ open }: { open: boolean }) {
           <div className="flex size-9 items-center justify-center rounded-full bg-muted">
             <User className="size-5 text-muted-foreground" />
           </div>
-          <span className="text-sm font-medium text-foreground">Luis Gustavo</span>
+          <span className="text-sm font-medium text-foreground">
+            Luis Gustavo
+          </span>
         </div>
 
         <nav className="flex-1 overflow-y-auto py-2">
           {items.map((item) => {
-            const isActive = active === item.label || isGroupActive(item);
+            const isActive =
+              active === item.label ||
+              (item.label === "Dashboard" && location.pathname === "/") ||
+              isGroupActive(item);
             const groupOpen = openGroups[item.label] || isGroupActive(item);
+            const itemClassName = cn(
+              "label-caps flex w-full items-center gap-3 px-5 py-3 text-left text-xs transition-colors",
+              isActive
+                ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                : "text-sidebar-foreground hover:bg-sidebar-accent/60",
+            );
+
+            if (item.to) {
+              return (
+                <Link
+                  key={item.label}
+                  to={item.to}
+                  onClick={() => setActive(item.label)}
+                  className={itemClassName}
+                >
+                  <item.icon
+                    className={cn(
+                      "size-5",
+                      isActive ? "text-primary" : "text-primary/70",
+                    )}
+                  />
+                  <span className="flex-1">{item.label}</span>
+                </Link>
+              );
+            }
 
             return (
               <div key={item.label}>
@@ -88,15 +124,13 @@ export function AppSidebar({ open }: { open: boolean }) {
                     setActive(item.label);
                     if (item.children) toggleGroup(item.label);
                   }}
-                  className={cn(
-                    "label-caps flex w-full items-center gap-3 px-5 py-3 text-left text-xs transition-colors",
-                    isActive
-                      ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                      : "text-sidebar-foreground hover:bg-sidebar-accent/60",
-                  )}
+                  className={itemClassName}
                 >
                   <item.icon
-                    className={cn("size-5", isActive ? "text-primary" : "text-primary/70")}
+                    className={cn(
+                      "size-5",
+                      isActive ? "text-primary" : "text-primary/70",
+                    )}
                   />
                   <span className="flex-1">{item.label}</span>
                   {item.children && (
@@ -111,26 +145,55 @@ export function AppSidebar({ open }: { open: boolean }) {
 
                 {item.children && groupOpen && (
                   <div className="border-l-2 border-primary/30 ml-7">
-                    {item.children.map((child) => (
-                      <button
-                        key={child.label}
-                        onClick={() => setActive(child.label)}
-                        className={cn(
-                          "label-caps flex w-full items-center gap-2 px-4 py-2.5 text-left text-[11px] transition-colors",
-                          active === child.label
-                            ? "bg-sidebar-accent/70 text-sidebar-accent-foreground"
-                            : "text-sidebar-foreground hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground",
-                        )}
-                      >
-                        <child.icon
-                          className={cn(
-                            "size-4",
-                            active === child.label ? "text-primary" : "text-primary/70",
-                          )}
-                        />
-                        {child.label}
-                      </button>
-                    ))}
+                    {item.children.map((child) => {
+                      const childActive =
+                        active === child.label ||
+                        (child.label === "Conteúdo" &&
+                          location.pathname === "/conteudo");
+                      const childClassName = cn(
+                        "label-caps flex w-full items-center gap-2 px-4 py-2.5 text-left text-[11px] transition-colors",
+                        childActive
+                          ? "bg-sidebar-accent/70 text-sidebar-accent-foreground"
+                          : "text-sidebar-foreground hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground",
+                      );
+
+                      if (child.label === "Conteúdo") {
+                        return (
+                          <Link
+                            key={child.label}
+                            to="/conteudo"
+                            onClick={() => setActive(child.label)}
+                            className={childClassName}
+                          >
+                            <child.icon
+                              className={cn(
+                                "size-4",
+                                childActive
+                                  ? "text-primary"
+                                  : "text-primary/70",
+                              )}
+                            />
+                            {child.label}
+                          </Link>
+                        );
+                      }
+
+                      return (
+                        <button
+                          key={child.label}
+                          onClick={() => setActive(child.label)}
+                          className={childClassName}
+                        >
+                          <child.icon
+                            className={cn(
+                              "size-4",
+                              childActive ? "text-primary" : "text-primary/70",
+                            )}
+                          />
+                          {child.label}
+                        </button>
+                      );
+                    })}
                   </div>
                 )}
               </div>
