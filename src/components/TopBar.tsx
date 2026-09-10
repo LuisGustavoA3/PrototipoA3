@@ -1,8 +1,21 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { Menu, Bell, BarChart3, IdCard, LogOut, User, X, ImageIcon } from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Menu,
+  Bell,
+  BarChart3,
+  IdCard,
+  LogOut,
+  User,
+  X,
+  ImageIcon,
+} from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -48,7 +61,10 @@ export function TopBar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
 
     function handlePointerDown(e: MouseEvent) {
       const target = e.target as Node;
-      if (panelRef.current?.contains(target) || triggerRef.current?.contains(target)) {
+      if (
+        panelRef.current?.contains(target) ||
+        triggerRef.current?.contains(target)
+      ) {
         return;
       }
       setTrilhasOpen(false);
@@ -80,7 +96,6 @@ export function TopBar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
           A3 Digital
         </Link>
 
-
         <div className="flex-1" />
 
         <button
@@ -88,7 +103,9 @@ export function TopBar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
           onClick={() => setTrilhasOpen((v) => !v)}
           className={cn(
             "label-caps text-xs transition-colors",
-            trilhasOpen ? "text-primary" : "text-muted-foreground hover:text-primary",
+            trilhasOpen
+              ? "text-primary"
+              : "text-muted-foreground hover:text-primary",
           )}
         >
           Minhas Trilhas
@@ -131,7 +148,9 @@ export function TopBar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
             <span className="label-caps text-xs">Perfil</span>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuItem onSelect={() => navigate({ to: "/minhas-estatisticas" })}>
+            <DropdownMenuItem
+              onSelect={() => navigate({ to: "/minhas-estatisticas" })}
+            >
               <BarChart3 className="size-4 text-primary" /> Minhas estatísticas
             </DropdownMenuItem>
             <DropdownMenuItem>
@@ -146,13 +165,18 @@ export function TopBar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
 
       {trilhasOpen && (
         <>
-          <div className="fixed inset-0 z-[45] bg-black/20" onClick={() => setTrilhasOpen(false)} />
+          <div
+            className="fixed inset-0 z-[45] bg-black/20"
+            onClick={() => setTrilhasOpen(false)}
+          />
           <div
             ref={panelRef}
             className="fixed top-16 left-1/2 z-50 w-[calc(100%-2rem)] max-w-2xl -translate-x-1/2 rounded-xl border border-border bg-card p-6 shadow-[0_8px_30px_rgb(0_0_0_/_12%)]"
           >
             <div className="flex items-center justify-between">
-              <h2 className="label-caps text-sm text-foreground">Minhas Trilhas</h2>
+              <h2 className="label-caps text-sm text-foreground">
+                Minhas Trilhas
+              </h2>
               <button
                 onClick={() => setTrilhasOpen(false)}
                 aria-label="Fechar Minhas Trilhas"
@@ -245,10 +269,14 @@ function CourseCarousel({
                 <div className="flex aspect-[3/4] items-center justify-center rounded-md bg-muted">
                   <div className="flex flex-col items-center gap-2 text-muted-foreground">
                     <ImageIcon className="size-10" />
-                    <span className="label-caps text-[10px]">Imagem do curso</span>
+                    <span className="label-caps text-[10px]">
+                      Imagem do curso
+                    </span>
                   </div>
                 </div>
-                <p className="label-caps mt-3 text-[10px] text-primary">Curso</p>
+                <p className="label-caps mt-3 text-[10px] text-primary">
+                  Curso
+                </p>
                 <p className="mt-1 line-clamp-2 text-sm font-medium text-foreground">
                   {course.name}
                 </p>
@@ -258,7 +286,9 @@ function CourseCarousel({
                     isActive ? "opacity-100" : "opacity-0",
                   )}
                 >
-                  <p className="mt-3 text-xs text-muted-foreground">Progresso {course.progress}</p>
+                  <p className="mt-3 text-xs text-muted-foreground">
+                    Progresso {course.progress}
+                  </p>
                   <div className="mt-1 h-2 rounded-full bg-muted">
                     <div
                       className="h-2 rounded-full bg-primary"

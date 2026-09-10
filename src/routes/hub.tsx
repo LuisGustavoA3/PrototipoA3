@@ -45,7 +45,9 @@ function Hub() {
     <div className="min-h-screen w-full bg-secondary">
       <div className="mx-auto flex min-h-screen max-w-5xl flex-col items-center justify-center gap-12 px-6 py-16">
         <div className="text-center">
-          <span className="block text-6xl font-light tracking-widest text-foreground">A3</span>
+          <span className="block text-6xl font-light tracking-widest text-foreground">
+            A3
+          </span>
           <span className="label-caps mt-1 block text-lg tracking-[0.4em] text-muted-foreground">
             Digital
           </span>

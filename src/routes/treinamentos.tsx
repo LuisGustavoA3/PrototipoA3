@@ -7,12 +7,14 @@ export const Route = createFileRoute("/treinamentos")({
       { title: "Treinamentos | A3 Digital" },
       {
         name: "description",
-        content: "Módulo de Treinamentos da A3 Digital: turmas, cursos e capacitações.",
+        content:
+          "Módulo de Treinamentos da A3 Digital: turmas, cursos e capacitações.",
       },
       { property: "og:title", content: "Treinamentos | A3 Digital" },
       {
         property: "og:description",
-        content: "Gerencie e acompanhe treinamentos e capacitações na A3 Digital.",
+        content:
+          "Gerencie e acompanhe treinamentos e capacitações na A3 Digital.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -32,7 +34,8 @@ function Treinamentos() {
       </Link>
       <h1 className="label-caps mt-6 text-lg text-foreground">Treinamentos</h1>
       <p className="mt-2 text-sm text-muted-foreground">
-        Módulo em construção. Em breve você poderá gerenciar turmas e capacitações aqui.
+        Módulo em construção. Em breve você poderá gerenciar turmas e
+        capacitações aqui.
       </p>
     </div>
   );

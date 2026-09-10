@@ -1,14 +1,28 @@
 import { Trophy, FileText, CalendarCheck, UserCircle2 } from "lucide-react";
 
-function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+function Card({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
-    <div className={`rounded-md border border-border bg-card p-5 shadow-[var(--shadow-card)] ${className}`}>
+    <div
+      className={`rounded-md border border-border bg-card p-5 shadow-[var(--shadow-card)] ${className}`}
+    >
       {children}
     </div>
   );
 }
 
-function CardTitle({ children, action }: { children: React.ReactNode; action?: string }) {
+function CardTitle({
+  children,
+  action,
+}: {
+  children: React.ReactNode;
+  action?: string;
+}) {
   return (
     <div className="mb-4 flex items-center justify-between border-b border-border pb-3">
       <h2 className="label-caps text-sm text-foreground">{children}</h2>
@@ -55,11 +69,13 @@ export function DashboardContent() {
             <FileText className="size-12 shrink-0 text-primary" />
             <div>
               <h3 className="text-base font-semibold text-foreground">
-                Artigo - Como o líder pode ajudar os funcionários a combater o status quo no dia a dia
+                Artigo - Como o líder pode ajudar os funcionários a combater o
+                status quo no dia a dia
               </h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                A liderança é essencial para criar uma cultura de inovação porque um líder visionário
-                é capaz de inspirar uma equipe e mantê-la engajada em alcançar...
+                A liderança é essencial para criar uma cultura de inovação
+                porque um líder visionário é capaz de inspirar uma equipe e
+                mantê-la engajada em alcançar...
               </p>
             </div>
           </div>
@@ -83,7 +99,9 @@ export function DashboardContent() {
                 ["Cargo", "-"],
               ].map(([k, v]) => (
                 <div key={k}>
-                  <dt className="label-caps text-[10px] text-muted-foreground">{k}</dt>
+                  <dt className="label-caps text-[10px] text-muted-foreground">
+                    {k}
+                  </dt>
                   <dd className="text-foreground">{v}</dd>
                 </div>
               ))}
@@ -103,7 +121,9 @@ export function DashboardContent() {
 
       <Card className="lg:max-w-[calc(50%-0.625rem)]">
         <CardTitle action="Ver plano de ação">Minhas ações</CardTitle>
-        <p className="rounded bg-primary-soft/60 px-4 py-4 text-sm text-foreground">Nenhum dado.</p>
+        <p className="rounded bg-primary-soft/60 px-4 py-4 text-sm text-foreground">
+          Nenhum dado.
+        </p>
       </Card>
     </div>
   );

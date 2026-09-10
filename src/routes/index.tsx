@@ -17,7 +17,8 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "Dashboard | A3 Digital" },
       {
         property: "og:description",
-        content: "Plataforma de mentoria e assessment: trilhas, sessões, PDI e biblioteca.",
+        content:
+          "Plataforma de mentoria e assessment: trilhas, sessões, PDI e biblioteca.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -39,7 +40,9 @@ function Index() {
           sidebarOpen ? "pl-[264px]" : "pl-0",
         )}
       >
-        <h1 className="label-caps px-6 pt-6 text-lg text-foreground">Dashboard</h1>
+        <h1 className="label-caps px-6 pt-6 text-lg text-foreground">
+          Dashboard
+        </h1>
         <DashboardContent />
       </main>
     </div>
