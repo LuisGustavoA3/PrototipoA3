@@ -161,7 +161,8 @@ export function AppSidebar({ open }: { open: boolean }) {
 
                       if (
                         child.label === "Conteúdo" ||
-                        child.label === "Meu Assessment"
+                          child.label === "Meu Assessment" ||
+                          child.label === "Jornada de Desenvolvimento"
                       ) {
                         return (
                           <Link
@@ -169,7 +170,9 @@ export function AppSidebar({ open }: { open: boolean }) {
                             to={
                               child.label === "Conteúdo"
                                 ? "/conteudo"
-                                : "/meu-assessment"
+                                  : child.label === "Meu Assessment"
+                                    ? "/meu-assessment"
+                                    : "/jornada-de-desenvolvimento"
                             }
                             onClick={() => setActive(child.label)}
                             className={childClassName}

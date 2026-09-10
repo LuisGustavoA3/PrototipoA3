@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdministracaoRouteImport } from './routes/administracao'
 import { Route as ConteudoRouteImport } from './routes/conteudo'
 import { Route as HubRouteImport } from './routes/hub'
+import { Route as JornadaDeDesenvolvimentoRouteImport } from './routes/jornada-de-desenvolvimento'
 import { Route as MeuAssessmentRouteImport } from './routes/meu-assessment'
 import { Route as MinhasEstatisticasRouteImport } from './routes/minhas-estatisticas'
 import { Route as TreinamentosRouteImport } from './routes/treinamentos'
@@ -37,6 +38,12 @@ const HubRoute = HubRouteImport.update({
   path: '/hub',
   getParentRoute: () => rootRouteImport,
 } as any)
+const JornadaDeDesenvolvimentoRoute =
+  JornadaDeDesenvolvimentoRouteImport.update({
+    id: '/jornada-de-desenvolvimento',
+    path: '/jornada-de-desenvolvimento',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const MeuAssessmentRoute = MeuAssessmentRouteImport.update({
   id: '/meu-assessment',
   path: '/meu-assessment',
@@ -58,6 +65,7 @@ export interface FileRoutesByFullPath {
   '/administracao': typeof AdministracaoRoute
   '/conteudo': typeof ConteudoRoute
   '/hub': typeof HubRoute
+  '/jornada-de-desenvolvimento': typeof JornadaDeDesenvolvimentoRoute
   '/meu-assessment': typeof MeuAssessmentRoute
   '/minhas-estatisticas': typeof MinhasEstatisticasRoute
   '/treinamentos': typeof TreinamentosRoute
@@ -67,6 +75,7 @@ export interface FileRoutesByTo {
   '/administracao': typeof AdministracaoRoute
   '/conteudo': typeof ConteudoRoute
   '/hub': typeof HubRoute
+  '/jornada-de-desenvolvimento': typeof JornadaDeDesenvolvimentoRoute
   '/meu-assessment': typeof MeuAssessmentRoute
   '/minhas-estatisticas': typeof MinhasEstatisticasRoute
   '/treinamentos': typeof TreinamentosRoute
@@ -77,6 +86,7 @@ export interface FileRoutesById {
   '/administracao': typeof AdministracaoRoute
   '/conteudo': typeof ConteudoRoute
   '/hub': typeof HubRoute
+  '/jornada-de-desenvolvimento': typeof JornadaDeDesenvolvimentoRoute
   '/meu-assessment': typeof MeuAssessmentRoute
   '/minhas-estatisticas': typeof MinhasEstatisticasRoute
   '/treinamentos': typeof TreinamentosRoute
@@ -88,6 +98,7 @@ export interface FileRouteTypes {
     | '/administracao'
     | '/conteudo'
     | '/hub'
+    | '/jornada-de-desenvolvimento'
     | '/meu-assessment'
     | '/minhas-estatisticas'
     | '/treinamentos'
@@ -97,6 +108,7 @@ export interface FileRouteTypes {
     | '/administracao'
     | '/conteudo'
     | '/hub'
+    | '/jornada-de-desenvolvimento'
     | '/meu-assessment'
     | '/minhas-estatisticas'
     | '/treinamentos'
@@ -106,6 +118,7 @@ export interface FileRouteTypes {
     | '/administracao'
     | '/conteudo'
     | '/hub'
+    | '/jornada-de-desenvolvimento'
     | '/meu-assessment'
     | '/minhas-estatisticas'
     | '/treinamentos'
@@ -116,6 +129,7 @@ export interface RootRouteChildren {
   AdministracaoRoute: typeof AdministracaoRoute
   ConteudoRoute: typeof ConteudoRoute
   HubRoute: typeof HubRoute
+  JornadaDeDesenvolvimentoRoute: typeof JornadaDeDesenvolvimentoRoute
   MeuAssessmentRoute: typeof MeuAssessmentRoute
   MinhasEstatisticasRoute: typeof MinhasEstatisticasRoute
   TreinamentosRoute: typeof TreinamentosRoute
@@ -151,6 +165,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HubRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/jornada-de-desenvolvimento': {
+      id: '/jornada-de-desenvolvimento'
+      path: '/jornada-de-desenvolvimento'
+      fullPath: '/jornada-de-desenvolvimento'
+      preLoaderRoute: typeof JornadaDeDesenvolvimentoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/meu-assessment': {
       id: '/meu-assessment'
       path: '/meu-assessment'
@@ -180,6 +201,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdministracaoRoute: AdministracaoRoute,
   ConteudoRoute: ConteudoRoute,
   HubRoute: HubRoute,
+  JornadaDeDesenvolvimentoRoute: JornadaDeDesenvolvimentoRoute,
   MeuAssessmentRoute: MeuAssessmentRoute,
   MinhasEstatisticasRoute: MinhasEstatisticasRoute,
   TreinamentosRoute: TreinamentosRoute,
