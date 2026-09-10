@@ -149,7 +149,9 @@ export function AppSidebar({ open }: { open: boolean }) {
                       const childActive =
                         active === child.label ||
                         (child.label === "Conteúdo" &&
-                          location.pathname === "/conteudo");
+                          location.pathname === "/conteudo") ||
+                        (child.label === "Meu Assessment" &&
+                          location.pathname === "/meu-assessment");
                       const childClassName = cn(
                         "label-caps flex w-full items-center gap-2 px-4 py-2.5 text-left text-[11px] transition-colors",
                         childActive
@@ -157,11 +159,18 @@ export function AppSidebar({ open }: { open: boolean }) {
                           : "text-sidebar-foreground hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground",
                       );
 
-                      if (child.label === "Conteúdo") {
+                      if (
+                        child.label === "Conteúdo" ||
+                        child.label === "Meu Assessment"
+                      ) {
                         return (
                           <Link
                             key={child.label}
-                            to="/conteudo"
+                            to={
+                              child.label === "Conteúdo"
+                                ? "/conteudo"
+                                : "/meu-assessment"
+                            }
                             onClick={() => setActive(child.label)}
                             className={childClassName}
                           >
