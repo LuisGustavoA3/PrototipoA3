@@ -43,6 +43,9 @@ function Index() {
         <h1 className="label-caps px-6 pt-6 text-lg text-foreground">
           Dashboard
         </h1>
+        <p className="max-w-2xl px-6 pt-2 text-sm text-muted-foreground">
+          Acompanhe seu progresso, suas sessões, conteúdos e principais atividades de desenvolvimento.
+        </p>
         <DashboardContent />
       </main>
     </div>

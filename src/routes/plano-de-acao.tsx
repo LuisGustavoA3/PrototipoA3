@@ -175,6 +175,9 @@ function PlanoDeAcao() {
           <header>
             <p className="label-caps text-xs text-primary">Meu desenvolvimento</p>
             <h1 className="mt-1 text-2xl text-foreground">Plano de Ação (PDI)</h1>
+            <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+              Crie, organize e acompanhe suas ações de desenvolvimento em um só lugar.
+            </p>
           </header>
 
           <section className="flex flex-col gap-4 rounded-md border border-border bg-card p-6 shadow-[var(--shadow-card)] sm:flex-row sm:items-center sm:justify-between">
