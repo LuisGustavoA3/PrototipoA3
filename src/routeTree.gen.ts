@@ -17,6 +17,7 @@ import { Route as HubRouteImport } from './routes/hub'
 import { Route as JornadaDeDesenvolvimentoRouteImport } from './routes/jornada-de-desenvolvimento'
 import { Route as MeuAssessmentRouteImport } from './routes/meu-assessment'
 import { Route as MinhasEstatisticasRouteImport } from './routes/minhas-estatisticas'
+import { Route as PlanoDeAcaoRouteImport } from './routes/plano-de-acao'
 import { Route as TreinamentosRouteImport } from './routes/treinamentos'
 
 const IndexRoute = IndexRouteImport.update({
@@ -60,6 +61,11 @@ const MinhasEstatisticasRoute = MinhasEstatisticasRouteImport.update({
   path: '/minhas-estatisticas',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PlanoDeAcaoRoute = PlanoDeAcaoRouteImport.update({
+  id: '/plano-de-acao',
+  path: '/plano-de-acao',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TreinamentosRoute = TreinamentosRouteImport.update({
   id: '/treinamentos',
   path: '/treinamentos',
@@ -75,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/jornada-de-desenvolvimento': typeof JornadaDeDesenvolvimentoRoute
   '/meu-assessment': typeof MeuAssessmentRoute
   '/minhas-estatisticas': typeof MinhasEstatisticasRoute
+  '/plano-de-acao': typeof PlanoDeAcaoRoute
   '/treinamentos': typeof TreinamentosRoute
 }
 export interface FileRoutesByTo {
@@ -86,6 +93,7 @@ export interface FileRoutesByTo {
   '/jornada-de-desenvolvimento': typeof JornadaDeDesenvolvimentoRoute
   '/meu-assessment': typeof MeuAssessmentRoute
   '/minhas-estatisticas': typeof MinhasEstatisticasRoute
+  '/plano-de-acao': typeof PlanoDeAcaoRoute
   '/treinamentos': typeof TreinamentosRoute
 }
 export interface FileRoutesById {
@@ -98,6 +106,7 @@ export interface FileRoutesById {
   '/jornada-de-desenvolvimento': typeof JornadaDeDesenvolvimentoRoute
   '/meu-assessment': typeof MeuAssessmentRoute
   '/minhas-estatisticas': typeof MinhasEstatisticasRoute
+  '/plano-de-acao': typeof PlanoDeAcaoRoute
   '/treinamentos': typeof TreinamentosRoute
 }
 export interface FileRouteTypes {
@@ -111,6 +120,7 @@ export interface FileRouteTypes {
     | '/jornada-de-desenvolvimento'
     | '/meu-assessment'
     | '/minhas-estatisticas'
+    | '/plano-de-acao'
     | '/treinamentos'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -122,6 +132,7 @@ export interface FileRouteTypes {
     | '/jornada-de-desenvolvimento'
     | '/meu-assessment'
     | '/minhas-estatisticas'
+    | '/plano-de-acao'
     | '/treinamentos'
   id:
     | '__root__'
@@ -133,6 +144,7 @@ export interface FileRouteTypes {
     | '/jornada-de-desenvolvimento'
     | '/meu-assessment'
     | '/minhas-estatisticas'
+    | '/plano-de-acao'
     | '/treinamentos'
   fileRoutesById: FileRoutesById
 }
@@ -145,6 +157,7 @@ export interface RootRouteChildren {
   JornadaDeDesenvolvimentoRoute: typeof JornadaDeDesenvolvimentoRoute
   MeuAssessmentRoute: typeof MeuAssessmentRoute
   MinhasEstatisticasRoute: typeof MinhasEstatisticasRoute
+  PlanoDeAcaoRoute: typeof PlanoDeAcaoRoute
   TreinamentosRoute: typeof TreinamentosRoute
 }
 
@@ -206,6 +219,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MinhasEstatisticasRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/plano-de-acao': {
+      id: '/plano-de-acao'
+      path: '/plano-de-acao'
+      fullPath: '/plano-de-acao'
+      preLoaderRoute: typeof PlanoDeAcaoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/treinamentos': {
       id: '/treinamentos'
       path: '/treinamentos'
@@ -225,6 +245,7 @@ const rootRouteChildren: RootRouteChildren = {
   JornadaDeDesenvolvimentoRoute: JornadaDeDesenvolvimentoRoute,
   MeuAssessmentRoute: MeuAssessmentRoute,
   MinhasEstatisticasRoute: MinhasEstatisticasRoute,
+  PlanoDeAcaoRoute: PlanoDeAcaoRoute,
   TreinamentosRoute: TreinamentosRoute,
 }
 export const routeTree = rootRouteImport
