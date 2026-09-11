@@ -11,8 +11,13 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdministracaoRouteImport } from './routes/administracao'
+import { Route as ArquivosCompartilhadosRouteImport } from './routes/arquivos-compartilhados'
+import { Route as ConteudoRouteImport } from './routes/conteudo'
 import { Route as HubRouteImport } from './routes/hub'
+import { Route as JornadaDeDesenvolvimentoRouteImport } from './routes/jornada-de-desenvolvimento'
+import { Route as MeuAssessmentRouteImport } from './routes/meu-assessment'
 import { Route as MinhasEstatisticasRouteImport } from './routes/minhas-estatisticas'
+import { Route as PlanoDeAcaoRouteImport } from './routes/plano-de-acao'
 import { Route as TreinamentosRouteImport } from './routes/treinamentos'
 
 const IndexRoute = IndexRouteImport.update({
@@ -25,14 +30,40 @@ const AdministracaoRoute = AdministracaoRouteImport.update({
   path: '/administracao',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ArquivosCompartilhadosRoute = ArquivosCompartilhadosRouteImport.update({
+  id: '/arquivos-compartilhados',
+  path: '/arquivos-compartilhados',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConteudoRoute = ConteudoRouteImport.update({
+  id: '/conteudo',
+  path: '/conteudo',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HubRoute = HubRouteImport.update({
   id: '/hub',
   path: '/hub',
   getParentRoute: () => rootRouteImport,
 } as any)
+const JornadaDeDesenvolvimentoRoute =
+  JornadaDeDesenvolvimentoRouteImport.update({
+    id: '/jornada-de-desenvolvimento',
+    path: '/jornada-de-desenvolvimento',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MeuAssessmentRoute = MeuAssessmentRouteImport.update({
+  id: '/meu-assessment',
+  path: '/meu-assessment',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MinhasEstatisticasRoute = MinhasEstatisticasRouteImport.update({
   id: '/minhas-estatisticas',
   path: '/minhas-estatisticas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlanoDeAcaoRoute = PlanoDeAcaoRouteImport.update({
+  id: '/plano-de-acao',
+  path: '/plano-de-acao',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TreinamentosRoute = TreinamentosRouteImport.update({
@@ -44,45 +75,89 @@ const TreinamentosRoute = TreinamentosRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/administracao': typeof AdministracaoRoute
+  '/arquivos-compartilhados': typeof ArquivosCompartilhadosRoute
+  '/conteudo': typeof ConteudoRoute
   '/hub': typeof HubRoute
+  '/jornada-de-desenvolvimento': typeof JornadaDeDesenvolvimentoRoute
+  '/meu-assessment': typeof MeuAssessmentRoute
   '/minhas-estatisticas': typeof MinhasEstatisticasRoute
+  '/plano-de-acao': typeof PlanoDeAcaoRoute
   '/treinamentos': typeof TreinamentosRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/administracao': typeof AdministracaoRoute
+  '/arquivos-compartilhados': typeof ArquivosCompartilhadosRoute
+  '/conteudo': typeof ConteudoRoute
   '/hub': typeof HubRoute
+  '/jornada-de-desenvolvimento': typeof JornadaDeDesenvolvimentoRoute
+  '/meu-assessment': typeof MeuAssessmentRoute
   '/minhas-estatisticas': typeof MinhasEstatisticasRoute
+  '/plano-de-acao': typeof PlanoDeAcaoRoute
   '/treinamentos': typeof TreinamentosRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/administracao': typeof AdministracaoRoute
+  '/arquivos-compartilhados': typeof ArquivosCompartilhadosRoute
+  '/conteudo': typeof ConteudoRoute
   '/hub': typeof HubRoute
+  '/jornada-de-desenvolvimento': typeof JornadaDeDesenvolvimentoRoute
+  '/meu-assessment': typeof MeuAssessmentRoute
   '/minhas-estatisticas': typeof MinhasEstatisticasRoute
+  '/plano-de-acao': typeof PlanoDeAcaoRoute
   '/treinamentos': typeof TreinamentosRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/administracao' | '/hub' | '/minhas-estatisticas' | '/treinamentos'
+    | '/'
+    | '/administracao'
+    | '/arquivos-compartilhados'
+    | '/conteudo'
+    | '/hub'
+    | '/jornada-de-desenvolvimento'
+    | '/meu-assessment'
+    | '/minhas-estatisticas'
+    | '/plano-de-acao'
+    | '/treinamentos'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/administracao' | '/hub' | '/minhas-estatisticas' | '/treinamentos'
+  to:
+    | '/'
+    | '/administracao'
+    | '/arquivos-compartilhados'
+    | '/conteudo'
+    | '/hub'
+    | '/jornada-de-desenvolvimento'
+    | '/meu-assessment'
+    | '/minhas-estatisticas'
+    | '/plano-de-acao'
+    | '/treinamentos'
   id:
     | '__root__'
     | '/'
     | '/administracao'
+    | '/arquivos-compartilhados'
+    | '/conteudo'
     | '/hub'
+    | '/jornada-de-desenvolvimento'
+    | '/meu-assessment'
     | '/minhas-estatisticas'
+    | '/plano-de-acao'
     | '/treinamentos'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdministracaoRoute: typeof AdministracaoRoute
+  ArquivosCompartilhadosRoute: typeof ArquivosCompartilhadosRoute
+  ConteudoRoute: typeof ConteudoRoute
   HubRoute: typeof HubRoute
+  JornadaDeDesenvolvimentoRoute: typeof JornadaDeDesenvolvimentoRoute
+  MeuAssessmentRoute: typeof MeuAssessmentRoute
   MinhasEstatisticasRoute: typeof MinhasEstatisticasRoute
+  PlanoDeAcaoRoute: typeof PlanoDeAcaoRoute
   TreinamentosRoute: typeof TreinamentosRoute
 }
 
@@ -102,6 +177,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdministracaoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/arquivos-compartilhados': {
+      id: '/arquivos-compartilhados'
+      path: '/arquivos-compartilhados'
+      fullPath: '/arquivos-compartilhados'
+      preLoaderRoute: typeof ArquivosCompartilhadosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/conteudo': {
+      id: '/conteudo'
+      path: '/conteudo'
+      fullPath: '/conteudo'
+      preLoaderRoute: typeof ConteudoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/hub': {
       id: '/hub'
       path: '/hub'
@@ -109,11 +198,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HubRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/jornada-de-desenvolvimento': {
+      id: '/jornada-de-desenvolvimento'
+      path: '/jornada-de-desenvolvimento'
+      fullPath: '/jornada-de-desenvolvimento'
+      preLoaderRoute: typeof JornadaDeDesenvolvimentoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/meu-assessment': {
+      id: '/meu-assessment'
+      path: '/meu-assessment'
+      fullPath: '/meu-assessment'
+      preLoaderRoute: typeof MeuAssessmentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/minhas-estatisticas': {
       id: '/minhas-estatisticas'
       path: '/minhas-estatisticas'
       fullPath: '/minhas-estatisticas'
       preLoaderRoute: typeof MinhasEstatisticasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/plano-de-acao': {
+      id: '/plano-de-acao'
+      path: '/plano-de-acao'
+      fullPath: '/plano-de-acao'
+      preLoaderRoute: typeof PlanoDeAcaoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/treinamentos': {
@@ -129,8 +239,13 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdministracaoRoute: AdministracaoRoute,
+  ArquivosCompartilhadosRoute: ArquivosCompartilhadosRoute,
+  ConteudoRoute: ConteudoRoute,
   HubRoute: HubRoute,
+  JornadaDeDesenvolvimentoRoute: JornadaDeDesenvolvimentoRoute,
+  MeuAssessmentRoute: MeuAssessmentRoute,
   MinhasEstatisticasRoute: MinhasEstatisticasRoute,
+  PlanoDeAcaoRoute: PlanoDeAcaoRoute,
   TreinamentosRoute: TreinamentosRoute,
 }
 export const routeTree = rootRouteImport
