@@ -151,7 +151,9 @@ export function AppSidebar({ open }: { open: boolean }) {
                         (child.label === "Conteúdo" &&
                           location.pathname === "/conteudo") ||
                         (child.label === "Meu Assessment" &&
-                          location.pathname === "/meu-assessment");
+                          location.pathname === "/meu-assessment") ||
+                        (child.label === "Arquivos Compartilhados" &&
+                          location.pathname === "/arquivos-compartilhados");
                       const childClassName = cn(
                         "label-caps flex w-full items-center gap-2 px-4 py-2.5 text-left text-[11px] transition-colors",
                         childActive
@@ -162,7 +164,8 @@ export function AppSidebar({ open }: { open: boolean }) {
                       if (
                         child.label === "Conteúdo" ||
                           child.label === "Meu Assessment" ||
-                          child.label === "Jornada de Desenvolvimento"
+                          child.label === "Jornada de Desenvolvimento" ||
+                          child.label === "Arquivos Compartilhados"
                       ) {
                         return (
                           <Link
@@ -172,7 +175,9 @@ export function AppSidebar({ open }: { open: boolean }) {
                                 ? "/conteudo"
                                   : child.label === "Meu Assessment"
                                     ? "/meu-assessment"
-                                    : "/jornada-de-desenvolvimento"
+                                    : child.label === "Jornada de Desenvolvimento"
+                                      ? "/jornada-de-desenvolvimento"
+                                      : "/arquivos-compartilhados"
                             }
                             onClick={() => setActive(child.label)}
                             className={childClassName}

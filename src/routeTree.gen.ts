@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdministracaoRouteImport } from './routes/administracao'
+import { Route as ArquivosCompartilhadosRouteImport } from './routes/arquivos-compartilhados'
 import { Route as ConteudoRouteImport } from './routes/conteudo'
 import { Route as HubRouteImport } from './routes/hub'
 import { Route as JornadaDeDesenvolvimentoRouteImport } from './routes/jornada-de-desenvolvimento'
@@ -26,6 +27,11 @@ const IndexRoute = IndexRouteImport.update({
 const AdministracaoRoute = AdministracaoRouteImport.update({
   id: '/administracao',
   path: '/administracao',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArquivosCompartilhadosRoute = ArquivosCompartilhadosRouteImport.update({
+  id: '/arquivos-compartilhados',
+  path: '/arquivos-compartilhados',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ConteudoRoute = ConteudoRouteImport.update({
@@ -63,6 +69,7 @@ const TreinamentosRoute = TreinamentosRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/administracao': typeof AdministracaoRoute
+  '/arquivos-compartilhados': typeof ArquivosCompartilhadosRoute
   '/conteudo': typeof ConteudoRoute
   '/hub': typeof HubRoute
   '/jornada-de-desenvolvimento': typeof JornadaDeDesenvolvimentoRoute
@@ -73,6 +80,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/administracao': typeof AdministracaoRoute
+  '/arquivos-compartilhados': typeof ArquivosCompartilhadosRoute
   '/conteudo': typeof ConteudoRoute
   '/hub': typeof HubRoute
   '/jornada-de-desenvolvimento': typeof JornadaDeDesenvolvimentoRoute
@@ -84,6 +92,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/administracao': typeof AdministracaoRoute
+  '/arquivos-compartilhados': typeof ArquivosCompartilhadosRoute
   '/conteudo': typeof ConteudoRoute
   '/hub': typeof HubRoute
   '/jornada-de-desenvolvimento': typeof JornadaDeDesenvolvimentoRoute
@@ -96,6 +105,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/administracao'
+    | '/arquivos-compartilhados'
     | '/conteudo'
     | '/hub'
     | '/jornada-de-desenvolvimento'
@@ -106,6 +116,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/administracao'
+    | '/arquivos-compartilhados'
     | '/conteudo'
     | '/hub'
     | '/jornada-de-desenvolvimento'
@@ -116,6 +127,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/administracao'
+    | '/arquivos-compartilhados'
     | '/conteudo'
     | '/hub'
     | '/jornada-de-desenvolvimento'
@@ -127,6 +139,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdministracaoRoute: typeof AdministracaoRoute
+  ArquivosCompartilhadosRoute: typeof ArquivosCompartilhadosRoute
   ConteudoRoute: typeof ConteudoRoute
   HubRoute: typeof HubRoute
   JornadaDeDesenvolvimentoRoute: typeof JornadaDeDesenvolvimentoRoute
@@ -149,6 +162,13 @@ declare module '@tanstack/react-router' {
       path: '/administracao'
       fullPath: '/administracao'
       preLoaderRoute: typeof AdministracaoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/arquivos-compartilhados': {
+      id: '/arquivos-compartilhados'
+      path: '/arquivos-compartilhados'
+      fullPath: '/arquivos-compartilhados'
+      preLoaderRoute: typeof ArquivosCompartilhadosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/conteudo': {
@@ -199,6 +219,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdministracaoRoute: AdministracaoRoute,
+  ArquivosCompartilhadosRoute: ArquivosCompartilhadosRoute,
   ConteudoRoute: ConteudoRoute,
   HubRoute: HubRoute,
   JornadaDeDesenvolvimentoRoute: JornadaDeDesenvolvimentoRoute,
