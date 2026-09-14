@@ -12,6 +12,10 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdministracaoRouteImport } from './routes/administracao'
 import { Route as ArquivosCompartilhadosRouteImport } from './routes/arquivos-compartilhados'
+import { Route as BibliotecaEquipeRouteImport } from './routes/biblioteca-equipe'
+import { Route as BibliotecaIndividuoRouteImport } from './routes/biblioteca-individuo'
+import { Route as BibliotecaMercadoRouteImport } from './routes/biblioteca-mercado'
+import { Route as BibliotecaNegocioRouteImport } from './routes/biblioteca-negocio'
 import { Route as ConteudoRouteImport } from './routes/conteudo'
 import { Route as HubRouteImport } from './routes/hub'
 import { Route as JornadaDeDesenvolvimentoRouteImport } from './routes/jornada-de-desenvolvimento'
@@ -19,6 +23,7 @@ import { Route as MeuAssessmentRouteImport } from './routes/meu-assessment'
 import { Route as MinhasEstatisticasRouteImport } from './routes/minhas-estatisticas'
 import { Route as PlanoDeAcaoRouteImport } from './routes/plano-de-acao'
 import { Route as TreinamentosRouteImport } from './routes/treinamentos'
+import { Route as BibliotecaConteudoContentIdRouteImport } from './routes/biblioteca/conteudo/$contentId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -33,6 +38,26 @@ const AdministracaoRoute = AdministracaoRouteImport.update({
 const ArquivosCompartilhadosRoute = ArquivosCompartilhadosRouteImport.update({
   id: '/arquivos-compartilhados',
   path: '/arquivos-compartilhados',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BibliotecaEquipeRoute = BibliotecaEquipeRouteImport.update({
+  id: '/biblioteca-equipe',
+  path: '/biblioteca-equipe',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BibliotecaIndividuoRoute = BibliotecaIndividuoRouteImport.update({
+  id: '/biblioteca-individuo',
+  path: '/biblioteca-individuo',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BibliotecaMercadoRoute = BibliotecaMercadoRouteImport.update({
+  id: '/biblioteca-mercado',
+  path: '/biblioteca-mercado',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BibliotecaNegocioRoute = BibliotecaNegocioRouteImport.update({
+  id: '/biblioteca-negocio',
+  path: '/biblioteca-negocio',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ConteudoRoute = ConteudoRouteImport.update({
@@ -71,11 +96,21 @@ const TreinamentosRoute = TreinamentosRouteImport.update({
   path: '/treinamentos',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BibliotecaConteudoContentIdRoute =
+  BibliotecaConteudoContentIdRouteImport.update({
+    id: '/biblioteca/conteudo/$contentId',
+    path: '/biblioteca/conteudo/$contentId',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/administracao': typeof AdministracaoRoute
   '/arquivos-compartilhados': typeof ArquivosCompartilhadosRoute
+  '/biblioteca-equipe': typeof BibliotecaEquipeRoute
+  '/biblioteca-individuo': typeof BibliotecaIndividuoRoute
+  '/biblioteca-mercado': typeof BibliotecaMercadoRoute
+  '/biblioteca-negocio': typeof BibliotecaNegocioRoute
   '/conteudo': typeof ConteudoRoute
   '/hub': typeof HubRoute
   '/jornada-de-desenvolvimento': typeof JornadaDeDesenvolvimentoRoute
@@ -83,11 +118,16 @@ export interface FileRoutesByFullPath {
   '/minhas-estatisticas': typeof MinhasEstatisticasRoute
   '/plano-de-acao': typeof PlanoDeAcaoRoute
   '/treinamentos': typeof TreinamentosRoute
+  '/biblioteca/conteudo/$contentId': typeof BibliotecaConteudoContentIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/administracao': typeof AdministracaoRoute
   '/arquivos-compartilhados': typeof ArquivosCompartilhadosRoute
+  '/biblioteca-equipe': typeof BibliotecaEquipeRoute
+  '/biblioteca-individuo': typeof BibliotecaIndividuoRoute
+  '/biblioteca-mercado': typeof BibliotecaMercadoRoute
+  '/biblioteca-negocio': typeof BibliotecaNegocioRoute
   '/conteudo': typeof ConteudoRoute
   '/hub': typeof HubRoute
   '/jornada-de-desenvolvimento': typeof JornadaDeDesenvolvimentoRoute
@@ -95,12 +135,17 @@ export interface FileRoutesByTo {
   '/minhas-estatisticas': typeof MinhasEstatisticasRoute
   '/plano-de-acao': typeof PlanoDeAcaoRoute
   '/treinamentos': typeof TreinamentosRoute
+  '/biblioteca/conteudo/$contentId': typeof BibliotecaConteudoContentIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/administracao': typeof AdministracaoRoute
   '/arquivos-compartilhados': typeof ArquivosCompartilhadosRoute
+  '/biblioteca-equipe': typeof BibliotecaEquipeRoute
+  '/biblioteca-individuo': typeof BibliotecaIndividuoRoute
+  '/biblioteca-mercado': typeof BibliotecaMercadoRoute
+  '/biblioteca-negocio': typeof BibliotecaNegocioRoute
   '/conteudo': typeof ConteudoRoute
   '/hub': typeof HubRoute
   '/jornada-de-desenvolvimento': typeof JornadaDeDesenvolvimentoRoute
@@ -108,6 +153,7 @@ export interface FileRoutesById {
   '/minhas-estatisticas': typeof MinhasEstatisticasRoute
   '/plano-de-acao': typeof PlanoDeAcaoRoute
   '/treinamentos': typeof TreinamentosRoute
+  '/biblioteca/conteudo/$contentId': typeof BibliotecaConteudoContentIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -115,6 +161,10 @@ export interface FileRouteTypes {
     | '/'
     | '/administracao'
     | '/arquivos-compartilhados'
+    | '/biblioteca-equipe'
+    | '/biblioteca-individuo'
+    | '/biblioteca-mercado'
+    | '/biblioteca-negocio'
     | '/conteudo'
     | '/hub'
     | '/jornada-de-desenvolvimento'
@@ -122,11 +172,16 @@ export interface FileRouteTypes {
     | '/minhas-estatisticas'
     | '/plano-de-acao'
     | '/treinamentos'
+    | '/biblioteca/conteudo/$contentId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/administracao'
     | '/arquivos-compartilhados'
+    | '/biblioteca-equipe'
+    | '/biblioteca-individuo'
+    | '/biblioteca-mercado'
+    | '/biblioteca-negocio'
     | '/conteudo'
     | '/hub'
     | '/jornada-de-desenvolvimento'
@@ -134,11 +189,16 @@ export interface FileRouteTypes {
     | '/minhas-estatisticas'
     | '/plano-de-acao'
     | '/treinamentos'
+    | '/biblioteca/conteudo/$contentId'
   id:
     | '__root__'
     | '/'
     | '/administracao'
     | '/arquivos-compartilhados'
+    | '/biblioteca-equipe'
+    | '/biblioteca-individuo'
+    | '/biblioteca-mercado'
+    | '/biblioteca-negocio'
     | '/conteudo'
     | '/hub'
     | '/jornada-de-desenvolvimento'
@@ -146,12 +206,17 @@ export interface FileRouteTypes {
     | '/minhas-estatisticas'
     | '/plano-de-acao'
     | '/treinamentos'
+    | '/biblioteca/conteudo/$contentId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdministracaoRoute: typeof AdministracaoRoute
   ArquivosCompartilhadosRoute: typeof ArquivosCompartilhadosRoute
+  BibliotecaEquipeRoute: typeof BibliotecaEquipeRoute
+  BibliotecaIndividuoRoute: typeof BibliotecaIndividuoRoute
+  BibliotecaMercadoRoute: typeof BibliotecaMercadoRoute
+  BibliotecaNegocioRoute: typeof BibliotecaNegocioRoute
   ConteudoRoute: typeof ConteudoRoute
   HubRoute: typeof HubRoute
   JornadaDeDesenvolvimentoRoute: typeof JornadaDeDesenvolvimentoRoute
@@ -159,6 +224,7 @@ export interface RootRouteChildren {
   MinhasEstatisticasRoute: typeof MinhasEstatisticasRoute
   PlanoDeAcaoRoute: typeof PlanoDeAcaoRoute
   TreinamentosRoute: typeof TreinamentosRoute
+  BibliotecaConteudoContentIdRoute: typeof BibliotecaConteudoContentIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -182,6 +248,34 @@ declare module '@tanstack/react-router' {
       path: '/arquivos-compartilhados'
       fullPath: '/arquivos-compartilhados'
       preLoaderRoute: typeof ArquivosCompartilhadosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/biblioteca-equipe': {
+      id: '/biblioteca-equipe'
+      path: '/biblioteca-equipe'
+      fullPath: '/biblioteca-equipe'
+      preLoaderRoute: typeof BibliotecaEquipeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/biblioteca-individuo': {
+      id: '/biblioteca-individuo'
+      path: '/biblioteca-individuo'
+      fullPath: '/biblioteca-individuo'
+      preLoaderRoute: typeof BibliotecaIndividuoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/biblioteca-mercado': {
+      id: '/biblioteca-mercado'
+      path: '/biblioteca-mercado'
+      fullPath: '/biblioteca-mercado'
+      preLoaderRoute: typeof BibliotecaMercadoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/biblioteca-negocio': {
+      id: '/biblioteca-negocio'
+      path: '/biblioteca-negocio'
+      fullPath: '/biblioteca-negocio'
+      preLoaderRoute: typeof BibliotecaNegocioRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/conteudo': {
@@ -233,6 +327,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TreinamentosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/biblioteca/conteudo/$contentId': {
+      id: '/biblioteca/conteudo/$contentId'
+      path: '/biblioteca/conteudo/$contentId'
+      fullPath: '/biblioteca/conteudo/$contentId'
+      preLoaderRoute: typeof BibliotecaConteudoContentIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -240,6 +341,10 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdministracaoRoute: AdministracaoRoute,
   ArquivosCompartilhadosRoute: ArquivosCompartilhadosRoute,
+  BibliotecaEquipeRoute: BibliotecaEquipeRoute,
+  BibliotecaIndividuoRoute: BibliotecaIndividuoRoute,
+  BibliotecaMercadoRoute: BibliotecaMercadoRoute,
+  BibliotecaNegocioRoute: BibliotecaNegocioRoute,
   ConteudoRoute: ConteudoRoute,
   HubRoute: HubRoute,
   JornadaDeDesenvolvimentoRoute: JornadaDeDesenvolvimentoRoute,
@@ -247,6 +352,7 @@ const rootRouteChildren: RootRouteChildren = {
   MinhasEstatisticasRoute: MinhasEstatisticasRoute,
   PlanoDeAcaoRoute: PlanoDeAcaoRoute,
   TreinamentosRoute: TreinamentosRoute,
+  BibliotecaConteudoContentIdRoute: BibliotecaConteudoContentIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

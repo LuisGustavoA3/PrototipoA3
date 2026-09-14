@@ -155,7 +155,15 @@ export function AppSidebar({ open }: { open: boolean }) {
                         (child.label === "Arquivos Compartilhados" &&
                           location.pathname === "/arquivos-compartilhados") ||
                         (child.label === "Plano de Ação (PDI)" &&
-                          location.pathname === "/plano-de-acao");
+                          location.pathname === "/plano-de-acao") ||
+                        (child.label === "Eixo: Negócio" &&
+                          location.pathname === "/biblioteca-negocio") ||
+                        (child.label === "Eixo: Equipe" &&
+                          location.pathname === "/biblioteca-equipe") ||
+                        (child.label === "Eixo: Mercado" &&
+                          location.pathname === "/biblioteca-mercado") ||
+                        (child.label === "Eixo: Indivíduo" &&
+                          location.pathname === "/biblioteca-individuo");
                       const childClassName = cn(
                         "label-caps flex w-full items-center gap-2 px-4 py-2.5 text-left text-[11px] transition-colors",
                         childActive
@@ -168,7 +176,11 @@ export function AppSidebar({ open }: { open: boolean }) {
                           child.label === "Meu Assessment" ||
                           child.label === "Jornada de Desenvolvimento" ||
                           child.label === "Arquivos Compartilhados" ||
-                          child.label === "Plano de Ação (PDI)"
+                          child.label === "Plano de Ação (PDI)" ||
+                          child.label === "Eixo: Negócio" ||
+                          child.label === "Eixo: Equipe" ||
+                          child.label === "Eixo: Mercado" ||
+                          child.label === "Eixo: Indivíduo"
                       ) {
                         return (
                           <Link
@@ -182,7 +194,15 @@ export function AppSidebar({ open }: { open: boolean }) {
                                       ? "/jornada-de-desenvolvimento"
                                       : child.label === "Arquivos Compartilhados"
                                         ? "/arquivos-compartilhados"
-                                        : "/plano-de-acao"
+                                        : child.label === "Plano de Ação (PDI)"
+                                          ? "/plano-de-acao"
+                                          : child.label === "Eixo: Negócio"
+                                            ? "/biblioteca-negocio"
+                                            : child.label === "Eixo: Equipe"
+                                              ? "/biblioteca-equipe"
+                                              : child.label === "Eixo: Mercado"
+                                                ? "/biblioteca-mercado"
+                                                : "/biblioteca-individuo"
                             }
                             onClick={() => setActive(child.label)}
                             className={childClassName}
