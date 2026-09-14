@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdministracaoRouteImport } from './routes/administracao'
 import { Route as ArquivosCompartilhadosRouteImport } from './routes/arquivos-compartilhados'
+import { Route as BibliotecaEquipeRouteImport } from './routes/biblioteca-equipe'
 import { Route as BibliotecaNegocioRouteImport } from './routes/biblioteca-negocio'
 import { Route as ConteudoRouteImport } from './routes/conteudo'
 import { Route as HubRouteImport } from './routes/hub'
@@ -35,6 +36,11 @@ const AdministracaoRoute = AdministracaoRouteImport.update({
 const ArquivosCompartilhadosRoute = ArquivosCompartilhadosRouteImport.update({
   id: '/arquivos-compartilhados',
   path: '/arquivos-compartilhados',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BibliotecaEquipeRoute = BibliotecaEquipeRouteImport.update({
+  id: '/biblioteca-equipe',
+  path: '/biblioteca-equipe',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BibliotecaNegocioRoute = BibliotecaNegocioRouteImport.update({
@@ -89,6 +95,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/administracao': typeof AdministracaoRoute
   '/arquivos-compartilhados': typeof ArquivosCompartilhadosRoute
+  '/biblioteca-equipe': typeof BibliotecaEquipeRoute
   '/biblioteca-negocio': typeof BibliotecaNegocioRoute
   '/conteudo': typeof ConteudoRoute
   '/hub': typeof HubRoute
@@ -103,6 +110,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/administracao': typeof AdministracaoRoute
   '/arquivos-compartilhados': typeof ArquivosCompartilhadosRoute
+  '/biblioteca-equipe': typeof BibliotecaEquipeRoute
   '/biblioteca-negocio': typeof BibliotecaNegocioRoute
   '/conteudo': typeof ConteudoRoute
   '/hub': typeof HubRoute
@@ -118,6 +126,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/administracao': typeof AdministracaoRoute
   '/arquivos-compartilhados': typeof ArquivosCompartilhadosRoute
+  '/biblioteca-equipe': typeof BibliotecaEquipeRoute
   '/biblioteca-negocio': typeof BibliotecaNegocioRoute
   '/conteudo': typeof ConteudoRoute
   '/hub': typeof HubRoute
@@ -134,6 +143,7 @@ export interface FileRouteTypes {
     | '/'
     | '/administracao'
     | '/arquivos-compartilhados'
+    | '/biblioteca-equipe'
     | '/biblioteca-negocio'
     | '/conteudo'
     | '/hub'
@@ -148,6 +158,7 @@ export interface FileRouteTypes {
     | '/'
     | '/administracao'
     | '/arquivos-compartilhados'
+    | '/biblioteca-equipe'
     | '/biblioteca-negocio'
     | '/conteudo'
     | '/hub'
@@ -162,6 +173,7 @@ export interface FileRouteTypes {
     | '/'
     | '/administracao'
     | '/arquivos-compartilhados'
+    | '/biblioteca-equipe'
     | '/biblioteca-negocio'
     | '/conteudo'
     | '/hub'
@@ -177,6 +189,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdministracaoRoute: typeof AdministracaoRoute
   ArquivosCompartilhadosRoute: typeof ArquivosCompartilhadosRoute
+  BibliotecaEquipeRoute: typeof BibliotecaEquipeRoute
   BibliotecaNegocioRoute: typeof BibliotecaNegocioRoute
   ConteudoRoute: typeof ConteudoRoute
   HubRoute: typeof HubRoute
@@ -209,6 +222,13 @@ declare module '@tanstack/react-router' {
       path: '/arquivos-compartilhados'
       fullPath: '/arquivos-compartilhados'
       preLoaderRoute: typeof ArquivosCompartilhadosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/biblioteca-equipe': {
+      id: '/biblioteca-equipe'
+      path: '/biblioteca-equipe'
+      fullPath: '/biblioteca-equipe'
+      preLoaderRoute: typeof BibliotecaEquipeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/biblioteca-negocio': {
@@ -281,6 +301,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdministracaoRoute: AdministracaoRoute,
   ArquivosCompartilhadosRoute: ArquivosCompartilhadosRoute,
+  BibliotecaEquipeRoute: BibliotecaEquipeRoute,
   BibliotecaNegocioRoute: BibliotecaNegocioRoute,
   ConteudoRoute: ConteudoRoute,
   HubRoute: HubRoute,

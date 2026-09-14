@@ -171,6 +171,95 @@ const businessContents: LibraryContent[] = [
   },
 ];
 
+const teamContents: LibraryContent[] = [
+  {
+    id: "equipe-01",
+    name: "Conversas que aproximam",
+    type: "Artigo",
+    topic: "Comunicação na Equipe",
+    axis: "Equipe",
+    description: "Práticas para criar conversas mais claras, abertas e produtivas no dia a dia.",
+    format: "pdf",
+    reference: "A3 Digital",
+    permitirDownload: true,
+    public: true,
+    active: true,
+    finished: true,
+    finishedAt: "2026-09-05T10:00:00",
+  },
+  {
+    id: "equipe-02",
+    name: "Feedback como ferramenta de desenvolvimento",
+    type: "Vídeo",
+    topic: "Comunicação na Equipe",
+    axis: "Equipe",
+    description: "Vídeo de exemplo sobre como transformar feedback em aprendizado compartilhado.",
+    format: "video",
+    reference: "A3 Digital Academy",
+    permitirDownload: false,
+    public: true,
+    active: true,
+    finished: false,
+  },
+  {
+    id: "equipe-03",
+    name: "Rituais de colaboração",
+    type: "Capítulo de livro",
+    topic: "Colaboração e Confiança",
+    axis: "Equipe",
+    description: "Uma leitura sobre acordos e rituais que fortalecem a colaboração entre pessoas.",
+    format: "pdf",
+    reference: "Biblioteca A3",
+    permitirDownload: false,
+    public: true,
+    active: true,
+    finished: false,
+  },
+  {
+    id: "equipe-04",
+    name: "Mapa de forças do time",
+    type: "Ferramenta",
+    topic: "Colaboração e Confiança",
+    axis: "Equipe",
+    description: "Ferramenta para identificar talentos, contribuições e oportunidades de parceria.",
+    format: "pdf",
+    reference: "A3 Digital",
+    permitirDownload: true,
+    public: true,
+    active: true,
+    finished: true,
+    finishedAt: "2026-08-26T14:20:00",
+  },
+  {
+    id: "equipe-05",
+    name: "Liderança que desenvolve pessoas",
+    type: "Podcast",
+    topic: "Liderança e Desenvolvimento",
+    axis: "Equipe",
+    description: "Episódio de exemplo sobre liderança, autonomia e crescimento do time.",
+    format: "audio",
+    reference: "A3 Digital Academy",
+    permitirDownload: false,
+    public: true,
+    active: true,
+    finished: false,
+  },
+  {
+    id: "equipe-06",
+    name: "Delegação com clareza",
+    type: "Infográfico",
+    topic: "Liderança e Desenvolvimento",
+    axis: "Equipe",
+    description: "Resumo visual para apoiar uma delegação mais clara e orientada a resultados.",
+    format: "pdf",
+    reference: "A3 Digital",
+    permitirDownload: true,
+    public: true,
+    active: true,
+    finished: false,
+  },
+];
+
 const otherAxisContents: LibraryContent[] = [
   ...Array.from({ length: 30 }, (_, index) => ({
     id: `biblioteca-${index + 1}`,
@@ -189,7 +278,7 @@ const otherAxisContents: LibraryContent[] = [
 ];
 
 const STORAGE_KEY = "a3:library-content-status";
-let contents = [...businessContents, ...otherAxisContents];
+let contents = [...businessContents, ...teamContents, ...otherAxisContents];
 let hasReadStoredStatus = false;
 const listeners = new Set<() => void>();
 

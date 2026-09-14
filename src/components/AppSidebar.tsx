@@ -157,7 +157,9 @@ export function AppSidebar({ open }: { open: boolean }) {
                         (child.label === "Plano de Ação (PDI)" &&
                           location.pathname === "/plano-de-acao") ||
                         (child.label === "Eixo: Negócio" &&
-                          location.pathname === "/biblioteca-negocio");
+                          location.pathname === "/biblioteca-negocio") ||
+                        (child.label === "Eixo: Equipe" &&
+                          location.pathname === "/biblioteca-equipe");
                       const childClassName = cn(
                         "label-caps flex w-full items-center gap-2 px-4 py-2.5 text-left text-[11px] transition-colors",
                         childActive
@@ -171,7 +173,8 @@ export function AppSidebar({ open }: { open: boolean }) {
                           child.label === "Jornada de Desenvolvimento" ||
                           child.label === "Arquivos Compartilhados" ||
                           child.label === "Plano de Ação (PDI)" ||
-                          child.label === "Eixo: Negócio"
+                          child.label === "Eixo: Negócio" ||
+                          child.label === "Eixo: Equipe"
                       ) {
                         return (
                           <Link
@@ -187,7 +190,9 @@ export function AppSidebar({ open }: { open: boolean }) {
                                         ? "/arquivos-compartilhados"
                                         : child.label === "Plano de Ação (PDI)"
                                           ? "/plano-de-acao"
-                                          : "/biblioteca-negocio"
+                                          : child.label === "Eixo: Negócio"
+                                            ? "/biblioteca-negocio"
+                                            : "/biblioteca-equipe"
                             }
                             onClick={() => setActive(child.label)}
                             className={childClassName}
