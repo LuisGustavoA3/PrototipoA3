@@ -238,7 +238,7 @@ function ContentItem({
       <button
         type="button"
         onClick={onOpen}
-        className="min-w-0 flex-1 text-left transition-colors hover:text-primary"
+        className="min-w-0 flex-1 cursor-pointer rounded-sm px-2 py-1 text-left transition-colors hover:bg-primary-soft/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       >
         <span className="label-caps text-[10px] text-muted-foreground">{content.type}</span>
         <span className="mx-2 text-xs text-muted-foreground">—</span>

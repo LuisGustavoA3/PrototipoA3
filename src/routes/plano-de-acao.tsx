@@ -19,6 +19,7 @@ import {
   type PdiAction,
   updatePdiAction,
   usePdiActions,
+  isValidPdiDate,
 } from "@/lib/pdi-store";
 import { cn } from "@/lib/utils";
 
@@ -244,6 +245,10 @@ function PlanoDeAcao() {
               form={form}
               setForm={setForm}
               isEditing={modal === "edit"}
+              dateError={
+                (form.startDate.length > 0 && !isValidPdiDate(form.startDate)) ||
+                (form.endDate.length > 0 && !isValidPdiDate(form.endDate))
+              }
               onCancel={() => setModal(modal === "edit" ? "details" : null)}
               onSave={saveAction}
             />
@@ -287,12 +292,14 @@ function ActionForm({
   form,
   setForm,
   isEditing,
+  dateError,
   onCancel,
   onSave,
 }: {
   form: FormValues;
   setForm: (form: FormValues) => void;
   isEditing: boolean;
+  dateError: boolean;
   onCancel: () => void;
   onSave: () => void;
 }) {
@@ -302,6 +309,7 @@ function ActionForm({
     !form.competency ||
     !form.startDate ||
     !form.endDate ||
+    dateError ||
     (form.status === "Concluído" && !form.evidence.trim());
 
   return (
@@ -333,11 +341,26 @@ function ActionForm({
           </select>
         </Field>
         <Field label="Início *">
-          <Input type="date" value={form.startDate} onChange={(event) => update({ startDate: event.target.value })} />
+          <Input
+            type="date"
+            max="9999-12-31"
+            value={form.startDate}
+            onChange={(event) => update({ startDate: event.target.value })}
+          />
         </Field>
         <Field label="Fim *">
-          <Input type="date" value={form.endDate} onChange={(event) => update({ endDate: event.target.value })} />
+          <Input
+            type="date"
+            max="9999-12-31"
+            value={form.endDate}
+            onChange={(event) => update({ endDate: event.target.value })}
+          />
         </Field>
+        {dateError && (
+          <p className="text-sm text-destructive sm:col-span-2">
+            Informe datas válidas com ano de até 4 dígitos.
+          </p>
+        )}
         <Field label="Detalhes" className="sm:col-span-2">
           <textarea
             value={form.details}
@@ -401,5 +424,6 @@ function EmptyState({ message, onAdd }: { message: string; onAdd: () => void }) 
 }
 
 function formatDate(value: string) {
-  return new Intl.DateTimeFormat("pt-BR").format(new Date(`${value.slice(0, 10)}T12:00:00`));
+  if (!isValidPdiDate(value)) return "Data inválida";
+  return new Intl.DateTimeFormat("pt-BR").format(new Date(`${value}T12:00:00`));
 }

@@ -87,14 +87,15 @@ export function AppSidebar({ open }: { open: boolean }) {
         <nav className="flex-1 overflow-y-auto py-2">
           {items.map((item) => {
             const isActive =
-              active === item.label ||
-              (item.label === "Dashboard" && location.pathname === "/") ||
-              isGroupActive(item);
+              !item.children &&
+              (item.label === "Dashboard"
+                ? location.pathname === "/"
+                : active === item.label);
             const groupOpen = openGroups[item.label] || isGroupActive(item);
             const itemClassName = cn(
               "label-caps flex w-full items-center gap-3 px-5 py-3 text-left text-xs transition-colors",
               isActive
-                ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                ? "bg-primary text-primary-foreground"
                 : "text-sidebar-foreground hover:bg-sidebar-accent/60",
             );
 
@@ -109,7 +110,7 @@ export function AppSidebar({ open }: { open: boolean }) {
                   <item.icon
                     className={cn(
                       "size-5",
-                      isActive ? "text-primary" : "text-primary/70",
+                      isActive ? "text-primary-foreground" : "text-primary/70",
                     )}
                   />
                   <span className="flex-1">{item.label}</span>
@@ -152,6 +153,8 @@ export function AppSidebar({ open }: { open: boolean }) {
                           location.pathname === "/conteudo") ||
                         (child.label === "Meu Assessment" &&
                           location.pathname === "/meu-assessment") ||
+                        (child.label === "Jornada de Desenvolvimento" &&
+                          location.pathname === "/jornada-de-desenvolvimento") ||
                         (child.label === "Arquivos Compartilhados" &&
                           location.pathname === "/arquivos-compartilhados") ||
                         (child.label === "Plano de Ação (PDI)" &&
@@ -167,7 +170,7 @@ export function AppSidebar({ open }: { open: boolean }) {
                       const childClassName = cn(
                         "label-caps flex w-full items-center gap-2 px-4 py-2.5 text-left text-[11px] transition-colors",
                         childActive
-                          ? "bg-sidebar-accent/70 text-sidebar-accent-foreground"
+                          ? "bg-primary text-primary-foreground"
                           : "text-sidebar-foreground hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground",
                       );
 
@@ -211,7 +214,7 @@ export function AppSidebar({ open }: { open: boolean }) {
                               className={cn(
                                 "size-4",
                                 childActive
-                                  ? "text-primary"
+                                  ? "text-primary-foreground"
                                   : "text-primary/70",
                               )}
                             />
@@ -229,7 +232,9 @@ export function AppSidebar({ open }: { open: boolean }) {
                           <child.icon
                             className={cn(
                               "size-4",
-                              childActive ? "text-primary" : "text-primary/70",
+                              childActive
+                                ? "text-primary-foreground"
+                                : "text-primary/70",
                             )}
                           />
                           {child.label}

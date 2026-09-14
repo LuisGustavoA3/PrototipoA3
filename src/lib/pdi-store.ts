@@ -20,6 +20,16 @@ export type PdiAction = {
   author: string;
 };
 
+export function isValidPdiDate(value: string) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+
+  const date = new Date(`${value}T00:00:00Z`);
+  return (
+    !Number.isNaN(date.getTime()) &&
+    date.toISOString().slice(0, 10) === value
+  );
+}
+
 const initialActions: PdiAction[] = [
   {
     id: "pdi-1",
@@ -80,6 +90,10 @@ export function usePdiActions() {
 }
 
 export function addPdiAction(action: Omit<PdiAction, "id" | "createdAt">) {
+  if (!isValidPdiDate(action.startDate) || !isValidPdiDate(action.endDate)) {
+    return;
+  }
+
   actions = [
     ...actions,
     {
@@ -92,6 +106,13 @@ export function addPdiAction(action: Omit<PdiAction, "id" | "createdAt">) {
 }
 
 export function updatePdiAction(id: string, changes: Partial<PdiAction>) {
+  if (
+    (changes.startDate !== undefined && !isValidPdiDate(changes.startDate)) ||
+    (changes.endDate !== undefined && !isValidPdiDate(changes.endDate))
+  ) {
+    return;
+  }
+
   actions = actions.map((action) =>
     action.id === id ? { ...action, ...changes } : action,
   );

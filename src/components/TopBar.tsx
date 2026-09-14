@@ -5,6 +5,8 @@ import {
   Menu,
   Bell,
   BarChart3,
+  ChevronLeft,
+  ChevronRight,
   IdCard,
   LogOut,
   User,
@@ -42,15 +44,28 @@ const trilhas = [
 ];
 
 const years = ["2026", "2025", "2024"];
+const selectedTrailStorageKey = "a3-selected-trail";
 
 export function TopBar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
   const navigate = useNavigate({ from: "/" });
   const [trilhasOpen, setTrilhasOpen] = useState(false);
   const [year, setYear] = useState("2026");
+  const [selectedTrail, setSelectedTrail] = useState<string | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
   const visible = trilhas.filter((t) => String(t.year) === year);
+
+  useEffect(() => {
+    const storedTrail = window.localStorage.getItem(selectedTrailStorageKey);
+    if (storedTrail) setSelectedTrail(storedTrail);
+  }, []);
+
+  useEffect(() => {
+    if (selectedTrail) {
+      window.localStorage.setItem(selectedTrailStorageKey, selectedTrail);
+    }
+  }, [selectedTrail]);
 
   useEffect(() => {
     if (!trilhasOpen) return;
@@ -96,10 +111,17 @@ export function TopBar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
           A3 Digital
         </Link>
 
+        {selectedTrail && (
+          <p className="max-w-[min(40vw,20rem)] truncate text-sm font-medium text-foreground" title={selectedTrail}>
+            {selectedTrail}
+          </p>
+        )}
+
         <div className="flex-1" />
 
         <button
           ref={triggerRef}
+          type="button"
           onClick={() => setTrilhasOpen((v) => !v)}
           className={cn(
             "label-caps text-xs transition-colors",
@@ -211,7 +233,14 @@ export function TopBar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
                 Nenhum dado.
               </p>
             ) : (
-              <CourseCarousel key={year} courses={visible} />
+              <CourseCarousel
+                key={year}
+                courses={visible}
+                selectedName={selectedTrail}
+                onSelect={(course) => {
+                  setSelectedTrail(course.name);
+                }}
+              />
             )}
           </div>
         </>
@@ -222,17 +251,54 @@ export function TopBar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
 
 function CourseCarousel({
   courses,
+  selectedName,
+  onSelect,
 }: {
   courses: { name: string; progress: string; year: number }[];
+  selectedName: string | null;
+  onSelect: (course: { name: string; progress: string; year: number }) => void;
 }) {
-  const [index, setIndex] = useState(0);
+  const selectedIndex = selectedName
+    ? courses.findIndex((course) => course.name === selectedName)
+    : -1;
+  const [index, setIndex] = useState(selectedIndex >= 0 ? selectedIndex : 0);
   const len = courses.length;
 
   const cardWidth = 176;
   const gap = 16;
 
+  const selectIndex = (nextIndex: number) => {
+    const course = courses[nextIndex];
+    if (!course) return;
+
+    setIndex(nextIndex);
+    onSelect(course);
+  };
+
+  const moveCarousel = (direction: -1 | 1) => {
+    selectIndex((index + direction + len) % len);
+  };
+
   return (
     <div className="relative mt-6 h-72 overflow-hidden">
+      <button
+        type="button"
+        onClick={() => moveCarousel(-1)}
+        aria-label="Selecionar trilha anterior"
+        title="Trilha anterior"
+        className="absolute left-1 top-1/2 z-20 flex size-9 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-card text-muted-foreground shadow-sm transition-colors hover:bg-accent hover:text-primary"
+      >
+        <ChevronLeft className="size-5" />
+      </button>
+      <button
+        type="button"
+        onClick={() => moveCarousel(1)}
+        aria-label="Selecionar próxima trilha"
+        title="Próxima trilha"
+        className="absolute right-1 top-1/2 z-20 flex size-9 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-card text-muted-foreground shadow-sm transition-colors hover:bg-accent hover:text-primary"
+      >
+        <ChevronRight className="size-5" />
+      </button>
       <div className="absolute inset-0 flex items-center justify-center">
         {courses.map((course, i) => {
           let dist = i - index;
@@ -263,7 +329,8 @@ function CourseCarousel({
               whileTap={isVisible ? { scale: isActive ? 0.98 : 0.8 } : {}}
             >
               <button
-                onClick={() => setIndex(i)}
+                type="button"
+                onClick={() => selectIndex(i)}
                 className="w-full cursor-pointer rounded-xl border border-border bg-card p-4 text-left shadow-[var(--shadow-card)] transition-shadow hover:shadow-md"
               >
                 <div className="flex aspect-[3/4] items-center justify-center rounded-md bg-muted">
