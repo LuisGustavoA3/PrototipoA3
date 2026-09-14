@@ -159,7 +159,9 @@ export function AppSidebar({ open }: { open: boolean }) {
                         (child.label === "Eixo: Negócio" &&
                           location.pathname === "/biblioteca-negocio") ||
                         (child.label === "Eixo: Equipe" &&
-                          location.pathname === "/biblioteca-equipe");
+                          location.pathname === "/biblioteca-equipe") ||
+                        (child.label === "Eixo: Mercado" &&
+                          location.pathname === "/biblioteca-mercado");
                       const childClassName = cn(
                         "label-caps flex w-full items-center gap-2 px-4 py-2.5 text-left text-[11px] transition-colors",
                         childActive
@@ -174,7 +176,8 @@ export function AppSidebar({ open }: { open: boolean }) {
                           child.label === "Arquivos Compartilhados" ||
                           child.label === "Plano de Ação (PDI)" ||
                           child.label === "Eixo: Negócio" ||
-                          child.label === "Eixo: Equipe"
+                          child.label === "Eixo: Equipe" ||
+                          child.label === "Eixo: Mercado"
                       ) {
                         return (
                           <Link
@@ -192,7 +195,9 @@ export function AppSidebar({ open }: { open: boolean }) {
                                           ? "/plano-de-acao"
                                           : child.label === "Eixo: Negócio"
                                             ? "/biblioteca-negocio"
-                                            : "/biblioteca-equipe"
+                                            : child.label === "Eixo: Equipe"
+                                              ? "/biblioteca-equipe"
+                                              : "/biblioteca-mercado"
                             }
                             onClick={() => setActive(child.label)}
                             className={childClassName}

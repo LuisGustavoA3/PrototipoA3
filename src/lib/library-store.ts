@@ -260,6 +260,95 @@ const teamContents: LibraryContent[] = [
   },
 ];
 
+const marketContents: LibraryContent[] = [
+  {
+    id: "mercado-01",
+    name: "Leitura de cenário e tendências",
+    type: "Artigo",
+    topic: "Visão de Mercado",
+    axis: "Mercado",
+    description: "Práticas para observar mudanças e reconhecer oportunidades no ambiente externo.",
+    format: "pdf",
+    reference: "A3 Digital",
+    permitirDownload: true,
+    public: true,
+    active: true,
+    finished: true,
+    finishedAt: "2026-09-06T10:00:00",
+  },
+  {
+    id: "mercado-02",
+    name: "Radar de oportunidades",
+    type: "Ferramenta",
+    topic: "Visão de Mercado",
+    axis: "Mercado",
+    description: "Ferramenta de exemplo para organizar sinais, oportunidades e hipóteses de mercado.",
+    format: "pdf",
+    reference: "Biblioteca A3",
+    permitirDownload: false,
+    public: true,
+    active: true,
+    finished: false,
+  },
+  {
+    id: "mercado-03",
+    name: "Comportamento do consumidor",
+    type: "Vídeo",
+    topic: "Clientes e Contexto",
+    axis: "Mercado",
+    description: "Vídeo de exemplo sobre necessidades, escolhas e mudanças no comportamento do consumidor.",
+    format: "video",
+    reference: "A3 Digital Academy",
+    permitirDownload: false,
+    public: true,
+    active: true,
+    finished: false,
+  },
+  {
+    id: "mercado-04",
+    name: "Jornada de valor para o cliente",
+    type: "Infográfico",
+    topic: "Clientes e Contexto",
+    axis: "Mercado",
+    description: "Resumo visual para analisar os principais pontos de contato com o cliente.",
+    format: "pdf",
+    reference: "A3 Digital",
+    permitirDownload: true,
+    public: true,
+    active: true,
+    finished: true,
+    finishedAt: "2026-08-30T14:20:00",
+  },
+  {
+    id: "mercado-05",
+    name: "Inovação conectada ao mercado",
+    type: "Podcast",
+    topic: "Inovação e Competitividade",
+    axis: "Mercado",
+    description: "Episódio de exemplo sobre inovação, diferenciação e posicionamento competitivo.",
+    format: "audio",
+    reference: "A3 Digital Academy",
+    permitirDownload: false,
+    public: true,
+    active: true,
+    finished: false,
+  },
+  {
+    id: "mercado-06",
+    name: "Matriz de diferenciação",
+    type: "Capítulo de livro",
+    topic: "Inovação e Competitividade",
+    axis: "Mercado",
+    description: "Uma leitura de exemplo sobre escolhas que ajudam a construir diferenciação.",
+    format: "pdf",
+    reference: "Biblioteca A3",
+    permitirDownload: false,
+    public: true,
+    active: true,
+    finished: false,
+  },
+];
+
 const otherAxisContents: LibraryContent[] = [
   ...Array.from({ length: 30 }, (_, index) => ({
     id: `biblioteca-${index + 1}`,
@@ -278,7 +367,7 @@ const otherAxisContents: LibraryContent[] = [
 ];
 
 const STORAGE_KEY = "a3:library-content-status";
-let contents = [...businessContents, ...teamContents, ...otherAxisContents];
+let contents = [...businessContents, ...teamContents, ...marketContents, ...otherAxisContents];
 let hasReadStoredStatus = false;
 const listeners = new Set<() => void>();
 
