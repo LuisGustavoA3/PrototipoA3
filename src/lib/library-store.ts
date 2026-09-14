@@ -5,7 +5,8 @@ export type LibraryContentType =
   | "Capítulo de livro"
   | "Vídeo"
   | "Infográfico"
-  | "Ferramenta";
+  | "Ferramenta"
+  | "Podcast";
 
 export type LibraryContent = {
   id: string;
@@ -13,7 +14,10 @@ export type LibraryContent = {
   type: LibraryContentType;
   topic: string;
   axis: "Negócio" | "Equipe" | "Mercado" | "Indivíduo";
+  description: string;
+  format: "pdf" | "video" | "audio";
   reference: string;
+  permitirDownload: boolean;
   public: boolean;
   active: boolean;
   finished: boolean;
@@ -27,7 +31,10 @@ const businessContents: LibraryContent[] = [
     type: "Artigo",
     topic: "Posicionamento Estratégico",
     axis: "Negócio",
+    description: "Uma introdução prática à ambidestria e às escolhas estratégicas das organizações.",
+    format: "pdf",
     reference: "A3 Digital",
+    permitirDownload: true,
     public: true,
     active: true,
     finished: true,
@@ -39,7 +46,10 @@ const businessContents: LibraryContent[] = [
     type: "Capítulo de livro",
     topic: "Posicionamento Estratégico",
     axis: "Negócio",
+    description: "Capítulo sobre como reconhecer sua contribuição dentro de uma visão estratégica maior.",
+    format: "pdf",
     reference: "Biblioteca A3",
+    permitirDownload: false,
     public: true,
     active: true,
     finished: false,
@@ -50,7 +60,10 @@ const businessContents: LibraryContent[] = [
     type: "Capítulo de livro",
     topic: "Posicionamento Estratégico",
     axis: "Negócio",
+    description: "Uma leitura sobre equilibrar a operação atual e a construção do futuro.",
+    format: "pdf",
     reference: "Biblioteca A3",
+    permitirDownload: false,
     public: true,
     active: true,
     finished: true,
@@ -62,7 +75,10 @@ const businessContents: LibraryContent[] = [
     type: "Vídeo",
     topic: "Visão Integrada & Sistêmica",
     axis: "Negócio",
+    description: "Vídeo mockado para explorar relações e efeitos sistêmicos nas decisões.",
+    format: "video",
     reference: "A3 Digital Academy",
+    permitirDownload: false,
     public: true,
     active: true,
     finished: false,
@@ -73,7 +89,10 @@ const businessContents: LibraryContent[] = [
     type: "Ferramenta",
     topic: "Visão Integrada & Sistêmica",
     axis: "Negócio",
+    description: "Uma ferramenta para mapear pessoas e grupos impactados por uma decisão.",
+    format: "pdf",
     reference: "A3 Digital",
+    permitirDownload: true,
     public: true,
     active: true,
     finished: true,
@@ -85,7 +104,10 @@ const businessContents: LibraryContent[] = [
     type: "Infográfico",
     topic: "Visão Integrada & Sistêmica",
     axis: "Negócio",
+    description: "Infográfico sobre os principais elos que formam uma cadeia de valor.",
+    format: "pdf",
     reference: "A3 Digital",
+    permitirDownload: true,
     public: true,
     active: true,
     finished: false,
@@ -96,7 +118,10 @@ const businessContents: LibraryContent[] = [
     type: "Artigo",
     topic: "Tomada de Decisão",
     axis: "Negócio",
+    description: "Artigo sobre escolhas conscientes e decisões conectadas aos resultados esperados.",
+    format: "pdf",
     reference: "A3 Digital",
+    permitirDownload: true,
     public: true,
     active: true,
     finished: true,
@@ -108,7 +133,10 @@ const businessContents: LibraryContent[] = [
     type: "Ferramenta",
     topic: "Tomada de Decisão",
     axis: "Negócio",
+    description: "Ferramenta prática para organizar critérios antes de decidir.",
+    format: "pdf",
     reference: "Biblioteca A3",
+    permitirDownload: false,
     public: true,
     active: true,
     finished: false,
@@ -119,18 +147,24 @@ const businessContents: LibraryContent[] = [
     type: "Vídeo",
     topic: "Gestão por Resultados",
     axis: "Negócio",
+    description: "Vídeo mockado sobre indicadores e a leitura de sinais importantes do negócio.",
+    format: "video",
     reference: "A3 Digital Academy",
+    permitirDownload: false,
     public: true,
     active: true,
     finished: false,
   },
   {
     id: "negocio-10",
-    name: "Da meta ao resultado",
-    type: "Artigo",
+    name: "Decisões que movem o negócio",
+    type: "Podcast",
     topic: "Gestão por Resultados",
     axis: "Negócio",
+    description: "Episódio mockado sobre transformar objetivos em resultados acompanháveis.",
+    format: "audio",
     reference: "A3 Digital",
+    permitirDownload: true,
     public: true,
     active: true,
     finished: false,
@@ -144,7 +178,10 @@ const otherAxisContents: LibraryContent[] = [
     type: "Artigo" as const,
     topic: index % 2 === 0 ? "Desenvolvimento profissional" : "Aprendizado contínuo",
     axis: ["Equipe", "Mercado", "Indivíduo"][index % 3] as LibraryContent["axis"],
+    description: "Conteúdo de exemplo da Biblioteca para cálculo do progresso geral.",
+    format: index % 3 === 0 ? "video" : "pdf",
     reference: "Biblioteca A3",
+    permitirDownload: false,
     public: true,
     active: true,
     finished: index < 5,
@@ -185,6 +222,10 @@ export function subscribeLibrary(listener: () => void) {
 export function getLibraryContents() {
   readStoredStatus();
   return contents;
+}
+
+export function getLibraryContent(id: string) {
+  return getLibraryContents().find((content) => content.id === id);
 }
 
 export function useLibraryContents() {

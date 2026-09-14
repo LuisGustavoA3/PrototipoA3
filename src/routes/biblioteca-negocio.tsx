@@ -1,15 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { BookOpen, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { TopBar } from "@/components/TopBar";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useSidebarOpen } from "@/hooks/use-sidebar";
 import {
@@ -45,7 +38,7 @@ function BibliotecaNegocio() {
   const contents = useLibraryContents();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
-  const [selectedContent, setSelectedContent] = useState<LibraryContent | null>(null);
+  const navigate = useNavigate({ from: "/biblioteca-negocio" });
 
   const activePublicContents = contents.filter((content) => content.public && content.active);
   const businessContents = activePublicContents.filter((content) => content.axis === "Negócio");
@@ -78,7 +71,7 @@ function BibliotecaNegocio() {
 
   const openContent = (content: LibraryContent) => {
     if (!content.finished) setLibraryContentFinished(content.id, true);
-    setSelectedContent({ ...content, finished: true });
+    navigate({ to: "/biblioteca/conteudo/$contentId", params: { contentId: content.id } });
   };
 
   const toggleFinished = (content: LibraryContent) => {
@@ -179,26 +172,6 @@ function BibliotecaNegocio() {
         </div>
       </main>
 
-      <Dialog open={selectedContent !== null} onOpenChange={(open) => !open && setSelectedContent(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <p className="label-caps text-xs text-primary">{selectedContent?.type}</p>
-            <DialogTitle>{selectedContent?.name}</DialogTitle>
-            <DialogDescription>{selectedContent?.topic}</DialogDescription>
-          </DialogHeader>
-          <div className="space-y-3 text-sm text-muted-foreground">
-            <p>
-              Este conteúdo faz parte do eixo Negócio e está disponível na Biblioteca para apoiar sua jornada de desenvolvimento.
-            </p>
-            <p>
-              Referência: <span className="text-foreground">{selectedContent?.reference}</span>
-            </p>
-            <p className="text-xs text-muted-foreground">
-              Ao abrir um conteúdo, ele é marcado automaticamente como finalizado.
-            </p>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

@@ -20,6 +20,7 @@ import { Route as MeuAssessmentRouteImport } from './routes/meu-assessment'
 import { Route as MinhasEstatisticasRouteImport } from './routes/minhas-estatisticas'
 import { Route as PlanoDeAcaoRouteImport } from './routes/plano-de-acao'
 import { Route as TreinamentosRouteImport } from './routes/treinamentos'
+import { Route as BibliotecaConteudoContentIdRouteImport } from './routes/biblioteca/conteudo/$contentId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -77,6 +78,12 @@ const TreinamentosRoute = TreinamentosRouteImport.update({
   path: '/treinamentos',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BibliotecaConteudoContentIdRoute =
+  BibliotecaConteudoContentIdRouteImport.update({
+    id: '/biblioteca/conteudo/$contentId',
+    path: '/biblioteca/conteudo/$contentId',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -90,6 +97,7 @@ export interface FileRoutesByFullPath {
   '/minhas-estatisticas': typeof MinhasEstatisticasRoute
   '/plano-de-acao': typeof PlanoDeAcaoRoute
   '/treinamentos': typeof TreinamentosRoute
+  '/biblioteca/conteudo/$contentId': typeof BibliotecaConteudoContentIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -103,6 +111,7 @@ export interface FileRoutesByTo {
   '/minhas-estatisticas': typeof MinhasEstatisticasRoute
   '/plano-de-acao': typeof PlanoDeAcaoRoute
   '/treinamentos': typeof TreinamentosRoute
+  '/biblioteca/conteudo/$contentId': typeof BibliotecaConteudoContentIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -117,6 +126,7 @@ export interface FileRoutesById {
   '/minhas-estatisticas': typeof MinhasEstatisticasRoute
   '/plano-de-acao': typeof PlanoDeAcaoRoute
   '/treinamentos': typeof TreinamentosRoute
+  '/biblioteca/conteudo/$contentId': typeof BibliotecaConteudoContentIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -132,6 +142,7 @@ export interface FileRouteTypes {
     | '/minhas-estatisticas'
     | '/plano-de-acao'
     | '/treinamentos'
+    | '/biblioteca/conteudo/$contentId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -145,6 +156,7 @@ export interface FileRouteTypes {
     | '/minhas-estatisticas'
     | '/plano-de-acao'
     | '/treinamentos'
+    | '/biblioteca/conteudo/$contentId'
   id:
     | '__root__'
     | '/'
@@ -158,6 +170,7 @@ export interface FileRouteTypes {
     | '/minhas-estatisticas'
     | '/plano-de-acao'
     | '/treinamentos'
+    | '/biblioteca/conteudo/$contentId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -172,6 +185,7 @@ export interface RootRouteChildren {
   MinhasEstatisticasRoute: typeof MinhasEstatisticasRoute
   PlanoDeAcaoRoute: typeof PlanoDeAcaoRoute
   TreinamentosRoute: typeof TreinamentosRoute
+  BibliotecaConteudoContentIdRoute: typeof BibliotecaConteudoContentIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -253,6 +267,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TreinamentosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/biblioteca/conteudo/$contentId': {
+      id: '/biblioteca/conteudo/$contentId'
+      path: '/biblioteca/conteudo/$contentId'
+      fullPath: '/biblioteca/conteudo/$contentId'
+      preLoaderRoute: typeof BibliotecaConteudoContentIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -268,6 +289,7 @@ const rootRouteChildren: RootRouteChildren = {
   MinhasEstatisticasRoute: MinhasEstatisticasRoute,
   PlanoDeAcaoRoute: PlanoDeAcaoRoute,
   TreinamentosRoute: TreinamentosRoute,
+  BibliotecaConteudoContentIdRoute: BibliotecaConteudoContentIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
