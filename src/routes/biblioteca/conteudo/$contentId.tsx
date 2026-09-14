@@ -153,7 +153,7 @@ function PDFViewer({ content }: { content: LibraryContent }) {
           <ViewerButton label="Aumentar zoom" onClick={() => setZoom(Math.min(160, zoom + 10))}><Plus /></ViewerButton>
           <ViewerButton label="Ajustar visualização" onClick={() => setZoom(100)}><Expand /></ViewerButton>
           <ViewerButton label="Tela cheia" onClick={toggleFullscreen}><Maximize /></ViewerButton>
-          {content.permitirDownload && <ViewerButton label="Baixar conteúdo" onClick={download}><Download /></ViewerButton>}
+          <ViewerButton label="Baixar conteúdo" onClick={download} disabled={!content.permitirDownload}><Download /></ViewerButton>
         </div>
       </div>
       <div className="flex min-h-[520px] items-start justify-center overflow-auto bg-muted/40 p-6 sm:p-10">
@@ -210,8 +210,8 @@ function MockMediaPlayer({ kind, duration }: { kind: "video" | "audio"; duration
   );
 }
 
-function ViewerButton({ label, onClick, children }: { label: string; onClick: () => void; children: React.ReactNode }) {
-  return <button type="button" aria-label={label} title={label} onClick={onClick} className="flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-primary"><span className="size-4">{children}</span></button>;
+function ViewerButton({ label, onClick, disabled = false, children }: { label: string; onClick: () => void; disabled?: boolean; children: React.ReactNode }) {
+  return <button type="button" aria-label={label} title={label} onClick={onClick} disabled={disabled} className="flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-primary"><span className="size-4">{children}</span></button>;
 }
 
 function formatTime(value: number) {
