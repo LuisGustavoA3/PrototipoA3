@@ -41,6 +41,8 @@ const checkpointSections: Section[] = [
   "Continuidade de desenvolvimento",
 ];
 
+const maxJourneyItemTitleLength = 50;
+
 export const Route = createFileRoute("/jornada-de-desenvolvimento")({
   head: () => ({
     meta: [
@@ -145,8 +147,12 @@ function JornadaDeDesenvolvimento() {
                 value={title}
                 onChange={(event) => setTitle(event.target.value)}
                 placeholder="Digite o título do item"
+                maxLength={maxJourneyItemTitleLength}
                 autoFocus
               />
+              <p className="mt-1 text-right text-xs text-muted-foreground">
+                {title.length}/{maxJourneyItemTitleLength}
+              </p>
             </div>
           </div>
           <DialogFooter>

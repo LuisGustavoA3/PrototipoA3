@@ -233,7 +233,7 @@ function ContentItem({
         type="button"
         onClick={onOpen}
         className={cn(
-          "min-w-0 flex-1 text-left transition-colors hover:text-primary",
+          "min-w-0 flex-1 cursor-pointer rounded-sm px-2 py-1 text-left transition-colors hover:bg-primary-soft/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
           content.finished && "text-foreground",
         )}
       >
