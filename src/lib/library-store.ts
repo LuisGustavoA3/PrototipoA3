@@ -349,6 +349,95 @@ const marketContents: LibraryContent[] = [
   },
 ];
 
+const individualContents: LibraryContent[] = [
+  {
+    id: "individuo-01",
+    name: "Autoconhecimento na prática",
+    type: "Artigo",
+    topic: "Autoconhecimento",
+    axis: "Indivíduo",
+    description: "Reflexões práticas para reconhecer padrões, valores e motivações pessoais.",
+    format: "pdf",
+    reference: "A3 Digital",
+    permitirDownload: true,
+    public: true,
+    active: true,
+    finished: true,
+    finishedAt: "2026-09-07T10:00:00",
+  },
+  {
+    id: "individuo-02",
+    name: "Diário de pontos fortes",
+    type: "Ferramenta",
+    topic: "Autoconhecimento",
+    axis: "Indivíduo",
+    description: "Ferramenta de exemplo para identificar talentos e situações em que você rende melhor.",
+    format: "pdf",
+    reference: "Biblioteca A3",
+    permitirDownload: false,
+    public: true,
+    active: true,
+    finished: false,
+  },
+  {
+    id: "individuo-03",
+    name: "Organização e foco no dia a dia",
+    type: "Vídeo",
+    topic: "Gestão do Tempo",
+    axis: "Indivíduo",
+    description: "Vídeo de exemplo com práticas para organizar prioridades e proteger o foco.",
+    format: "video",
+    reference: "A3 Digital Academy",
+    permitirDownload: false,
+    public: true,
+    active: true,
+    finished: false,
+  },
+  {
+    id: "individuo-04",
+    name: "Matriz de prioridades pessoais",
+    type: "Infográfico",
+    topic: "Gestão do Tempo",
+    axis: "Indivíduo",
+    description: "Resumo visual para apoiar decisões sobre urgência, importância e energia disponível.",
+    format: "pdf",
+    reference: "A3 Digital",
+    permitirDownload: true,
+    public: true,
+    active: true,
+    finished: true,
+    finishedAt: "2026-08-31T14:20:00",
+  },
+  {
+    id: "individuo-05",
+    name: "Resiliência em movimento",
+    type: "Podcast",
+    topic: "Resiliência e Aprendizado",
+    axis: "Indivíduo",
+    description: "Episódio de exemplo sobre adaptação, aprendizados e continuidade em momentos difíceis.",
+    format: "audio",
+    reference: "A3 Digital Academy",
+    permitirDownload: false,
+    public: true,
+    active: true,
+    finished: false,
+  },
+  {
+    id: "individuo-06",
+    name: "Aprender com experiências",
+    type: "Capítulo de livro",
+    topic: "Resiliência e Aprendizado",
+    axis: "Indivíduo",
+    description: "Uma leitura de exemplo sobre transformar experiências em desenvolvimento contínuo.",
+    format: "pdf",
+    reference: "Biblioteca A3",
+    permitirDownload: false,
+    public: true,
+    active: true,
+    finished: false,
+  },
+];
+
 const otherAxisContents: LibraryContent[] = [
   ...Array.from({ length: 30 }, (_, index) => ({
     id: `biblioteca-${index + 1}`,
@@ -367,7 +456,13 @@ const otherAxisContents: LibraryContent[] = [
 ];
 
 const STORAGE_KEY = "a3:library-content-status";
-let contents = [...businessContents, ...teamContents, ...marketContents, ...otherAxisContents];
+let contents = [
+  ...businessContents,
+  ...teamContents,
+  ...marketContents,
+  ...individualContents,
+  ...otherAxisContents,
+];
 let hasReadStoredStatus = false;
 const listeners = new Set<() => void>();
 

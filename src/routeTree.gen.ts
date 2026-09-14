@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdministracaoRouteImport } from './routes/administracao'
 import { Route as ArquivosCompartilhadosRouteImport } from './routes/arquivos-compartilhados'
 import { Route as BibliotecaEquipeRouteImport } from './routes/biblioteca-equipe'
+import { Route as BibliotecaIndividuoRouteImport } from './routes/biblioteca-individuo'
 import { Route as BibliotecaMercadoRouteImport } from './routes/biblioteca-mercado'
 import { Route as BibliotecaNegocioRouteImport } from './routes/biblioteca-negocio'
 import { Route as ConteudoRouteImport } from './routes/conteudo'
@@ -42,6 +43,11 @@ const ArquivosCompartilhadosRoute = ArquivosCompartilhadosRouteImport.update({
 const BibliotecaEquipeRoute = BibliotecaEquipeRouteImport.update({
   id: '/biblioteca-equipe',
   path: '/biblioteca-equipe',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BibliotecaIndividuoRoute = BibliotecaIndividuoRouteImport.update({
+  id: '/biblioteca-individuo',
+  path: '/biblioteca-individuo',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BibliotecaMercadoRoute = BibliotecaMercadoRouteImport.update({
@@ -102,6 +108,7 @@ export interface FileRoutesByFullPath {
   '/administracao': typeof AdministracaoRoute
   '/arquivos-compartilhados': typeof ArquivosCompartilhadosRoute
   '/biblioteca-equipe': typeof BibliotecaEquipeRoute
+  '/biblioteca-individuo': typeof BibliotecaIndividuoRoute
   '/biblioteca-mercado': typeof BibliotecaMercadoRoute
   '/biblioteca-negocio': typeof BibliotecaNegocioRoute
   '/conteudo': typeof ConteudoRoute
@@ -118,6 +125,7 @@ export interface FileRoutesByTo {
   '/administracao': typeof AdministracaoRoute
   '/arquivos-compartilhados': typeof ArquivosCompartilhadosRoute
   '/biblioteca-equipe': typeof BibliotecaEquipeRoute
+  '/biblioteca-individuo': typeof BibliotecaIndividuoRoute
   '/biblioteca-mercado': typeof BibliotecaMercadoRoute
   '/biblioteca-negocio': typeof BibliotecaNegocioRoute
   '/conteudo': typeof ConteudoRoute
@@ -135,6 +143,7 @@ export interface FileRoutesById {
   '/administracao': typeof AdministracaoRoute
   '/arquivos-compartilhados': typeof ArquivosCompartilhadosRoute
   '/biblioteca-equipe': typeof BibliotecaEquipeRoute
+  '/biblioteca-individuo': typeof BibliotecaIndividuoRoute
   '/biblioteca-mercado': typeof BibliotecaMercadoRoute
   '/biblioteca-negocio': typeof BibliotecaNegocioRoute
   '/conteudo': typeof ConteudoRoute
@@ -153,6 +162,7 @@ export interface FileRouteTypes {
     | '/administracao'
     | '/arquivos-compartilhados'
     | '/biblioteca-equipe'
+    | '/biblioteca-individuo'
     | '/biblioteca-mercado'
     | '/biblioteca-negocio'
     | '/conteudo'
@@ -169,6 +179,7 @@ export interface FileRouteTypes {
     | '/administracao'
     | '/arquivos-compartilhados'
     | '/biblioteca-equipe'
+    | '/biblioteca-individuo'
     | '/biblioteca-mercado'
     | '/biblioteca-negocio'
     | '/conteudo'
@@ -185,6 +196,7 @@ export interface FileRouteTypes {
     | '/administracao'
     | '/arquivos-compartilhados'
     | '/biblioteca-equipe'
+    | '/biblioteca-individuo'
     | '/biblioteca-mercado'
     | '/biblioteca-negocio'
     | '/conteudo'
@@ -202,6 +214,7 @@ export interface RootRouteChildren {
   AdministracaoRoute: typeof AdministracaoRoute
   ArquivosCompartilhadosRoute: typeof ArquivosCompartilhadosRoute
   BibliotecaEquipeRoute: typeof BibliotecaEquipeRoute
+  BibliotecaIndividuoRoute: typeof BibliotecaIndividuoRoute
   BibliotecaMercadoRoute: typeof BibliotecaMercadoRoute
   BibliotecaNegocioRoute: typeof BibliotecaNegocioRoute
   ConteudoRoute: typeof ConteudoRoute
@@ -242,6 +255,13 @@ declare module '@tanstack/react-router' {
       path: '/biblioteca-equipe'
       fullPath: '/biblioteca-equipe'
       preLoaderRoute: typeof BibliotecaEquipeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/biblioteca-individuo': {
+      id: '/biblioteca-individuo'
+      path: '/biblioteca-individuo'
+      fullPath: '/biblioteca-individuo'
+      preLoaderRoute: typeof BibliotecaIndividuoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/biblioteca-mercado': {
@@ -322,6 +342,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdministracaoRoute: AdministracaoRoute,
   ArquivosCompartilhadosRoute: ArquivosCompartilhadosRoute,
   BibliotecaEquipeRoute: BibliotecaEquipeRoute,
+  BibliotecaIndividuoRoute: BibliotecaIndividuoRoute,
   BibliotecaMercadoRoute: BibliotecaMercadoRoute,
   BibliotecaNegocioRoute: BibliotecaNegocioRoute,
   ConteudoRoute: ConteudoRoute,
