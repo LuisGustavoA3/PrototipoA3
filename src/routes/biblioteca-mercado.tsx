@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { BookOpen, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
@@ -38,6 +38,7 @@ function BibliotecaMercado() {
   const contents = useLibraryContents();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const navigate = useNavigate({ from: "/biblioteca-mercado" });
 
   const activePublicContents = contents.filter((content) => content.public && content.active);
   const marketContents = activePublicContents.filter((content) => content.axis === "Mercado");
@@ -70,6 +71,7 @@ function BibliotecaMercado() {
 
   const openContent = (content: LibraryContent) => {
     if (!content.finished) setLibraryContentFinished(content.id, true);
+    navigate({ to: "/biblioteca/conteudo/$contentId", params: { contentId: content.id } });
   };
 
   const toggleFinished = (content: LibraryContent) => {

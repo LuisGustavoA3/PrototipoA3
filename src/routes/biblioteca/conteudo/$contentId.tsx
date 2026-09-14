@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import {
   ChevronsLeft,
   ChevronLeft,
@@ -19,8 +19,8 @@ import { TopBar } from "@/components/TopBar";
 import { Button } from "@/components/ui/button";
 import { useSidebarOpen } from "@/hooks/use-sidebar";
 import {
+  getActivePublicContentsForAxis,
   getLibraryContent,
-  getLibraryContents,
   setLibraryContentFinished,
   useLibraryContents,
   type LibraryContent,
@@ -37,23 +37,29 @@ function ContentReaderPage() {
   const contents = useLibraryContents();
   const content = getLibraryContent(contentId);
   const navigate = useNavigate({ from: "/biblioteca/conteudo/$contentId" });
-  const businessContents = useMemo(
-    () => contents.filter((item) => item.axis === "Negócio" && item.public && item.active),
-    [contents],
+
+  const axisContents = useMemo(
+    () => (content ? getActivePublicContentsForAxis(content.axis) : []),
+    [content, contents],
   );
-  const currentIndex = businessContents.findIndex((item) => item.id === contentId);
+  const currentIndex = axisContents.findIndex((item) => item.id === contentId);
 
   useEffect(() => {
     if (content && !content.finished) setLibraryContentFinished(content.id, true);
   }, [content]);
 
-  if (!content) {
-    return <ReaderShell sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar}>
-      <div className="rounded-md border border-dashed border-border bg-card p-10 text-center text-sm text-muted-foreground">
-        Conteúdo não encontrado.
-      </div>
-    </ReaderShell>;
+  if (!content || !content.public || !content.active) {
+    return (
+      <ReaderShell sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar}>
+        <div className="rounded-md border border-dashed border-border bg-card p-10 text-center text-sm text-muted-foreground">
+          Conteúdo não encontrado.
+        </div>
+      </ReaderShell>
+    );
   }
+
+  const previousContent = currentIndex > 0 ? axisContents[currentIndex - 1] : undefined;
+  const nextContent = currentIndex >= 0 && currentIndex < axisContents.length - 1 ? axisContents[currentIndex + 1] : undefined;
 
   const goTo = (item: LibraryContent | undefined) => {
     if (item) navigate({ params: { contentId: item.id } });
@@ -64,17 +70,22 @@ function ContentReaderPage() {
       <div className="space-y-5">
         <header>
           <p className="label-caps text-xs text-primary">{content.type}</p>
-          <h1 className="mt-1 text-2xl text-foreground">{content.name}</h1>
-          <p className="mt-2 max-w-3xl text-sm text-muted-foreground">{content.description}</p>
+          <h1 className="mt-1 text-2xl text-foreground">
+            {content.type} - {content.name}
+          </h1>
+          <p className="mt-2 max-w-3xl text-sm text-muted-foreground">{content.topic}</p>
+          {content.description ? (
+            <p className="mt-2 max-w-3xl text-sm text-muted-foreground">{content.description}</p>
+          ) : null}
         </header>
 
         <ContentViewer content={content} />
 
         <nav className="flex flex-col gap-3 border-t border-border pt-5 sm:flex-row sm:items-center sm:justify-between">
-          <Button variant="outline" disabled={currentIndex <= 0} onClick={() => goTo(businessContents[currentIndex - 1])}>
+          <Button variant="outline" disabled={!previousContent} onClick={() => goTo(previousContent)}>
             <ChevronLeft className="size-4" /> Anterior
           </Button>
-          <Button variant="outline" disabled={currentIndex < 0 || currentIndex >= businessContents.length - 1} onClick={() => goTo(businessContents[currentIndex + 1])}>
+          <Button variant="outline" disabled={!nextContent} onClick={() => goTo(nextContent)}>
             Próximo <ChevronRight className="size-4" />
           </Button>
         </nav>

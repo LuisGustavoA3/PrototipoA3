@@ -8,12 +8,14 @@ export type LibraryContentType =
   | "Ferramenta"
   | "Podcast";
 
+export type LibraryAxis = "Negócio" | "Equipe" | "Mercado" | "Indivíduo";
+
 export type LibraryContent = {
   id: string;
   name: string;
   type: LibraryContentType;
   topic: string;
-  axis: "Negócio" | "Equipe" | "Mercado" | "Indivíduo";
+  axis: LibraryAxis;
   description: string;
   format: "pdf" | "video" | "audio";
   reference: string;
@@ -499,6 +501,12 @@ export function getLibraryContents() {
 
 export function getLibraryContent(id: string) {
   return getLibraryContents().find((content) => content.id === id);
+}
+
+export function getActivePublicContentsForAxis(axis: LibraryAxis) {
+  return getLibraryContents().filter(
+    (content) => content.axis === axis && content.public && content.active,
+  );
 }
 
 export function useLibraryContents() {

@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { BookOpen, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
@@ -38,6 +38,7 @@ function BibliotecaIndividuo() {
   const contents = useLibraryContents();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const navigate = useNavigate({ from: "/biblioteca-individuo" });
 
   const activePublicContents = contents.filter((content) => content.public && content.active);
   const individualContents = activePublicContents.filter((content) => content.axis === "Indivíduo");
@@ -70,6 +71,7 @@ function BibliotecaIndividuo() {
 
   const openContent = (content: LibraryContent) => {
     if (!content.finished) setLibraryContentFinished(content.id, true);
+    navigate({ to: "/biblioteca/conteudo/$contentId", params: { contentId: content.id } });
   };
 
   const toggleFinished = (content: LibraryContent) => {
