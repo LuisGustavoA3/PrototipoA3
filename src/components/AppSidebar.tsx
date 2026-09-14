@@ -155,7 +155,9 @@ export function AppSidebar({ open }: { open: boolean }) {
                         (child.label === "Arquivos Compartilhados" &&
                           location.pathname === "/arquivos-compartilhados") ||
                         (child.label === "Plano de Ação (PDI)" &&
-                          location.pathname === "/plano-de-acao");
+                          location.pathname === "/plano-de-acao") ||
+                        (child.label === "Eixo: Negócio" &&
+                          location.pathname === "/biblioteca-negocio");
                       const childClassName = cn(
                         "label-caps flex w-full items-center gap-2 px-4 py-2.5 text-left text-[11px] transition-colors",
                         childActive
@@ -168,7 +170,8 @@ export function AppSidebar({ open }: { open: boolean }) {
                           child.label === "Meu Assessment" ||
                           child.label === "Jornada de Desenvolvimento" ||
                           child.label === "Arquivos Compartilhados" ||
-                          child.label === "Plano de Ação (PDI)"
+                          child.label === "Plano de Ação (PDI)" ||
+                          child.label === "Eixo: Negócio"
                       ) {
                         return (
                           <Link
@@ -182,7 +185,9 @@ export function AppSidebar({ open }: { open: boolean }) {
                                       ? "/jornada-de-desenvolvimento"
                                       : child.label === "Arquivos Compartilhados"
                                         ? "/arquivos-compartilhados"
-                                        : "/plano-de-acao"
+                                        : child.label === "Plano de Ação (PDI)"
+                                          ? "/plano-de-acao"
+                                          : "/biblioteca-negocio"
                             }
                             onClick={() => setActive(child.label)}
                             className={childClassName}
