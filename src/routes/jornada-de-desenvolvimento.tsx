@@ -13,21 +13,14 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useSidebarOpen } from "@/hooks/use-sidebar";
+import {
+  addJourneyItem,
+  type EditableSection,
+  type JourneyItem,
+  type Section,
+  useJourneyItems,
+} from "@/lib/journey-store";
 import { cn } from "@/lib/utils";
-
-type EditableSection =
-  | "Entregáveis"
-  | "Prioridades de desenvolvimento"
-  | "Suporte ao desenvolvimento"
-  | "Obstáculos ao desenvolvimento";
-
-type Section = EditableSection | "Resultados e progressos" | "Continuidade de desenvolvimento";
-
-type JourneyItem = {
-  id: number;
-  title: string;
-  updatedAt: string;
-};
 
 const startingPointSections: EditableSection[] = [
   "Entregáveis",
@@ -58,14 +51,7 @@ export const Route = createFileRoute("/jornada-de-desenvolvimento")({
 
 function JornadaDeDesenvolvimento() {
   const [sidebarOpen, toggleSidebar] = useSidebarOpen();
-  const [items, setItems] = useState<Record<Section, JourneyItem[]>>({
-    Entregáveis: [],
-    "Prioridades de desenvolvimento": [],
-    "Suporte ao desenvolvimento": [],
-    "Obstáculos ao desenvolvimento": [],
-    "Resultados e progressos": [],
-    "Continuidade de desenvolvimento": [],
-  });
+  const items = useJourneyItems();
   const [selectedSection, setSelectedSection] = useState<EditableSection | null>(null);
   const [title, setTitle] = useState("");
 
@@ -82,19 +68,7 @@ function JornadaDeDesenvolvimento() {
   const createItem = () => {
     if (!selectedSection || !title.trim()) return;
 
-    const newItem: JourneyItem = {
-      id: Date.now(),
-      title: title.trim(),
-      updatedAt: new Intl.DateTimeFormat("pt-BR", {
-        dateStyle: "short",
-        timeStyle: "short",
-      }).format(new Date()),
-    };
-
-    setItems((currentItems) => ({
-      ...currentItems,
-      [selectedSection]: [...currentItems[selectedSection], newItem],
-    }));
+    addJourneyItem(selectedSection, title);
     closeNewItem();
   };
 

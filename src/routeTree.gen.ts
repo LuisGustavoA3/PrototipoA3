@@ -18,6 +18,7 @@ import { Route as BibliotecaMercadoRouteImport } from './routes/biblioteca-merca
 import { Route as BibliotecaNegocioRouteImport } from './routes/biblioteca-negocio'
 import { Route as ConteudoRouteImport } from './routes/conteudo'
 import { Route as HubRouteImport } from './routes/hub'
+import { Route as InformacoesPessoaisRouteImport } from './routes/informacoes-pessoais'
 import { Route as JornadaDeDesenvolvimentoRouteImport } from './routes/jornada-de-desenvolvimento'
 import { Route as MeuAssessmentRouteImport } from './routes/meu-assessment'
 import { Route as MinhasEstatisticasRouteImport } from './routes/minhas-estatisticas'
@@ -70,6 +71,11 @@ const HubRoute = HubRouteImport.update({
   path: '/hub',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InformacoesPessoaisRoute = InformacoesPessoaisRouteImport.update({
+  id: '/informacoes-pessoais',
+  path: '/informacoes-pessoais',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const JornadaDeDesenvolvimentoRoute =
   JornadaDeDesenvolvimentoRouteImport.update({
     id: '/jornada-de-desenvolvimento',
@@ -113,6 +119,7 @@ export interface FileRoutesByFullPath {
   '/biblioteca-negocio': typeof BibliotecaNegocioRoute
   '/conteudo': typeof ConteudoRoute
   '/hub': typeof HubRoute
+  '/informacoes-pessoais': typeof InformacoesPessoaisRoute
   '/jornada-de-desenvolvimento': typeof JornadaDeDesenvolvimentoRoute
   '/meu-assessment': typeof MeuAssessmentRoute
   '/minhas-estatisticas': typeof MinhasEstatisticasRoute
@@ -130,6 +137,7 @@ export interface FileRoutesByTo {
   '/biblioteca-negocio': typeof BibliotecaNegocioRoute
   '/conteudo': typeof ConteudoRoute
   '/hub': typeof HubRoute
+  '/informacoes-pessoais': typeof InformacoesPessoaisRoute
   '/jornada-de-desenvolvimento': typeof JornadaDeDesenvolvimentoRoute
   '/meu-assessment': typeof MeuAssessmentRoute
   '/minhas-estatisticas': typeof MinhasEstatisticasRoute
@@ -148,6 +156,7 @@ export interface FileRoutesById {
   '/biblioteca-negocio': typeof BibliotecaNegocioRoute
   '/conteudo': typeof ConteudoRoute
   '/hub': typeof HubRoute
+  '/informacoes-pessoais': typeof InformacoesPessoaisRoute
   '/jornada-de-desenvolvimento': typeof JornadaDeDesenvolvimentoRoute
   '/meu-assessment': typeof MeuAssessmentRoute
   '/minhas-estatisticas': typeof MinhasEstatisticasRoute
@@ -167,6 +176,7 @@ export interface FileRouteTypes {
     | '/biblioteca-negocio'
     | '/conteudo'
     | '/hub'
+    | '/informacoes-pessoais'
     | '/jornada-de-desenvolvimento'
     | '/meu-assessment'
     | '/minhas-estatisticas'
@@ -184,6 +194,7 @@ export interface FileRouteTypes {
     | '/biblioteca-negocio'
     | '/conteudo'
     | '/hub'
+    | '/informacoes-pessoais'
     | '/jornada-de-desenvolvimento'
     | '/meu-assessment'
     | '/minhas-estatisticas'
@@ -201,6 +212,7 @@ export interface FileRouteTypes {
     | '/biblioteca-negocio'
     | '/conteudo'
     | '/hub'
+    | '/informacoes-pessoais'
     | '/jornada-de-desenvolvimento'
     | '/meu-assessment'
     | '/minhas-estatisticas'
@@ -219,6 +231,7 @@ export interface RootRouteChildren {
   BibliotecaNegocioRoute: typeof BibliotecaNegocioRoute
   ConteudoRoute: typeof ConteudoRoute
   HubRoute: typeof HubRoute
+  InformacoesPessoaisRoute: typeof InformacoesPessoaisRoute
   JornadaDeDesenvolvimentoRoute: typeof JornadaDeDesenvolvimentoRoute
   MeuAssessmentRoute: typeof MeuAssessmentRoute
   MinhasEstatisticasRoute: typeof MinhasEstatisticasRoute
@@ -292,6 +305,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HubRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/informacoes-pessoais': {
+      id: '/informacoes-pessoais'
+      path: '/informacoes-pessoais'
+      fullPath: '/informacoes-pessoais'
+      preLoaderRoute: typeof InformacoesPessoaisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/jornada-de-desenvolvimento': {
       id: '/jornada-de-desenvolvimento'
       path: '/jornada-de-desenvolvimento'
@@ -347,6 +367,7 @@ const rootRouteChildren: RootRouteChildren = {
   BibliotecaNegocioRoute: BibliotecaNegocioRoute,
   ConteudoRoute: ConteudoRoute,
   HubRoute: HubRoute,
+  InformacoesPessoaisRoute: InformacoesPessoaisRoute,
   JornadaDeDesenvolvimentoRoute: JornadaDeDesenvolvimentoRoute,
   MeuAssessmentRoute: MeuAssessmentRoute,
   MinhasEstatisticasRoute: MinhasEstatisticasRoute,
