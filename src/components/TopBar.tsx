@@ -175,7 +175,9 @@ export function TopBar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
             >
               <BarChart3 className="size-4 text-primary" /> Minhas estatísticas
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              onSelect={() => navigate({ to: "/informacoes-pessoais" })}
+            >
               <IdCard className="size-4 text-primary" /> Informações pessoais
             </DropdownMenuItem>
             <DropdownMenuItem>
