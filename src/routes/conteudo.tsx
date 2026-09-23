@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import {
   BookOpen,
   CheckCircle2,
@@ -12,49 +12,17 @@ import { AppSidebar } from "@/components/AppSidebar";
 import { TopBar } from "@/components/TopBar";
 import { useSidebarOpen } from "@/hooks/use-sidebar";
 import { cn } from "@/lib/utils";
+import {
+  type LibraryContent,
+  useLibraryContents,
+} from "@/lib/library-store";
+
 
 type Axis = "Todos" | "Indivíduo" | "Equipe" | "Negócio" | "Mercado";
 
 const axes: Axis[] = ["Todos", "Indivíduo", "Equipe", "Negócio", "Mercado"];
 
-const contents = [
-  {
-    title: "Como o líder pode ajudar os funcionários a combater o status quo",
-    type: "Artigo",
-    axis: "Equipe" as Axis,
-    duration: "8 min de leitura",
-    icon: FileText,
-    description:
-      "Práticas para criar uma cultura de inovação e manter o time engajado.",
-  },
-  {
-    title: "Comunicação estratégica para momentos de mudança",
-    type: "Vídeo",
-    axis: "Indivíduo" as Axis,
-    duration: "12 min",
-    icon: PlayCircle,
-    description:
-      "Aprenda a organizar mensagens claras e conduzir conversas importantes.",
-  },
-  {
-    title: "Visão de negócio: decisões que geram impacto",
-    type: "Artigo",
-    axis: "Negócio" as Axis,
-    duration: "10 min de leitura",
-    icon: FileText,
-    description:
-      "Uma leitura prática para conectar prioridades, pessoas e resultados.",
-  },
-  {
-    title: "Inovação e criatividade no mercado atual",
-    type: "Podcast",
-    axis: "Mercado" as Axis,
-    duration: "22 min",
-    icon: BookOpen,
-    description:
-      "Ideias para observar oportunidades e transformar repertório em ação.",
-  },
-];
+
 
 export const Route = createFileRoute("/conteudo")({
   head: () => ({
@@ -75,15 +43,26 @@ function Conteudo() {
   const [selectedAxis, setSelectedAxis] = useState<Axis>("Todos");
   const [search, setSearch] = useState("");
 
-  const filteredContents = contents.filter((content) => {
-    const matchesAxis =
-      selectedAxis === "Todos" || content.axis === selectedAxis;
-    const query = search.toLowerCase();
-    return (
-      matchesAxis &&
-      `${content.title} ${content.description}`.toLowerCase().includes(query)
-    );
-  });
+  const navigate = useNavigate({ from: "/conteudo" });
+  const contents = useLibraryContents();
+const activePublicContents = contents.filter(
+  (content) => content.public && content.active,
+);
+
+const filteredContents = activePublicContents.filter((content) => {
+  const matchesAxis =
+    selectedAxis === "Todos" || content.axis === selectedAxis;
+
+  const query = search.toLowerCase().trim();
+
+  return (
+    matchesAxis &&
+    `${content.name} ${content.description} ${content.topic}`
+      .toLowerCase()
+      .includes(query)
+  );
+});
+
 
   return (
     <div className="h-screen w-full overflow-hidden bg-background">
@@ -177,12 +156,27 @@ function Conteudo() {
             {filteredContents.length > 0 ? (
               <div className="grid gap-4 md:grid-cols-2">
                 {filteredContents.map((content) => (
-                  <article
-                    key={content.title}
-                    className="rounded-md border border-border bg-card p-5 shadow-[var(--shadow-card)] transition-transform hover:-translate-y-0.5"
-                  >
+<article
+  key={content.id}
+  onClick={() =>
+    navigate({
+      to: "/biblioteca/conteudo/$contentId",
+      params: { contentId: content.id },
+    })
+  }
+  className="cursor-pointer rounded-md border border-border bg-card p-5 shadow-[var(--shadow-card)] transition-all hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-md"
+>
+  
                     <div className="flex items-start justify-between gap-4">
-                      <content.icon className="size-9 shrink-0 text-primary" />
+                      {content.format === "pdf" && (
+  <FileText className="size-9 shrink-0 text-primary" />
+)}
+{content.format === "video" && (
+  <PlayCircle className="size-9 shrink-0 text-primary" />
+)}
+{content.format === "audio" && (
+  <BookOpen className="size-9 shrink-0 text-primary" />
+)}
                       <span className="label-caps rounded bg-primary-soft/60 px-2 py-1 text-[10px] text-accent-foreground">
                         {content.axis}
                       </span>
@@ -191,15 +185,11 @@ function Conteudo() {
                       {content.type}
                     </p>
                     <h3 className="mt-2 text-lg leading-tight text-foreground">
-                      {content.title}
+                      {content.name}
                     </h3>
                     <p className="mt-3 text-sm leading-5 text-muted-foreground">
                       {content.description}
                     </p>
-                    <div className="mt-5 flex items-center gap-2 text-xs text-muted-foreground">
-                      <Clock3 className="size-4 text-primary" />
-                      {content.duration}
-                    </div>
                   </article>
                 ))}
               </div>
@@ -212,5 +202,7 @@ function Conteudo() {
         </div>
       </main>
     </div>
+    
   );
+  
 }
