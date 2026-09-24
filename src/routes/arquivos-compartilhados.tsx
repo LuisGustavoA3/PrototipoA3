@@ -225,9 +225,9 @@ function ArquivosCompartilhados() {
                   type="button"
                   onClick={() => setFilter(item.value)}
                   className={cn(
-                    "label-caps rounded-md px-4 py-2 text-xs transition-colors",
+                    "label-caps rounded-md px-4 py-2 text-xs transition-colors cursor-pointer",
                     filter === item.value
-                      ? "bg-primary text-primary-foreground"
+                      ? "bg-primary text-primary-foreground cursor-pointer"
                       : "border border-border bg-card text-foreground hover:bg-accent",
                   )}
                 >
@@ -390,7 +390,7 @@ function FileCard({
           type="button"
           onClick={() => onDownload(file)}
           aria-label={`Baixar ${file.name}`}
-          className="flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-primary"
+          className="flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-primary cursor-pointer"
         >
           <Download className="size-4" />
         </button>
@@ -399,7 +399,7 @@ function FileCard({
             type="button"
             onClick={() => onDelete(file.id)}
             aria-label={`Excluir ${file.name}`}
-            className="flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+            className="flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive cursor-pointer"
           >
             <Trash2 className="size-4" />
           </button>
