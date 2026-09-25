@@ -58,7 +58,8 @@ const initialFiles: SharedFile[] = [
   {
     id: "ARQ-003",
     name: "Feedback de liderança.pdf",
-    description: "Material de apoio para a próxima conversa de desenvolvimento.",
+    description:
+      "Material de apoio para a próxima conversa de desenvolvimento.",
     author: "Juliano Ribeiro",
     date: "2026-09-04",
     dateLabel: "04/09/2026",
@@ -78,7 +79,8 @@ export const Route = createFileRoute("/arquivos-compartilhados")({
       { title: "Arquivos Compartilhados | A3 Digital" },
       {
         name: "description",
-        content: "Compartilhe e acompanhe arquivos entre mentor e mentorado na A3 Digital.",
+        content:
+          "Compartilhe e acompanhe arquivos entre mentor e mentorado na A3 Digital.",
       },
     ],
   }),
@@ -88,6 +90,7 @@ export const Route = createFileRoute("/arquivos-compartilhados")({
 function ArquivosCompartilhados() {
   const [sidebarOpen, toggleSidebar] = useSidebarOpen();
   const [files, setFiles] = useState(initialFiles);
+  const [fileToDelete, setFileToDelete] = useState<string | null>(null);
   const [filter, setFilter] = useState<FileFilter>("all");
   const [search, setSearch] = useState("");
   const [uploadOpen, setUploadOpen] = useState(false);
@@ -96,7 +99,15 @@ function ArquivosCompartilhados() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const confirmDelete = () => {
+    if (!fileToDelete) return;
 
+    setFiles((currentFiles) =>
+      currentFiles.filter((item) => item.id !== fileToDelete),
+    );
+
+    setFileToDelete(null);
+  };
   const visibleFiles = useMemo(() => {
     const query = search.toLowerCase().trim();
 
@@ -109,17 +120,6 @@ function ArquivosCompartilhados() {
       )
       .sort((first, second) => second.date.localeCompare(first.date));
   }, [files, filter, search]);
-
-  const groupedFiles = useMemo(() => {
-    const groups = new Map<string, SharedFile[]>();
-
-    visibleFiles.forEach((file) => {
-      const groupKey = filter === "all" ? file.date : `${file.author} - ${file.dateLabel}`;
-      groups.set(groupKey, [...(groups.get(groupKey) ?? []), file]);
-    });
-
-    return [...groups.entries()];
-  }, [filter, visibleFiles]);
 
   const resetUpload = () => {
     setUploadOpen(false);
@@ -154,7 +154,9 @@ function ArquivosCompartilhados() {
   };
 
   const downloadFile = (file: SharedFile) => {
-    const blob = new Blob([`Arquivo demonstrativo: ${file.name}`], { type: "text/plain" });
+    const blob = new Blob([`Arquivo demonstrativo: ${file.name}`], {
+      type: "text/plain",
+    });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
@@ -175,19 +177,27 @@ function ArquivosCompartilhados() {
       >
         <div className="space-y-6 p-6">
           <header>
-            <p className="label-caps text-xs text-primary">Meu desenvolvimento</p>
-            <h1 className="mt-1 text-2xl text-foreground">Arquivos Compartilhados</h1>
+            <p className="label-caps text-xs text-primary">
+              Meu desenvolvimento
+            </p>
+            <h1 className="mt-1 text-2xl text-foreground">
+              Arquivos Compartilhados
+            </h1>
             <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-              Compartilhe documentos e mantenha os materiais da sua jornada organizados.
+              Compartilhe documentos e mantenha os materiais da sua jornada
+              organizados.
             </p>
           </header>
 
           <section className="rounded-md border border-border bg-card p-6 shadow-[var(--shadow-card)]">
             <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h2 className="label-caps text-sm text-foreground">Enviar um documento</h2>
+                <h2 className="label-caps text-sm text-foreground">
+                  Enviar um documento
+                </h2>
                 <p className="mt-2 text-sm text-muted-foreground">
-                  Compartilhe um material com seu mentor para manter o acompanhamento atualizado.
+                  Compartilhe um material com seu mentor para manter o
+                  acompanhamento atualizado.
                 </p>
               </div>
               <Button onClick={() => setUploadOpen(true)}>
@@ -200,9 +210,12 @@ function ArquivosCompartilhados() {
           <section className="space-y-4">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <div>
-                <h2 className="label-caps text-sm text-foreground">Arquivos compartilhados</h2>
+                <h2 className="label-caps text-sm text-foreground">
+                  Arquivos compartilhados
+                </h2>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  {visibleFiles.length} arquivo{visibleFiles.length === 1 ? "" : "s"} encontrado
+                  {visibleFiles.length} arquivo
+                  {visibleFiles.length === 1 ? "" : "s"} encontrado
                   {visibleFiles.length === 1 ? "" : "s"}
                 </p>
               </div>
@@ -211,7 +224,7 @@ function ArquivosCompartilhados() {
                 <Input
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
-                  placeholder="Pesquisar por ID, nome, autor ou data"
+                  placeholder="Pesquisar por nome, autor ou data"
                   aria-label="Pesquisar arquivos"
                   className="pl-9"
                 />
@@ -236,43 +249,82 @@ function ArquivosCompartilhados() {
               ))}
             </div>
 
-            {groupedFiles.length === 0 ? (
+            {visibleFiles.length === 0 ? (
               <div className="rounded-md border border-dashed border-border bg-card px-6 py-12 text-center text-sm text-muted-foreground">
                 Nenhum arquivo encontrado.
               </div>
             ) : (
-              <div className="space-y-5">
-                {groupedFiles.map(([group, groupFiles]) => (
-                  <div key={group}>
-                    <div className="mb-2 flex items-center gap-2">
-                      {filter === "all" ? (
-                        <CalendarDays className="size-4 text-primary" />
-                      ) : (
-                        <FileText className="size-4 text-primary" />
-                      )}
-                      <h3 className="label-caps text-xs text-muted-foreground">
-                        
-                        {filter === "all" ? groupFiles[0]?.dateLabel ?? group : group}
-                      </h3>
-                    </div>
-                    <div className="space-y-2">
-                      {groupFiles.map((file) => (
-                        <FileCard
-                          key={file.id}
-                          file={file}
-                          canDelete={file.author === currentUser}
-                          onDownload={downloadFile}
-                          onDelete={(id) =>
-                            setFiles((currentFiles) => currentFiles.filter((item) => item.id !== id))
-                          }
-                        />
-                      ))}
-                    </div>
-                  </div>
+              <div className="space-y-2">
+                {visibleFiles.map((file) => (
+                  <FileCard
+                    key={file.id}
+                    file={file}
+                    canDelete={file.author === currentUser}
+                    onDownload={downloadFile}
+                    onDelete={(id) => {
+                      setFileToDelete(id);
+
+                      if (fileToDelete) {
+                        setFiles((currentFiles) =>
+                          currentFiles.filter((item) => item.id !== id),
+                        );
+                      }
+                    }}
+                  />
                 ))}
               </div>
             )}
           </section>
+          {fileToDelete && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+              <div
+                role="alertdialog"
+                aria-modal="true"
+                aria-labelledby="delete-dialog-title"
+                aria-describedby="delete-dialog-description"
+                className="w-full max-w-md rounded-xl border border-border bg-card p-6 shadow-xl"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-700">
+                    <Trash2 className="h-6 w-6" />
+                  </div>
+
+                  <h2
+                    id="delete-dialog-title"
+                    className="text-lg font-semibold text-foreground"
+                  >
+                    Excluir arquivo?
+                  </h2>
+                </div>
+
+                <p
+                  id="delete-dialog-description"
+                  className="mt-4 text-sm text-muted-foreground"
+                >
+                  Tem certeza de que deseja excluir este item? Essa ação não
+                  poderá ser desfeita.
+                </p>
+
+                <div className="mt-6 flex justify-end gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setFileToDelete(null)}
+                    className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+                  >
+                    Não
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={confirmDelete}
+                    className="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-red-700"
+                  >
+                    Sim, excluir
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </main>
 
@@ -283,7 +335,10 @@ function ArquivosCompartilhados() {
           </DialogHeader>
           <div className="space-y-4 py-2">
             <div>
-              <label htmlFor="file-title" className="label-caps mb-2 block text-xs text-muted-foreground">
+              <label
+                htmlFor="file-title"
+                className="label-caps mb-2 block text-xs text-muted-foreground"
+              >
                 Título
               </label>
               <Input
@@ -294,7 +349,10 @@ function ArquivosCompartilhados() {
               />
             </div>
             <div>
-              <label htmlFor="file-description" className="label-caps mb-2 block text-xs text-muted-foreground">
+              <label
+                htmlFor="file-description"
+                className="label-caps mb-2 block text-xs text-muted-foreground"
+              >
                 Descrição
               </label>
               <textarea
@@ -306,7 +364,9 @@ function ArquivosCompartilhados() {
               />
             </div>
             <div>
-              <span className="label-caps mb-2 block text-xs text-muted-foreground">Arquivo</span>
+              <span className="label-caps mb-2 block text-xs text-muted-foreground">
+                Arquivo
+              </span>
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
@@ -329,10 +389,13 @@ function ArquivosCompartilhados() {
               >
                 <UploadCloud className="size-8 text-primary" />
                 <span className="mt-2 text-sm font-medium text-foreground">
-                  {selectedFile ? selectedFile.name : "Selecione ou arraste um arquivo aqui"}
+                  {selectedFile
+                    ? selectedFile.name
+                    : "Selecione ou arraste um arquivo aqui"}
                 </span>
                 <span className="mt-1 text-xs text-muted-foreground">
-                  Formatos aceitos: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, JPG e PNG. Máximo de 10 MB.
+                  Formatos aceitos: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, JPG e
+                  PNG. Máximo de 10 MB.
                 </span>
               </button>
               <input
@@ -348,7 +411,11 @@ function ArquivosCompartilhados() {
             <Button type="button" variant="outline" onClick={resetUpload}>
               Cancelar
             </Button>
-            <Button type="button" onClick={sendFile} disabled={!selectedFile || !title.trim()}>
+            <Button
+              type="button"
+              onClick={sendFile}
+              disabled={!selectedFile || !title.trim()}
+            >
               Enviar
             </Button>
           </DialogFooter>
@@ -376,13 +443,15 @@ function FileCard({
           <FileText className="size-5 text-primary" />
         </div>
         <div className="min-w-0">
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            <h4 className="truncate text-sm font-medium text-foreground">{file.name}</h4>
-            <span className="font-mono text-[10px] text-muted-foreground">{file.id}</span>
-          </div>
-          <p className="mt-1 text-xs text-muted-foreground">{file.description}</p>
+          <h4 className="truncate text-sm font-medium text-foreground">
+            {file.name}
+          </h4>
+          <p className="mt-1 text-xs text-muted-foreground">
+            {file.description}
+          </p>
           <p className="mt-2 text-xs text-muted-foreground">
-            Autor: <span className="text-foreground">{file.author}</span> · {file.dateLabel}
+            Autor: <span className="text-foreground">{file.author}</span> ·{" "}
+            {file.dateLabel}
           </p>
         </div>
       </div>
