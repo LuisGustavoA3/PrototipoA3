@@ -1,11 +1,7 @@
 import { useSyncExternalStore } from "react";
 
 export type ActionStatus =
-  | "Concluído"
-  | "Em andamento"
-  | "Não iniciado"
-  | "Parado"
-  | "Cancelado";
+  "Concluído" | "Em andamento" | "Não iniciado" | "Parado" | "Cancelado";
 
 export type PdiAction = {
   id: string;
@@ -25,8 +21,7 @@ export function isValidPdiDate(value: string) {
 
   const date = new Date(`${value}T00:00:00Z`);
   return (
-    !Number.isNaN(date.getTime()) &&
-    date.toISOString().slice(0, 10) === value
+    !Number.isNaN(date.getTime()) && date.toISOString().slice(0, 10) === value
   );
 }
 
@@ -70,6 +65,7 @@ const initialActions: PdiAction[] = [
 ];
 
 let actions = initialActions;
+let hiddenDashboardActionIds: string[] = [];
 const listeners = new Set<() => void>();
 
 function notify() {
@@ -116,5 +112,25 @@ export function updatePdiAction(id: string, changes: Partial<PdiAction>) {
   actions = actions.map((action) =>
     action.id === id ? { ...action, ...changes } : action,
   );
+  notify();
+}
+
+export function getHiddenDashboardActionIds() {
+  return hiddenDashboardActionIds;
+}
+
+export function useHiddenDashboardActionIds() {
+  return useSyncExternalStore(
+    subscribePdi,
+    getHiddenDashboardActionIds,
+    getHiddenDashboardActionIds,
+  );
+}
+
+export function hidePdiActionFromDashboard(id: string) {
+  if (hiddenDashboardActionIds.includes(id)) return;
+
+  hiddenDashboardActionIds = [...hiddenDashboardActionIds, id];
+
   notify();
 }

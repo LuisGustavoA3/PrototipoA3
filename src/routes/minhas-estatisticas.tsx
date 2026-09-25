@@ -52,7 +52,7 @@ const dataByAxis: Record<
   { subject: string; value: number; fullMark: number }[]
 > = {
   individuo: [
-    { subject: "Autoconhecimento", value: 85, fullMark: 100 },
+    { subject: "Autoconhecimento", value: 100, fullMark: 100 },
     { subject: "Gestão do Tempo", value: 70, fullMark: 100 },
     { subject: "Planejamento e Organização", value: 78, fullMark: 100 },
     { subject: "Proatividade", value: 92, fullMark: 100 },

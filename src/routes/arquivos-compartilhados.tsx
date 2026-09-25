@@ -251,7 +251,8 @@ function ArquivosCompartilhados() {
                         <FileText className="size-4 text-primary" />
                       )}
                       <h3 className="label-caps text-xs text-muted-foreground">
-                        {filter === "all" ? groupFiles[0].dateLabel : group}
+                        
+                        {filter === "all" ? groupFiles[0]?.dateLabel ?? group : group}
                       </h3>
                     </div>
                     <div className="space-y-2">
