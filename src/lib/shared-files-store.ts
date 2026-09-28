@@ -1,6 +1,5 @@
 import { useSyncExternalStore } from "react";
 
-
 export type SharedFile = {
   id: string;
   name: string;
@@ -9,39 +8,39 @@ export type SharedFile = {
   date: string;
   dateLabel: string;
   direction: "received" | "sent";
-format:
-  | "pdf"
-  | "doc"
-  | "docx"
-  | "odt"
-  | "rtf"
-  | "txt"
-  | "xls"
-  | "xlsx"
-  | "ods"
-  | "csv"
-  | "ppt"
-  | "pptx"
-  | "odp"
-  | "key"
-  | "png"
-  | "jpg"
-  | "jpeg"
-  | "gif"
-  | "svg"
-  | "webp"
-  | "mp4"
-  | "mov"
-  | "avi"
-  | "webm"
-  | "mp3"
-  | "wav"
-  | "ogg"
-  | "m4a"
-  | "zip"
-  | "rar"
-  | "7z"
-  | "tar.gz";
+  format:
+    | "pdf"
+    | "doc"
+    | "docx"
+    | "odt"
+    | "rtf"
+    | "txt"
+    | "xls"
+    | "xlsx"
+    | "ods"
+    | "csv"
+    | "ppt"
+    | "pptx"
+    | "odp"
+    | "key"
+    | "png"
+    | "jpg"
+    | "jpeg"
+    | "gif"
+    | "svg"
+    | "webp"
+    | "mp4"
+    | "mov"
+    | "avi"
+    | "webm"
+    | "mp3"
+    | "wav"
+    | "ogg"
+    | "m4a"
+    | "zip"
+    | "rar"
+    | "7z"
+    | "tar.gz";
 };
 
 const initialSharedFiles: SharedFile[] = [
@@ -135,6 +134,16 @@ const initialSharedFiles: SharedFile[] = [
     direction: "sent",
     format: "txt",
   },
+  {
+    id: "ARQ-010",
+    name: "Plano de Desenvolvimento Individual.pdf",
+    description: "Plano de desenvolvimento compartilhado com o mentorado.",
+    author: "Você",
+    date: new Date().toISOString(),
+    dateLabel: "Hoje",
+    direction: "sent",
+    format: "pdf",
+  },
 ];
 
 let sharedFiles = [...initialSharedFiles];
@@ -145,9 +154,7 @@ export function getSharedFiles(): SharedFile[] {
   return sharedFiles;
 }
 
-export function subscribeSharedFiles(
-  listener: () => void
-): () => void {
+export function subscribeSharedFiles(listener: () => void): () => void {
   listeners.add(listener);
 
   return () => {
@@ -159,7 +166,7 @@ export function useSharedFiles(): SharedFile[] {
   return useSyncExternalStore(
     subscribeSharedFiles,
     getSharedFiles,
-    getSharedFiles
+    getSharedFiles,
   );
 }
 

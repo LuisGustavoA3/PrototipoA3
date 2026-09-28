@@ -306,7 +306,6 @@ function ArquivosCompartilhados() {
                     key={file.id}
                     file={file}
                     onClick={() => setSelectedFileDetails(file)}
-                    canDelete={file.author === currentUser}
                     onDownload={downloadFile}
                     onDelete={(id) => {
                       setFileToDelete(id);
@@ -542,13 +541,11 @@ function ArquivosCompartilhados() {
 }
 function FileCard({
   file,
-  canDelete,
   onDownload,
   onDelete,
   onClick,
 }: {
   file: SharedFile;
-  canDelete: boolean;
   onDownload: (file: SharedFile) => void;
   onDelete: (id: string) => void;
   onClick: () => void;
@@ -605,7 +602,7 @@ function FileCard({
           <Download className="size-4" />
         </button>
 
-        {canDelete && (
+        {file.direction === "sent" && (
           <button
             type="button"
             onClick={() => onDelete(file.id)}
