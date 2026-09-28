@@ -2,11 +2,19 @@ import { createFileRoute } from "@tanstack/react-router";
 import {
   CalendarDays,
   Download,
+  FileArchive,
+  FileAudio,
+  FileImage,
+  FileSpreadsheet,
   FileText,
+  FileVideo,
+  Icon,
+  Presentation,
   Search,
   Trash2,
   UploadCloud,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { TopBar } from "@/components/TopBar";
@@ -21,51 +29,83 @@ import {
 import { Input } from "@/components/ui/input";
 import { useSidebarOpen } from "@/hooks/use-sidebar";
 import { cn } from "@/lib/utils";
-
+import {
+  addSharedFile,
+  removeSharedFile,
+  useSharedFiles,
+  type SharedFile,
+} from "@/lib/shared-files-store";
 type FileFilter = "all" | "received" | "sent";
-
-type SharedFile = {
-  id: string;
-  name: string;
-  description: string;
-  author: string;
-  date: string;
-  dateLabel: string;
-  direction: "received" | "sent";
-};
 
 const currentUser = "Luis Gustavo";
 
-const initialFiles: SharedFile[] = [
-  {
-    id: "ARQ-001",
-    name: "Plano de desenvolvimento.pdf",
-    description: "Plano inicial compartilhado para acompanhamento da jornada.",
-    author: "Juliano Ribeiro",
-    date: "2026-09-08",
-    dateLabel: "08/09/2026",
-    direction: "received",
-  },
-  {
-    id: "ARQ-002",
-    name: "Anotações da sessão.docx",
-    description: "Anotações e próximos passos da última sessão.",
-    author: currentUser,
-    date: "2026-09-06",
-    dateLabel: "06/09/2026",
-    direction: "sent",
-  },
-  {
-    id: "ARQ-003",
-    name: "Feedback de liderança.pdf",
-    description:
-      "Material de apoio para a próxima conversa de desenvolvimento.",
-    author: "Juliano Ribeiro",
-    date: "2026-09-04",
-    dateLabel: "04/09/2026",
-    direction: "received",
-  },
-];
+function getFileStyle(format: string): {
+  Icon: LucideIcon;
+  colorClass: string;
+} {
+  const normalizedFormat = format.toLowerCase();
+
+  if (normalizedFormat === "pdf") {
+    return {
+      Icon: FileText,
+      colorClass: "bg-red-100 text-red-600",
+    };
+  }
+
+  if (["doc", "docx", "odt", "rtf", "txt"].includes(normalizedFormat)) {
+    return {
+      Icon: FileText,
+      colorClass: "bg-blue-100 text-blue-600",
+    };
+  }
+
+  if (["xls", "xlsx", "ods", "csv"].includes(normalizedFormat)) {
+    return {
+      Icon: FileSpreadsheet,
+      colorClass: "bg-green-100 text-green-600",
+    };
+  }
+
+  if (["ppt", "pptx", "odp", "key"].includes(normalizedFormat)) {
+    return {
+      Icon: Presentation,
+      colorClass: "bg-orange-100 text-orange-600",
+    };
+  }
+
+  if (["png", "jpg", "jpeg", "gif", "svg", "webp"].includes(normalizedFormat)) {
+    return {
+      Icon: FileImage,
+      colorClass: "bg-purple-100 text-purple-600",
+    };
+  }
+
+  if (["mp4", "mov", "avi", "webm"].includes(normalizedFormat)) {
+    return {
+      Icon: FileVideo,
+      colorClass: "bg-pink-100 text-pink-600",
+    };
+  }
+
+  if (["mp3", "wav", "ogg", "m4a"].includes(normalizedFormat)) {
+    return {
+      Icon: FileAudio,
+      colorClass: "bg-violet-100 text-violet-600",
+    };
+  }
+
+  if (["zip", "rar", "7z", "tar.gz"].includes(normalizedFormat)) {
+    return {
+      Icon: FileArchive,
+      colorClass: "bg-amber-100 text-amber-700",
+    };
+  }
+
+  return {
+    Icon: FileText,
+    colorClass: "bg-gray-100 text-gray-600",
+  };
+}
 
 const filters: { label: string; value: FileFilter }[] = [
   { label: "Todos", value: "all" },
@@ -89,7 +129,7 @@ export const Route = createFileRoute("/arquivos-compartilhados")({
 
 function ArquivosCompartilhados() {
   const [sidebarOpen, toggleSidebar] = useSidebarOpen();
-  const [files, setFiles] = useState(initialFiles);
+  const files = useSharedFiles();
   const [fileToDelete, setFileToDelete] = useState<string | null>(null);
   const [filter, setFilter] = useState<FileFilter>("all");
   const [search, setSearch] = useState("");
@@ -99,17 +139,16 @@ function ArquivosCompartilhados() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [selectedFileDetails, setSelectedFileDetails] =
-  useState<SharedFile | null>(null);
+    useState<SharedFile | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
   const confirmDelete = () => {
     if (!fileToDelete) return;
 
-    setFiles((currentFiles) =>
-      currentFiles.filter((item) => item.id !== fileToDelete),
-    );
-
+    removeSharedFile(fileToDelete);
     setFileToDelete(null);
   };
+
   const visibleFiles = useMemo(() => {
     const query = search.toLowerCase().trim();
 
@@ -141,17 +180,22 @@ function ArquivosCompartilhados() {
     if (!selectedFile || !title.trim()) return;
 
     const now = new Date();
+    const extension = selectedFile.name.split(".").pop()?.toLowerCase();
+
+    if (!extension) return;
+
     const newFile: SharedFile = {
-      id: `ARQ-${String(files.length + 1).padStart(3, "0")}`,
+      id: `ARQ-${String(Date.now())}`,
       name: selectedFile.name,
       description: description.trim() || "Arquivo compartilhado.",
       author: currentUser,
       date: now.toISOString().slice(0, 10),
       dateLabel: new Intl.DateTimeFormat("pt-BR").format(now),
       direction: "sent",
+      format: extension as SharedFile["format"],
     };
 
-    setFiles((currentFiles) => [newFile, ...currentFiles]);
+    addSharedFile(newFile);
     resetUpload();
   };
 
@@ -266,13 +310,6 @@ function ArquivosCompartilhados() {
                     onDownload={downloadFile}
                     onDelete={(id) => {
                       setFileToDelete(id);
-                      if (fileToDelete) {
-                        setFiles((currentFiles) =>
-                          currentFiles.filter((item) => item.id !== id),
-                        );
-                        
-                      }
-                      
                     }}
                   />
                 ))}
@@ -280,78 +317,79 @@ function ArquivosCompartilhados() {
             )}
           </section>
           <Dialog
-  open={!!selectedFileDetails}
-  onOpenChange={(open) => {
-    if (!open) setSelectedFileDetails(null);
-  }}
->
-  <DialogContent className="max-w-xl">
-    <DialogHeader>
-      <DialogTitle>Detalhes do arquivo</DialogTitle>
-    </DialogHeader>
+            open={!!selectedFileDetails}
+            onOpenChange={(open) => {
+              if (!open) setSelectedFileDetails(null);
+            }}
+          >
+            <DialogContent className="max-w-xl">
+              <DialogHeader>
+                <DialogTitle>Detalhes do arquivo</DialogTitle>
+              </DialogHeader>
 
-    {selectedFileDetails && (
-      <div className="space-y-4 py-2">
-        <div>
-          <p className="text-xs text-muted-foreground">Nome do arquivo</p>
-          <p className="mt-1 break-words text-sm font-medium text-foreground">
-            {selectedFileDetails.name}
-          </p>
-        </div>
+              {selectedFileDetails && (
+                <div className="space-y-4 py-2">
+                  <div>
+                    <p className="text-xs text-muted-foreground">
+                      Nome do arquivo
+                    </p>
+                    <p className="mt-1 break-words text-sm font-medium text-foreground">
+                      {selectedFileDetails.name}
+                    </p>
+                  </div>
 
-        <div>
-          <p className="text-xs text-muted-foreground">Descrição</p>
-          <p className="mt-1 whitespace-pre-wrap break-words text-sm text-foreground">
-            {selectedFileDetails.description}
-          </p>
-        </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground">Descrição</p>
+                    <p className="mt-1 whitespace-pre-wrap break-words text-sm text-foreground">
+                      {selectedFileDetails.description}
+                    </p>
+                  </div>
 
-        <div>
-          <p className="text-xs text-muted-foreground">Autor</p>
-          <p className="mt-1 text-sm text-foreground">
-            {selectedFileDetails.author}
-          </p>
-        </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground">Autor</p>
+                    <p className="mt-1 text-sm text-foreground">
+                      {selectedFileDetails.author}
+                    </p>
+                  </div>
 
-        <div>
-          <p className="text-xs text-muted-foreground">Data de compartilhamento</p>
-          <p className="mt-1 text-sm text-foreground">
-            {selectedFileDetails.dateLabel}
-          </p>
-          
-        </div>
-        
-      </div>
-      
-    )}
-    <DialogFooter>
-  <Button
-    variant="outline"
-    onClick={() => {
-      if (selectedFileDetails) {
-        downloadFile(selectedFileDetails);
-      }
-    }}
-  >
-    <Download className="mr-2 h-4 w-4" />
-    Baixar arquivo
-  </Button>
+                  <div>
+                    <p className="text-xs text-muted-foreground">
+                      Data de compartilhamento
+                    </p>
+                    <p className="mt-1 text-sm text-foreground">
+                      {selectedFileDetails.dateLabel}
+                    </p>
+                  </div>
+                </div>
+              )}
+              <DialogFooter>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    if (selectedFileDetails) {
+                      downloadFile(selectedFileDetails);
+                    }
+                  }}
+                >
+                  <Download className="mr-2 h-4 w-4" />
+                  Baixar arquivo
+                </Button>
 
-  {selectedFileDetails?.author === currentUser && (
-    <Button
-      variant="destructive"
-      onClick={() => {
-        setFileToDelete(selectedFileDetails.id);
-        setSelectedFileDetails(null);
-      }}
-    >
-      <Trash2 className="mr-2 h-4 w-4" />
-      Remover arquivo
-    </Button>
-  )}
-</DialogFooter>
-  </DialogContent>
-</Dialog>
+                {selectedFileDetails?.author === currentUser && (
+                  <Button
+                    variant="destructive"
+                    onClick={() => {
+                      setFileToDelete(selectedFileDetails.id);
+                      setSelectedFileDetails(null);
+                    }}
+                  >
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    Remover arquivo
+                  </Button>
+                )}
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
           {fileToDelete && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
               <div
@@ -405,13 +443,12 @@ function ArquivosCompartilhados() {
         </div>
       </main>
 
-      <Dialog open={uploadOpen} onOpenChange={(open) => !open && resetUpload()}
-        >
+      <Dialog open={uploadOpen} onOpenChange={(open) => !open && resetUpload()}>
         <DialogContent className="max-w-xl">
           <DialogHeader>
             <DialogTitle>Enviar arquivo</DialogTitle>
           </DialogHeader>
-          
+
           <div className="space-y-4 py-2">
             <div>
               <label
@@ -503,7 +540,6 @@ function ArquivosCompartilhados() {
     </div>
   );
 }
-
 function FileCard({
   file,
   canDelete,
@@ -517,37 +553,48 @@ function FileCard({
   onDelete: (id: string) => void;
   onClick: () => void;
 }) {
+  const { Icon, colorClass } = getFileStyle(file.format);
+
   return (
     <article
-  role="button"
-  tabIndex={0}
-  onClick={onClick}
-  onKeyDown={(event) => {
-    if (event.key === "Enter" && event.target === event.currentTarget) {
-      onClick();
-    }
-  }}
-  className="relative flex cursor-pointer flex-col gap-4 rounded-md border border-border bg-card p-4 shadow-[var(--shadow-card)] transition-all hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary/30 sm:flex-row sm:items-center sm:justify-between"
->
+      role="button"
+      tabIndex={0}
+      onClick={onClick}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" && event.target === event.currentTarget) {
+          onClick();
+        }
+      }}
+      className="relative flex cursor-pointer flex-col gap-4 rounded-md border border-border bg-card p-4 shadow-[var(--shadow-card)] transition-all hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary/30 sm:flex-row sm:items-center sm:justify-between"
+    >
       <div className="flex min-w-0 gap-3 pr-20">
-        <div className="flex size-10 shrink-0 items-center justify-center rounded-md bg-primary-soft/50">
-          <FileText className="size-5 text-primary" />
+        <div
+          className={cn(
+            "flex size-10 shrink-0 items-center justify-center rounded-md",
+            colorClass,
+          )}
+        >
+          <Icon className="size-5" />
         </div>
+
         <div className="min-w-0">
           <h4 className="truncate text-sm font-medium text-foreground">
             {file.name}
           </h4>
-<p className="mt-1 text-xs text-muted-foreground">
-  {file.description.length > 50
-    ? `${file.description.slice(0, 50)}...`
-    : file.description}
-</p>
+
+          <p className="mt-1 text-xs text-muted-foreground">
+            {file.description.length > 50
+              ? `${file.description.slice(0, 50)}...`
+              : file.description}
+          </p>
+
           <p className="mt-2 text-xs text-muted-foreground">
             Autor: <span className="text-foreground">{file.author}</span> ·{" "}
             {file.dateLabel}
           </p>
         </div>
       </div>
+
       <div className="absolute right-3 top-3 flex items-center gap-2">
         <button
           type="button"
@@ -557,6 +604,7 @@ function FileCard({
         >
           <Download className="size-4" />
         </button>
+
         {canDelete && (
           <button
             type="button"
