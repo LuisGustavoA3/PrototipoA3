@@ -33,7 +33,8 @@ const businessContents: LibraryContent[] = [
     type: "Artigo",
     topic: "Posicionamento Estratégico",
     axis: "Negócio",
-    description: "Uma introdução prática à ambidestria e às escolhas estratégicas das organizações.",
+    description:
+      "Uma introdução prática à ambidestria e às escolhas estratégicas das organizações.",
     format: "pdf",
     reference: "A3 Digital",
     permitirDownload: true,
@@ -48,7 +49,8 @@ const businessContents: LibraryContent[] = [
     type: "Capítulo de livro",
     topic: "Posicionamento Estratégico",
     axis: "Negócio",
-    description: "Capítulo sobre como reconhecer sua contribuição dentro de uma visão estratégica maior.",
+    description:
+      "Capítulo sobre como reconhecer sua contribuição dentro de uma visão estratégica maior.",
     format: "pdf",
     reference: "Biblioteca A3",
     permitirDownload: false,
@@ -62,7 +64,8 @@ const businessContents: LibraryContent[] = [
     type: "Capítulo de livro",
     topic: "Posicionamento Estratégico",
     axis: "Negócio",
-    description: "Uma leitura sobre equilibrar a operação atual e a construção do futuro.",
+    description:
+      "Uma leitura sobre equilibrar a operação atual e a construção do futuro.",
     format: "pdf",
     reference: "Biblioteca A3",
     permitirDownload: false,
@@ -77,7 +80,8 @@ const businessContents: LibraryContent[] = [
     type: "Vídeo",
     topic: "Visão Integrada & Sistêmica",
     axis: "Negócio",
-    description: "Vídeo mockado para explorar relações e efeitos sistêmicos nas decisões.",
+    description:
+      "Vídeo mockado para explorar relações e efeitos sistêmicos nas decisões.",
     format: "video",
     reference: "A3 Digital Academy",
     permitirDownload: false,
@@ -91,7 +95,8 @@ const businessContents: LibraryContent[] = [
     type: "Ferramenta",
     topic: "Visão Integrada & Sistêmica",
     axis: "Negócio",
-    description: "Uma ferramenta para mapear pessoas e grupos impactados por uma decisão.",
+    description:
+      "Uma ferramenta para mapear pessoas e grupos impactados por uma decisão.",
     format: "pdf",
     reference: "A3 Digital",
     permitirDownload: true,
@@ -106,7 +111,8 @@ const businessContents: LibraryContent[] = [
     type: "Infográfico",
     topic: "Visão Integrada & Sistêmica",
     axis: "Negócio",
-    description: "Infográfico sobre os principais elos que formam uma cadeia de valor.",
+    description:
+      "Infográfico sobre os principais elos que formam uma cadeia de valor.",
     format: "pdf",
     reference: "A3 Digital",
     permitirDownload: true,
@@ -120,7 +126,8 @@ const businessContents: LibraryContent[] = [
     type: "Artigo",
     topic: "Tomada de Decisão",
     axis: "Negócio",
-    description: "Artigo sobre escolhas conscientes e decisões conectadas aos resultados esperados.",
+    description:
+      "Artigo sobre escolhas conscientes e decisões conectadas aos resultados esperados.",
     format: "pdf",
     reference: "A3 Digital",
     permitirDownload: true,
@@ -135,7 +142,8 @@ const businessContents: LibraryContent[] = [
     type: "Ferramenta",
     topic: "Tomada de Decisão",
     axis: "Negócio",
-    description: "Ferramenta prática para organizar critérios antes de decidir.",
+    description:
+      "Ferramenta prática para organizar critérios antes de decidir.",
     format: "pdf",
     reference: "Biblioteca A3",
     permitirDownload: false,
@@ -149,7 +157,8 @@ const businessContents: LibraryContent[] = [
     type: "Vídeo",
     topic: "Gestão por Resultados",
     axis: "Negócio",
-    description: "Vídeo mockado sobre indicadores e a leitura de sinais importantes do negócio.",
+    description:
+      "Vídeo mockado sobre indicadores e a leitura de sinais importantes do negócio.",
     format: "video",
     reference: "A3 Digital Academy",
     permitirDownload: false,
@@ -163,7 +172,8 @@ const businessContents: LibraryContent[] = [
     type: "Podcast",
     topic: "Gestão por Resultados",
     axis: "Negócio",
-    description: "Episódio mockado sobre transformar objetivos em resultados acompanháveis.",
+    description:
+      "Episódio mockado sobre transformar objetivos em resultados acompanháveis.",
     format: "audio",
     reference: "A3 Digital",
     permitirDownload: true,
@@ -180,7 +190,8 @@ const teamContents: LibraryContent[] = [
     type: "Artigo",
     topic: "Comunicação na Equipe",
     axis: "Equipe",
-    description: "Práticas para criar conversas mais claras, abertas e produtivas no dia a dia.",
+    description:
+      "Práticas para criar conversas mais claras, abertas e produtivas no dia a dia.",
     format: "pdf",
     reference: "A3 Digital",
     permitirDownload: true,
@@ -195,7 +206,8 @@ const teamContents: LibraryContent[] = [
     type: "Vídeo",
     topic: "Comunicação na Equipe",
     axis: "Equipe",
-    description: "Vídeo de exemplo sobre como transformar feedback em aprendizado compartilhado.",
+    description:
+      "Vídeo de exemplo sobre como transformar feedback em aprendizado compartilhado.",
     format: "video",
     reference: "A3 Digital Academy",
     permitirDownload: false,
@@ -209,7 +221,8 @@ const teamContents: LibraryContent[] = [
     type: "Capítulo de livro",
     topic: "Colaboração e Confiança",
     axis: "Equipe",
-    description: "Uma leitura sobre acordos e rituais que fortalecem a colaboração entre pessoas.",
+    description:
+      "Uma leitura sobre acordos e rituais que fortalecem a colaboração entre pessoas.",
     format: "pdf",
     reference: "Biblioteca A3",
     permitirDownload: false,
@@ -223,7 +236,8 @@ const teamContents: LibraryContent[] = [
     type: "Ferramenta",
     topic: "Colaboração e Confiança",
     axis: "Equipe",
-    description: "Ferramenta para identificar talentos, contribuições e oportunidades de parceria.",
+    description:
+      "Ferramenta para identificar talentos, contribuições e oportunidades de parceria.",
     format: "pdf",
     reference: "A3 Digital",
     permitirDownload: true,
@@ -238,7 +252,8 @@ const teamContents: LibraryContent[] = [
     type: "Podcast",
     topic: "Liderança e Desenvolvimento",
     axis: "Equipe",
-    description: "Episódio de exemplo sobre liderança, autonomia e crescimento do time.",
+    description:
+      "Episódio de exemplo sobre liderança, autonomia e crescimento do time.",
     format: "audio",
     reference: "A3 Digital Academy",
     permitirDownload: false,
@@ -252,7 +267,8 @@ const teamContents: LibraryContent[] = [
     type: "Infográfico",
     topic: "Liderança e Desenvolvimento",
     axis: "Equipe",
-    description: "Resumo visual para apoiar uma delegação mais clara e orientada a resultados.",
+    description:
+      "Resumo visual para apoiar uma delegação mais clara e orientada a resultados.",
     format: "pdf",
     reference: "A3 Digital",
     permitirDownload: true,
@@ -269,7 +285,8 @@ const marketContents: LibraryContent[] = [
     type: "Artigo",
     topic: "Visão de Mercado",
     axis: "Mercado",
-    description: "Práticas para observar mudanças e reconhecer oportunidades no ambiente externo.",
+    description:
+      "Práticas para observar mudanças e reconhecer oportunidades no ambiente externo.",
     format: "pdf",
     reference: "A3 Digital",
     permitirDownload: true,
@@ -284,7 +301,8 @@ const marketContents: LibraryContent[] = [
     type: "Ferramenta",
     topic: "Visão de Mercado",
     axis: "Mercado",
-    description: "Ferramenta de exemplo para organizar sinais, oportunidades e hipóteses de mercado.",
+    description:
+      "Ferramenta de exemplo para organizar sinais, oportunidades e hipóteses de mercado.",
     format: "pdf",
     reference: "Biblioteca A3",
     permitirDownload: false,
@@ -298,7 +316,8 @@ const marketContents: LibraryContent[] = [
     type: "Vídeo",
     topic: "Clientes e Contexto",
     axis: "Mercado",
-    description: "Vídeo de exemplo sobre necessidades, escolhas e mudanças no comportamento do consumidor.",
+    description:
+      "Vídeo de exemplo sobre necessidades, escolhas e mudanças no comportamento do consumidor.",
     format: "video",
     reference: "A3 Digital Academy",
     permitirDownload: false,
@@ -312,7 +331,8 @@ const marketContents: LibraryContent[] = [
     type: "Infográfico",
     topic: "Clientes e Contexto",
     axis: "Mercado",
-    description: "Resumo visual para analisar os principais pontos de contato com o cliente.",
+    description:
+      "Resumo visual para analisar os principais pontos de contato com o cliente.",
     format: "pdf",
     reference: "A3 Digital",
     permitirDownload: true,
@@ -327,7 +347,8 @@ const marketContents: LibraryContent[] = [
     type: "Podcast",
     topic: "Inovação e Competitividade",
     axis: "Mercado",
-    description: "Episódio de exemplo sobre inovação, diferenciação e posicionamento competitivo.",
+    description:
+      "Episódio de exemplo sobre inovação, diferenciação e posicionamento competitivo.",
     format: "audio",
     reference: "A3 Digital Academy",
     permitirDownload: false,
@@ -341,7 +362,8 @@ const marketContents: LibraryContent[] = [
     type: "Capítulo de livro",
     topic: "Inovação e Competitividade",
     axis: "Mercado",
-    description: "Uma leitura de exemplo sobre escolhas que ajudam a construir diferenciação.",
+    description:
+      "Uma leitura de exemplo sobre escolhas que ajudam a construir diferenciação.",
     format: "pdf",
     reference: "Biblioteca A3",
     permitirDownload: false,
@@ -358,7 +380,8 @@ const individualContents: LibraryContent[] = [
     type: "Artigo",
     topic: "Autoconhecimento",
     axis: "Indivíduo",
-    description: "Reflexões práticas para reconhecer padrões, valores e motivações pessoais.",
+    description:
+      "Reflexões práticas para reconhecer padrões, valores e motivações pessoais.",
     format: "pdf",
     reference: "A3 Digital",
     permitirDownload: true,
@@ -373,7 +396,8 @@ const individualContents: LibraryContent[] = [
     type: "Ferramenta",
     topic: "Autoconhecimento",
     axis: "Indivíduo",
-    description: "Ferramenta de exemplo para identificar talentos e situações em que você rende melhor.",
+    description:
+      "Ferramenta de exemplo para identificar talentos e situações em que você rende melhor.",
     format: "pdf",
     reference: "Biblioteca A3",
     permitirDownload: false,
@@ -387,7 +411,8 @@ const individualContents: LibraryContent[] = [
     type: "Vídeo",
     topic: "Gestão do Tempo",
     axis: "Indivíduo",
-    description: "Vídeo de exemplo com práticas para organizar prioridades e proteger o foco.",
+    description:
+      "Vídeo de exemplo com práticas para organizar prioridades e proteger o foco.",
     format: "video",
     reference: "A3 Digital Academy",
     permitirDownload: false,
@@ -401,7 +426,8 @@ const individualContents: LibraryContent[] = [
     type: "Infográfico",
     topic: "Gestão do Tempo",
     axis: "Indivíduo",
-    description: "Resumo visual para apoiar decisões sobre urgência, importância e energia disponível.",
+    description:
+      "Resumo visual para apoiar decisões sobre urgência, importância e energia disponível.",
     format: "pdf",
     reference: "A3 Digital",
     permitirDownload: true,
@@ -416,7 +442,8 @@ const individualContents: LibraryContent[] = [
     type: "Podcast",
     topic: "Resiliência e Aprendizado",
     axis: "Indivíduo",
-    description: "Episódio de exemplo sobre adaptação, aprendizados e continuidade em momentos difíceis.",
+    description:
+      "Episódio de exemplo sobre adaptação, aprendizados e continuidade em momentos difíceis.",
     format: "audio",
     reference: "A3 Digital Academy",
     permitirDownload: false,
@@ -430,7 +457,8 @@ const individualContents: LibraryContent[] = [
     type: "Capítulo de livro",
     topic: "Resiliência e Aprendizado",
     axis: "Indivíduo",
-    description: "Uma leitura de exemplo sobre transformar experiências em desenvolvimento contínuo.",
+    description:
+      "Uma leitura de exemplo sobre transformar experiências em desenvolvimento contínuo.",
     format: "pdf",
     reference: "Biblioteca A3",
     permitirDownload: false,
@@ -445,10 +473,14 @@ const otherAxisContents: LibraryContent[] = [
     id: `biblioteca-${index + 1}`,
     name: `Conteúdo de desenvolvimento ${index + 1}`,
     type: "Artigo" as const,
-    topic: index % 2 === 0 ? "Desenvolvimento profissional" : "Aprendizado contínuo",
-    axis: ["Equipe", "Mercado", "Indivíduo"][index % 3] as LibraryContent["axis"],
-    description: "Conteúdo de exemplo da Biblioteca para cálculo do progresso geral.",
-    format: index % 3 === 0 ? "video" : "pdf",
+    topic:
+      index % 2 === 0 ? "Desenvolvimento profissional" : "Aprendizado contínuo",
+    axis: ["Equipe", "Mercado", "Indivíduo"][
+      index % 3
+    ] as LibraryContent["axis"],
+    description:
+      "Conteúdo de exemplo da Biblioteca para cálculo do progresso geral.",
+    format: index % 3 === 0 ? "video" : ("pdf" as LibraryContent["format"]),
     reference: "Biblioteca A3",
     permitirDownload: false,
     public: true,
@@ -458,7 +490,7 @@ const otherAxisContents: LibraryContent[] = [
 ];
 
 const STORAGE_KEY = "a3:library-content-status";
-let contents = [
+let contents: LibraryContent[] = [
   ...businessContents,
   ...teamContents,
   ...marketContents,
@@ -473,10 +505,9 @@ function readStoredStatus() {
 
   hasReadStoredStatus = true;
   try {
-    const stored = JSON.parse(window.localStorage.getItem(STORAGE_KEY) ?? "{}") as Record<
-      string,
-      { finished: boolean; finishedAt?: string }
-    >;
+    const stored = JSON.parse(
+      window.localStorage.getItem(STORAGE_KEY) ?? "{}",
+    ) as Record<string, { finished: boolean; finishedAt?: string }>;
     contents = contents.map((content) =>
       stored[content.id] ? { ...content, ...stored[content.id] } : content,
     );
@@ -530,10 +561,9 @@ export function setLibraryContentFinished(id: string, finished: boolean) {
   );
 
   if (typeof window !== "undefined") {
-    const current = JSON.parse(window.localStorage.getItem(STORAGE_KEY) ?? "{}") as Record<
-      string,
-      unknown
-    >;
+    const current = JSON.parse(
+      window.localStorage.getItem(STORAGE_KEY) ?? "{}",
+    ) as Record<string, unknown>;
     current[id] = { finished, finishedAt };
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(current));
   }
