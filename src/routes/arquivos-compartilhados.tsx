@@ -98,6 +98,8 @@ function ArquivosCompartilhados() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [selectedFileDetails, setSelectedFileDetails] =
+  useState<SharedFile | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const confirmDelete = () => {
     if (!fileToDelete) return;
@@ -254,27 +256,102 @@ function ArquivosCompartilhados() {
                 Nenhum arquivo encontrado.
               </div>
             ) : (
-              <div className="space-y-2">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 {visibleFiles.map((file) => (
                   <FileCard
                     key={file.id}
                     file={file}
+                    onClick={() => setSelectedFileDetails(file)}
                     canDelete={file.author === currentUser}
                     onDownload={downloadFile}
                     onDelete={(id) => {
                       setFileToDelete(id);
-
                       if (fileToDelete) {
                         setFiles((currentFiles) =>
                           currentFiles.filter((item) => item.id !== id),
                         );
+                        
                       }
+                      
                     }}
                   />
                 ))}
               </div>
             )}
           </section>
+          <Dialog
+  open={!!selectedFileDetails}
+  onOpenChange={(open) => {
+    if (!open) setSelectedFileDetails(null);
+  }}
+>
+  <DialogContent className="max-w-xl">
+    <DialogHeader>
+      <DialogTitle>Detalhes do arquivo</DialogTitle>
+    </DialogHeader>
+
+    {selectedFileDetails && (
+      <div className="space-y-4 py-2">
+        <div>
+          <p className="text-xs text-muted-foreground">Nome do arquivo</p>
+          <p className="mt-1 break-words text-sm font-medium text-foreground">
+            {selectedFileDetails.name}
+          </p>
+        </div>
+
+        <div>
+          <p className="text-xs text-muted-foreground">Descrição</p>
+          <p className="mt-1 whitespace-pre-wrap break-words text-sm text-foreground">
+            {selectedFileDetails.description}
+          </p>
+        </div>
+
+        <div>
+          <p className="text-xs text-muted-foreground">Autor</p>
+          <p className="mt-1 text-sm text-foreground">
+            {selectedFileDetails.author}
+          </p>
+        </div>
+
+        <div>
+          <p className="text-xs text-muted-foreground">Data de compartilhamento</p>
+          <p className="mt-1 text-sm text-foreground">
+            {selectedFileDetails.dateLabel}
+          </p>
+          
+        </div>
+        
+      </div>
+      
+    )}
+    <DialogFooter>
+  <Button
+    variant="outline"
+    onClick={() => {
+      if (selectedFileDetails) {
+        downloadFile(selectedFileDetails);
+      }
+    }}
+  >
+    <Download className="mr-2 h-4 w-4" />
+    Baixar arquivo
+  </Button>
+
+  {selectedFileDetails?.author === currentUser && (
+    <Button
+      variant="destructive"
+      onClick={() => {
+        setFileToDelete(selectedFileDetails.id);
+        setSelectedFileDetails(null);
+      }}
+    >
+      <Trash2 className="mr-2 h-4 w-4" />
+      Remover arquivo
+    </Button>
+  )}
+</DialogFooter>
+  </DialogContent>
+</Dialog>
           {fileToDelete && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
               <div
@@ -328,11 +405,13 @@ function ArquivosCompartilhados() {
         </div>
       </main>
 
-      <Dialog open={uploadOpen} onOpenChange={(open) => !open && resetUpload()}>
+      <Dialog open={uploadOpen} onOpenChange={(open) => !open && resetUpload()}
+        >
         <DialogContent className="max-w-xl">
           <DialogHeader>
             <DialogTitle>Enviar arquivo</DialogTitle>
           </DialogHeader>
+          
           <div className="space-y-4 py-2">
             <div>
               <label
@@ -430,15 +509,27 @@ function FileCard({
   canDelete,
   onDownload,
   onDelete,
+  onClick,
 }: {
   file: SharedFile;
   canDelete: boolean;
   onDownload: (file: SharedFile) => void;
   onDelete: (id: string) => void;
+  onClick: () => void;
 }) {
   return (
-    <article className="flex flex-col gap-4 rounded-md border border-border bg-card p-4 shadow-[var(--shadow-card)] sm:flex-row sm:items-center sm:justify-between">
-      <div className="flex min-w-0 gap-3">
+    <article
+  role="button"
+  tabIndex={0}
+  onClick={onClick}
+  onKeyDown={(event) => {
+    if (event.key === "Enter" && event.target === event.currentTarget) {
+      onClick();
+    }
+  }}
+  className="relative flex cursor-pointer flex-col gap-4 rounded-md border border-border bg-card p-4 shadow-[var(--shadow-card)] transition-all hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary/30 sm:flex-row sm:items-center sm:justify-between"
+>
+      <div className="flex min-w-0 gap-3 pr-20">
         <div className="flex size-10 shrink-0 items-center justify-center rounded-md bg-primary-soft/50">
           <FileText className="size-5 text-primary" />
         </div>
@@ -446,16 +537,18 @@ function FileCard({
           <h4 className="truncate text-sm font-medium text-foreground">
             {file.name}
           </h4>
-          <p className="mt-1 text-xs text-muted-foreground">
-            {file.description}
-          </p>
+<p className="mt-1 text-xs text-muted-foreground">
+  {file.description.length > 50
+    ? `${file.description.slice(0, 50)}...`
+    : file.description}
+</p>
           <p className="mt-2 text-xs text-muted-foreground">
             Autor: <span className="text-foreground">{file.author}</span> ·{" "}
             {file.dateLabel}
           </p>
         </div>
       </div>
-      <div className="flex shrink-0 items-center gap-2 self-end sm:self-center">
+      <div className="absolute right-3 top-3 flex items-center gap-2">
         <button
           type="button"
           onClick={() => onDownload(file)}
