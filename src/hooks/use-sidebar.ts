@@ -9,7 +9,7 @@ import {
 
 /** Persisted sidebar open/closed state, shared across routes. */
 export function useSidebarOpen(): [boolean, () => void] {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     setOpen(getSidebarOpen());

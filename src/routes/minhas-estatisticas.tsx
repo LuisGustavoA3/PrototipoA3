@@ -52,7 +52,7 @@ const dataByAxis: Record<
   { subject: string; value: number; fullMark: number }[]
 > = {
   individuo: [
-    { subject: "Autoconhecimento", value: 85, fullMark: 100 },
+    { subject: "Autoconhecimento", value: 100, fullMark: 100 },
     { subject: "Gestão do Tempo", value: 70, fullMark: 100 },
     { subject: "Planejamento e Organização", value: 78, fullMark: 100 },
     { subject: "Proatividade", value: 92, fullMark: 100 },
@@ -143,6 +143,30 @@ export const Route = createFileRoute("/minhas-estatisticas")({
   }),
   component: MinhasEstatisticas,
 });
+
+function CustomRadarTick(props: any) {
+  const { x, y, cx, cy, payload } = props;
+
+  const dx = x - cx;
+  const dy = y - cy;
+  const distance = Math.sqrt(dx * dx + dy * dy) || 1;
+
+  const offset = 12;
+  const adjustedX = x + (dx / distance) * offset;
+  const adjustedY = y + (dy / distance) * offset;
+
+  return (
+    <text
+      x={adjustedX}
+      y={adjustedY}
+      textAnchor={props.textAnchor}
+      fill="var(--foreground)"
+      fontSize={12}
+    >
+      {payload.value}
+    </text>
+  );
+}
 
 function MinhasEstatisticas() {
   const [sidebarOpen, toggleSidebar] = useSidebarOpen();
@@ -240,7 +264,8 @@ function MinhasEstatisticas() {
                     <PolarGrid />
                     <PolarAngleAxis
                       dataKey="subject"
-                      tick={{ fill: "var(--foreground)", fontSize: 12 }}
+                      radius={170}
+                      tick={<CustomRadarTick />}
                     />
                     <PolarRadiusAxis
                       angle={90}

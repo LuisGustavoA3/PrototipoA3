@@ -110,7 +110,7 @@ function BibliotecaEquipe() {
             />
           </section>
 
-          <p className="rounded-md border border-border bg-card px-4 py-3 text-xs text-muted-foreground">
+          <p className="cursor-pointer rounded-md border border-border bg-card p-5 shadow-[var(--shadow-card)] transition-all hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-md">
             Seu progresso considera todos os conteúdos públicos da Biblioteca e pode ser alterado caso o total de conteúdos seja atualizado.
           </p>
 

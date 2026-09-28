@@ -2,11 +2,19 @@ import { createFileRoute } from "@tanstack/react-router";
 import {
   CalendarDays,
   Download,
+  FileArchive,
+  FileAudio,
+  FileImage,
+  FileSpreadsheet,
   FileText,
+  FileVideo,
+  Icon,
+  Presentation,
   Search,
   Trash2,
   UploadCloud,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { TopBar } from "@/components/TopBar";
@@ -21,50 +29,83 @@ import {
 import { Input } from "@/components/ui/input";
 import { useSidebarOpen } from "@/hooks/use-sidebar";
 import { cn } from "@/lib/utils";
-
+import {
+  addSharedFile,
+  removeSharedFile,
+  useSharedFiles,
+  type SharedFile,
+} from "@/lib/shared-files-store";
 type FileFilter = "all" | "received" | "sent";
-
-type SharedFile = {
-  id: string;
-  name: string;
-  description: string;
-  author: string;
-  date: string;
-  dateLabel: string;
-  direction: "received" | "sent";
-};
 
 const currentUser = "Luis Gustavo";
 
-const initialFiles: SharedFile[] = [
-  {
-    id: "ARQ-001",
-    name: "Plano de desenvolvimento.pdf",
-    description: "Plano inicial compartilhado para acompanhamento da jornada.",
-    author: "Juliano Ribeiro",
-    date: "2026-09-08",
-    dateLabel: "08/09/2026",
-    direction: "received",
-  },
-  {
-    id: "ARQ-002",
-    name: "Anotações da sessão.docx",
-    description: "Anotações e próximos passos da última sessão.",
-    author: currentUser,
-    date: "2026-09-06",
-    dateLabel: "06/09/2026",
-    direction: "sent",
-  },
-  {
-    id: "ARQ-003",
-    name: "Feedback de liderança.pdf",
-    description: "Material de apoio para a próxima conversa de desenvolvimento.",
-    author: "Juliano Ribeiro",
-    date: "2026-09-04",
-    dateLabel: "04/09/2026",
-    direction: "received",
-  },
-];
+function getFileStyle(format: string): {
+  Icon: LucideIcon;
+  colorClass: string;
+} {
+  const normalizedFormat = format.toLowerCase();
+
+  if (normalizedFormat === "pdf") {
+    return {
+      Icon: FileText,
+      colorClass: "bg-red-100 text-red-600",
+    };
+  }
+
+  if (["doc", "docx", "odt", "rtf", "txt"].includes(normalizedFormat)) {
+    return {
+      Icon: FileText,
+      colorClass: "bg-blue-100 text-blue-600",
+    };
+  }
+
+  if (["xls", "xlsx", "ods", "csv"].includes(normalizedFormat)) {
+    return {
+      Icon: FileSpreadsheet,
+      colorClass: "bg-green-100 text-green-600",
+    };
+  }
+
+  if (["ppt", "pptx", "odp", "key"].includes(normalizedFormat)) {
+    return {
+      Icon: Presentation,
+      colorClass: "bg-orange-100 text-orange-600",
+    };
+  }
+
+  if (["png", "jpg", "jpeg", "gif", "svg", "webp"].includes(normalizedFormat)) {
+    return {
+      Icon: FileImage,
+      colorClass: "bg-purple-100 text-purple-600",
+    };
+  }
+
+  if (["mp4", "mov", "avi", "webm"].includes(normalizedFormat)) {
+    return {
+      Icon: FileVideo,
+      colorClass: "bg-pink-100 text-pink-600",
+    };
+  }
+
+  if (["mp3", "wav", "ogg", "m4a"].includes(normalizedFormat)) {
+    return {
+      Icon: FileAudio,
+      colorClass: "bg-violet-100 text-violet-600",
+    };
+  }
+
+  if (["zip", "rar", "7z", "tar.gz"].includes(normalizedFormat)) {
+    return {
+      Icon: FileArchive,
+      colorClass: "bg-amber-100 text-amber-700",
+    };
+  }
+
+  return {
+    Icon: FileText,
+    colorClass: "bg-gray-100 text-gray-600",
+  };
+}
 
 const filters: { label: string; value: FileFilter }[] = [
   { label: "Todos", value: "all" },
@@ -78,7 +119,8 @@ export const Route = createFileRoute("/arquivos-compartilhados")({
       { title: "Arquivos Compartilhados | A3 Digital" },
       {
         name: "description",
-        content: "Compartilhe e acompanhe arquivos entre mentor e mentorado na A3 Digital.",
+        content:
+          "Compartilhe e acompanhe arquivos entre mentor e mentorado na A3 Digital.",
       },
     ],
   }),
@@ -87,7 +129,8 @@ export const Route = createFileRoute("/arquivos-compartilhados")({
 
 function ArquivosCompartilhados() {
   const [sidebarOpen, toggleSidebar] = useSidebarOpen();
-  const [files, setFiles] = useState(initialFiles);
+  const files = useSharedFiles();
+  const [fileToDelete, setFileToDelete] = useState<string | null>(null);
   const [filter, setFilter] = useState<FileFilter>("all");
   const [search, setSearch] = useState("");
   const [uploadOpen, setUploadOpen] = useState(false);
@@ -95,7 +138,16 @@ function ArquivosCompartilhados() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [selectedFileDetails, setSelectedFileDetails] =
+    useState<SharedFile | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const confirmDelete = () => {
+    if (!fileToDelete) return;
+
+    removeSharedFile(fileToDelete);
+    setFileToDelete(null);
+  };
 
   const visibleFiles = useMemo(() => {
     const query = search.toLowerCase().trim();
@@ -109,17 +161,6 @@ function ArquivosCompartilhados() {
       )
       .sort((first, second) => second.date.localeCompare(first.date));
   }, [files, filter, search]);
-
-  const groupedFiles = useMemo(() => {
-    const groups = new Map<string, SharedFile[]>();
-
-    visibleFiles.forEach((file) => {
-      const groupKey = filter === "all" ? file.date : `${file.author} - ${file.dateLabel}`;
-      groups.set(groupKey, [...(groups.get(groupKey) ?? []), file]);
-    });
-
-    return [...groups.entries()];
-  }, [filter, visibleFiles]);
 
   const resetUpload = () => {
     setUploadOpen(false);
@@ -139,22 +180,29 @@ function ArquivosCompartilhados() {
     if (!selectedFile || !title.trim()) return;
 
     const now = new Date();
+    const extension = selectedFile.name.split(".").pop()?.toLowerCase();
+
+    if (!extension) return;
+
     const newFile: SharedFile = {
-      id: `ARQ-${String(files.length + 1).padStart(3, "0")}`,
+      id: `ARQ-${String(Date.now())}`,
       name: selectedFile.name,
       description: description.trim() || "Arquivo compartilhado.",
       author: currentUser,
       date: now.toISOString().slice(0, 10),
       dateLabel: new Intl.DateTimeFormat("pt-BR").format(now),
       direction: "sent",
+      format: extension as SharedFile["format"],
     };
 
-    setFiles((currentFiles) => [newFile, ...currentFiles]);
+    addSharedFile(newFile);
     resetUpload();
   };
 
   const downloadFile = (file: SharedFile) => {
-    const blob = new Blob([`Arquivo demonstrativo: ${file.name}`], { type: "text/plain" });
+    const blob = new Blob([`Arquivo demonstrativo: ${file.name}`], {
+      type: "text/plain",
+    });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
@@ -175,19 +223,27 @@ function ArquivosCompartilhados() {
       >
         <div className="space-y-6 p-6">
           <header>
-            <p className="label-caps text-xs text-primary">Meu desenvolvimento</p>
-            <h1 className="mt-1 text-2xl text-foreground">Arquivos Compartilhados</h1>
+            <p className="label-caps text-xs text-primary">
+              Meu desenvolvimento
+            </p>
+            <h1 className="mt-1 text-2xl text-foreground">
+              Arquivos Compartilhados
+            </h1>
             <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-              Compartilhe documentos e mantenha os materiais da sua jornada organizados.
+              Compartilhe documentos e mantenha os materiais da sua jornada
+              organizados.
             </p>
           </header>
 
           <section className="rounded-md border border-border bg-card p-6 shadow-[var(--shadow-card)]">
             <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h2 className="label-caps text-sm text-foreground">Enviar um documento</h2>
+                <h2 className="label-caps text-sm text-foreground">
+                  Enviar um documento
+                </h2>
                 <p className="mt-2 text-sm text-muted-foreground">
-                  Compartilhe um material com seu mentor para manter o acompanhamento atualizado.
+                  Compartilhe um material com seu mentor para manter o
+                  acompanhamento atualizado.
                 </p>
               </div>
               <Button onClick={() => setUploadOpen(true)}>
@@ -200,9 +256,12 @@ function ArquivosCompartilhados() {
           <section className="space-y-4">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <div>
-                <h2 className="label-caps text-sm text-foreground">Arquivos compartilhados</h2>
+                <h2 className="label-caps text-sm text-foreground">
+                  Arquivos compartilhados
+                </h2>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  {visibleFiles.length} arquivo{visibleFiles.length === 1 ? "" : "s"} encontrado
+                  {visibleFiles.length} arquivo
+                  {visibleFiles.length === 1 ? "" : "s"} encontrado
                   {visibleFiles.length === 1 ? "" : "s"}
                 </p>
               </div>
@@ -211,7 +270,7 @@ function ArquivosCompartilhados() {
                 <Input
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
-                  placeholder="Pesquisar por ID, nome, autor ou data"
+                  placeholder="Pesquisar por nome, autor ou data"
                   aria-label="Pesquisar arquivos"
                   className="pl-9"
                 />
@@ -225,9 +284,9 @@ function ArquivosCompartilhados() {
                   type="button"
                   onClick={() => setFilter(item.value)}
                   className={cn(
-                    "label-caps rounded-md px-4 py-2 text-xs transition-colors",
+                    "label-caps rounded-md px-4 py-2 text-xs transition-colors cursor-pointer",
                     filter === item.value
-                      ? "bg-primary text-primary-foreground"
+                      ? "bg-primary text-primary-foreground cursor-pointer"
                       : "border border-border bg-card text-foreground hover:bg-accent",
                   )}
                 >
@@ -236,42 +295,150 @@ function ArquivosCompartilhados() {
               ))}
             </div>
 
-            {groupedFiles.length === 0 ? (
+            {visibleFiles.length === 0 ? (
               <div className="rounded-md border border-dashed border-border bg-card px-6 py-12 text-center text-sm text-muted-foreground">
                 Nenhum arquivo encontrado.
               </div>
             ) : (
-              <div className="space-y-5">
-                {groupedFiles.map(([group, groupFiles]) => (
-                  <div key={group}>
-                    <div className="mb-2 flex items-center gap-2">
-                      {filter === "all" ? (
-                        <CalendarDays className="size-4 text-primary" />
-                      ) : (
-                        <FileText className="size-4 text-primary" />
-                      )}
-                      <h3 className="label-caps text-xs text-muted-foreground">
-                        {filter === "all" ? groupFiles[0].dateLabel : group}
-                      </h3>
-                    </div>
-                    <div className="space-y-2">
-                      {groupFiles.map((file) => (
-                        <FileCard
-                          key={file.id}
-                          file={file}
-                          canDelete={file.author === currentUser}
-                          onDownload={downloadFile}
-                          onDelete={(id) =>
-                            setFiles((currentFiles) => currentFiles.filter((item) => item.id !== id))
-                          }
-                        />
-                      ))}
-                    </div>
-                  </div>
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                {visibleFiles.map((file) => (
+                  <FileCard
+                    key={file.id}
+                    file={file}
+                    onClick={() => setSelectedFileDetails(file)}
+                    onDownload={downloadFile}
+                    onDelete={(id) => {
+                      setFileToDelete(id);
+                    }}
+                  />
                 ))}
               </div>
             )}
           </section>
+          <Dialog
+            open={!!selectedFileDetails}
+            onOpenChange={(open) => {
+              if (!open) setSelectedFileDetails(null);
+            }}
+          >
+            <DialogContent className="max-w-xl">
+              <DialogHeader>
+                <DialogTitle>Detalhes do arquivo</DialogTitle>
+              </DialogHeader>
+
+              {selectedFileDetails && (
+                <div className="space-y-4 py-2">
+                  <div>
+                    <p className="text-xs text-muted-foreground">
+                      Nome do arquivo
+                    </p>
+                    <p className="mt-1 break-words text-sm font-medium text-foreground">
+                      {selectedFileDetails.name}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-xs text-muted-foreground">Descrição</p>
+                    <p className="mt-1 whitespace-pre-wrap break-words text-sm text-foreground">
+                      {selectedFileDetails.description}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-xs text-muted-foreground">Autor</p>
+                    <p className="mt-1 text-sm text-foreground">
+                      {selectedFileDetails.author}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-xs text-muted-foreground">
+                      Data de compartilhamento
+                    </p>
+                    <p className="mt-1 text-sm text-foreground">
+                      {selectedFileDetails.dateLabel}
+                    </p>
+                  </div>
+                </div>
+              )}
+              <DialogFooter>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    if (selectedFileDetails) {
+                      downloadFile(selectedFileDetails);
+                    }
+                  }}
+                >
+                  <Download className="mr-2 h-4 w-4" />
+                  Baixar arquivo
+                </Button>
+
+                {selectedFileDetails?.author === currentUser && (
+                  <Button
+                    variant="destructive"
+                    onClick={() => {
+                      setFileToDelete(selectedFileDetails.id);
+                      setSelectedFileDetails(null);
+                    }}
+                  >
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    Remover arquivo
+                  </Button>
+                )}
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+          {fileToDelete && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+              <div
+                role="alertdialog"
+                aria-modal="true"
+                aria-labelledby="delete-dialog-title"
+                aria-describedby="delete-dialog-description"
+                className="w-full max-w-md rounded-xl border border-border bg-card p-6 shadow-xl"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-700">
+                    <Trash2 className="h-6 w-6" />
+                  </div>
+
+                  <h2
+                    id="delete-dialog-title"
+                    className="text-lg font-semibold text-foreground"
+                  >
+                    Excluir arquivo?
+                  </h2>
+                </div>
+
+                <p
+                  id="delete-dialog-description"
+                  className="mt-4 text-sm text-muted-foreground"
+                >
+                  Tem certeza de que deseja excluir este item? Essa ação não
+                  poderá ser desfeita.
+                </p>
+
+                <div className="mt-6 flex justify-end gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setFileToDelete(null)}
+                    className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+                  >
+                    Não
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={confirmDelete}
+                    className="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-red-700"
+                  >
+                    Sim, excluir
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </main>
 
@@ -280,9 +447,13 @@ function ArquivosCompartilhados() {
           <DialogHeader>
             <DialogTitle>Enviar arquivo</DialogTitle>
           </DialogHeader>
+
           <div className="space-y-4 py-2">
             <div>
-              <label htmlFor="file-title" className="label-caps mb-2 block text-xs text-muted-foreground">
+              <label
+                htmlFor="file-title"
+                className="label-caps mb-2 block text-xs text-muted-foreground"
+              >
                 Título
               </label>
               <Input
@@ -293,7 +464,10 @@ function ArquivosCompartilhados() {
               />
             </div>
             <div>
-              <label htmlFor="file-description" className="label-caps mb-2 block text-xs text-muted-foreground">
+              <label
+                htmlFor="file-description"
+                className="label-caps mb-2 block text-xs text-muted-foreground"
+              >
                 Descrição
               </label>
               <textarea
@@ -305,7 +479,9 @@ function ArquivosCompartilhados() {
               />
             </div>
             <div>
-              <span className="label-caps mb-2 block text-xs text-muted-foreground">Arquivo</span>
+              <span className="label-caps mb-2 block text-xs text-muted-foreground">
+                Arquivo
+              </span>
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
@@ -328,10 +504,13 @@ function ArquivosCompartilhados() {
               >
                 <UploadCloud className="size-8 text-primary" />
                 <span className="mt-2 text-sm font-medium text-foreground">
-                  {selectedFile ? selectedFile.name : "Selecione ou arraste um arquivo aqui"}
+                  {selectedFile
+                    ? selectedFile.name
+                    : "Selecione ou arraste um arquivo aqui"}
                 </span>
                 <span className="mt-1 text-xs text-muted-foreground">
-                  Formatos aceitos: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, JPG e PNG. Máximo de 10 MB.
+                  Formatos aceitos: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, JPG e
+                  PNG. Máximo de 10 MB.
                 </span>
               </button>
               <input
@@ -347,7 +526,11 @@ function ArquivosCompartilhados() {
             <Button type="button" variant="outline" onClick={resetUpload}>
               Cancelar
             </Button>
-            <Button type="button" onClick={sendFile} disabled={!selectedFile || !title.trim()}>
+            <Button
+              type="button"
+              onClick={sendFile}
+              disabled={!selectedFile || !title.trim()}
+            >
               Enviar
             </Button>
           </DialogFooter>
@@ -356,50 +539,75 @@ function ArquivosCompartilhados() {
     </div>
   );
 }
-
 function FileCard({
   file,
-  canDelete,
   onDownload,
   onDelete,
+  onClick,
 }: {
   file: SharedFile;
-  canDelete: boolean;
   onDownload: (file: SharedFile) => void;
   onDelete: (id: string) => void;
+  onClick: () => void;
 }) {
+  const { Icon, colorClass } = getFileStyle(file.format);
+
   return (
-    <article className="flex flex-col gap-4 rounded-md border border-border bg-card p-4 shadow-[var(--shadow-card)] sm:flex-row sm:items-center sm:justify-between">
-      <div className="flex min-w-0 gap-3">
-        <div className="flex size-10 shrink-0 items-center justify-center rounded-md bg-primary-soft/50">
-          <FileText className="size-5 text-primary" />
+    <article
+      role="button"
+      tabIndex={0}
+      onClick={onClick}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" && event.target === event.currentTarget) {
+          onClick();
+        }
+      }}
+      className="relative flex cursor-pointer flex-col gap-4 rounded-md border border-border bg-card p-4 shadow-[var(--shadow-card)] transition-all hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary/30 sm:flex-row sm:items-center sm:justify-between"
+    >
+      <div className="flex min-w-0 gap-3 pr-20">
+        <div
+          className={cn(
+            "flex size-10 shrink-0 items-center justify-center rounded-md",
+            colorClass,
+          )}
+        >
+          <Icon className="size-5" />
         </div>
+
         <div className="min-w-0">
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            <h4 className="truncate text-sm font-medium text-foreground">{file.name}</h4>
-            <span className="font-mono text-[10px] text-muted-foreground">{file.id}</span>
-          </div>
-          <p className="mt-1 text-xs text-muted-foreground">{file.description}</p>
+          <h4 className="truncate text-sm font-medium text-foreground">
+            {file.name}
+          </h4>
+
+          <p className="mt-1 text-xs text-muted-foreground">
+            {file.description.length > 50
+              ? `${file.description.slice(0, 50)}...`
+              : file.description}
+          </p>
+
           <p className="mt-2 text-xs text-muted-foreground">
-            Autor: <span className="text-foreground">{file.author}</span> · {file.dateLabel}
+            Autor: <span className="text-foreground">{file.author}</span> ·{" "}
+            {file.dateLabel}
           </p>
         </div>
       </div>
-      <div className="flex shrink-0 items-center gap-2 self-end sm:self-center">
+
+      <div className="absolute right-3 top-3 flex items-center gap-2">
         <button
           type="button"
           onClick={() => onDownload(file)}
           aria-label={`Baixar ${file.name}`}
-          className="flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-primary"
+          className="flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-primary cursor-pointer"
         >
           <Download className="size-4" />
         </button>
-        {canDelete && (
+
+        {file.direction === "sent" && (
           <button
             type="button"
             onClick={() => onDelete(file.id)}
             aria-label={`Excluir ${file.name}`}
-            className="flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+            className="flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive cursor-pointer"
           >
             <Trash2 className="size-4" />
           </button>
