@@ -17,6 +17,9 @@ import {
   TrendingUp,
   User,
   Sprout,
+  CircleHelp,
+  Bot,
+  MapPin,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSidebarGroups } from "@/hooks/use-sidebar";
@@ -28,6 +31,7 @@ type Item = {
   children?: {
     label: string;
     icon: React.ComponentType<{ className?: string }>;
+    to?: "/faq" | "/assistente" | "/contatos-localizacao";
   }[];
 };
 
@@ -54,7 +58,19 @@ const items: Item[] = [
       { label: "Eixo: Indivíduo", icon: User },
     ],
   },
-  { label: "Ajuda", icon: LifeBuoy },
+  {
+    label: "Ajuda",
+    icon: LifeBuoy,
+    children: [
+      { label: "FAQ", icon: CircleHelp, to: "/faq" },
+      { label: "Assistente", icon: Bot, to: "/assistente" },
+      {
+        label: "Contatos e localização",
+        icon: MapPin,
+        to: "/contatos-localizacao",
+      },
+    ],
+  },
   { label: "Avalie-nos", icon: Star },
   { label: "Fale com a A3", icon: MessageSquare },
 ];
@@ -65,7 +81,10 @@ export function AppSidebar({ open }: { open: boolean }) {
   const location = useLocation();
 
   const isGroupActive = (item: Item) =>
-    item.children?.some((child) => child.label === active) ?? false;
+    item.children?.some(
+      (child) =>
+        child.label === active || (child.to && location.pathname === child.to),
+    ) ?? false;
 
   return (
     <aside
@@ -149,12 +168,14 @@ export function AppSidebar({ open }: { open: boolean }) {
                     {item.children.map((child) => {
                       const childActive =
                         active === child.label ||
+                        (child.to && location.pathname === child.to) ||
                         (child.label === "Conteúdo" &&
                           location.pathname === "/conteudo") ||
                         (child.label === "Meu Assessment" &&
                           location.pathname === "/meu-assessment") ||
                         (child.label === "Jornada de Desenvolvimento" &&
-                          location.pathname === "/jornada-de-desenvolvimento") ||
+                          location.pathname ===
+                            "/jornada-de-desenvolvimento") ||
                         (child.label === "Arquivos Compartilhados" &&
                           location.pathname === "/arquivos-compartilhados") ||
                         (child.label === "Plano de Ação (PDI)" &&
@@ -174,16 +195,37 @@ export function AppSidebar({ open }: { open: boolean }) {
                           : "text-sidebar-foreground hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground",
                       );
 
+                      if (child.to) {
+                        return (
+                          <Link
+                            key={child.label}
+                            to={child.to}
+                            onClick={() => setActive(child.label)}
+                            className={childClassName}
+                          >
+                            <child.icon
+                              className={cn(
+                                "size-4",
+                                childActive
+                                  ? "text-primary-foreground"
+                                  : "text-primary/70",
+                              )}
+                            />
+                            {child.label}
+                          </Link>
+                        );
+                      }
+
                       if (
                         child.label === "Conteúdo" ||
-                          child.label === "Meu Assessment" ||
-                          child.label === "Jornada de Desenvolvimento" ||
-                          child.label === "Arquivos Compartilhados" ||
-                          child.label === "Plano de Ação (PDI)" ||
-                          child.label === "Eixo: Negócio" ||
-                          child.label === "Eixo: Equipe" ||
-                          child.label === "Eixo: Mercado" ||
-                          child.label === "Eixo: Indivíduo"
+                        child.label === "Meu Assessment" ||
+                        child.label === "Jornada de Desenvolvimento" ||
+                        child.label === "Arquivos Compartilhados" ||
+                        child.label === "Plano de Ação (PDI)" ||
+                        child.label === "Eixo: Negócio" ||
+                        child.label === "Eixo: Equipe" ||
+                        child.label === "Eixo: Mercado" ||
+                        child.label === "Eixo: Indivíduo"
                       ) {
                         return (
                           <Link
@@ -191,21 +233,21 @@ export function AppSidebar({ open }: { open: boolean }) {
                             to={
                               child.label === "Conteúdo"
                                 ? "/conteudo"
-                                  : child.label === "Meu Assessment"
-                                    ? "/meu-assessment"
-                                    : child.label === "Jornada de Desenvolvimento"
-                                      ? "/jornada-de-desenvolvimento"
-                                      : child.label === "Arquivos Compartilhados"
-                                        ? "/arquivos-compartilhados"
-                                        : child.label === "Plano de Ação (PDI)"
-                                          ? "/plano-de-acao"
-                                          : child.label === "Eixo: Negócio"
-                                            ? "/biblioteca-negocio"
-                                            : child.label === "Eixo: Equipe"
-                                              ? "/biblioteca-equipe"
-                                              : child.label === "Eixo: Mercado"
-                                                ? "/biblioteca-mercado"
-                                                : "/biblioteca-individuo"
+                                : child.label === "Meu Assessment"
+                                  ? "/meu-assessment"
+                                  : child.label === "Jornada de Desenvolvimento"
+                                    ? "/jornada-de-desenvolvimento"
+                                    : child.label === "Arquivos Compartilhados"
+                                      ? "/arquivos-compartilhados"
+                                      : child.label === "Plano de Ação (PDI)"
+                                        ? "/plano-de-acao"
+                                        : child.label === "Eixo: Negócio"
+                                          ? "/biblioteca-negocio"
+                                          : child.label === "Eixo: Equipe"
+                                            ? "/biblioteca-equipe"
+                                            : child.label === "Eixo: Mercado"
+                                              ? "/biblioteca-mercado"
+                                              : "/biblioteca-individuo"
                             }
                             onClick={() => setActive(child.label)}
                             className={childClassName}

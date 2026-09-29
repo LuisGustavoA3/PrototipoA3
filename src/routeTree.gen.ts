@@ -12,11 +12,14 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdministracaoRouteImport } from './routes/administracao'
 import { Route as ArquivosCompartilhadosRouteImport } from './routes/arquivos-compartilhados'
+import { Route as AssistenteRouteImport } from './routes/assistente'
 import { Route as BibliotecaEquipeRouteImport } from './routes/biblioteca-equipe'
 import { Route as BibliotecaIndividuoRouteImport } from './routes/biblioteca-individuo'
 import { Route as BibliotecaMercadoRouteImport } from './routes/biblioteca-mercado'
 import { Route as BibliotecaNegocioRouteImport } from './routes/biblioteca-negocio'
+import { Route as ContatosLocalizacaoRouteImport } from './routes/contatos-localizacao'
 import { Route as ConteudoRouteImport } from './routes/conteudo'
+import { Route as FaqRouteImport } from './routes/faq'
 import { Route as HubRouteImport } from './routes/hub'
 import { Route as InformacoesPessoaisRouteImport } from './routes/informacoes-pessoais'
 import { Route as JornadaDeDesenvolvimentoRouteImport } from './routes/jornada-de-desenvolvimento'
@@ -41,6 +44,11 @@ const ArquivosCompartilhadosRoute = ArquivosCompartilhadosRouteImport.update({
   path: '/arquivos-compartilhados',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AssistenteRoute = AssistenteRouteImport.update({
+  id: '/assistente',
+  path: '/assistente',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BibliotecaEquipeRoute = BibliotecaEquipeRouteImport.update({
   id: '/biblioteca-equipe',
   path: '/biblioteca-equipe',
@@ -61,9 +69,19 @@ const BibliotecaNegocioRoute = BibliotecaNegocioRouteImport.update({
   path: '/biblioteca-negocio',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ContatosLocalizacaoRoute = ContatosLocalizacaoRouteImport.update({
+  id: '/contatos-localizacao',
+  path: '/contatos-localizacao',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ConteudoRoute = ConteudoRouteImport.update({
   id: '/conteudo',
   path: '/conteudo',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HubRoute = HubRouteImport.update({
@@ -113,11 +131,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/administracao': typeof AdministracaoRoute
   '/arquivos-compartilhados': typeof ArquivosCompartilhadosRoute
+  '/assistente': typeof AssistenteRoute
   '/biblioteca-equipe': typeof BibliotecaEquipeRoute
   '/biblioteca-individuo': typeof BibliotecaIndividuoRoute
   '/biblioteca-mercado': typeof BibliotecaMercadoRoute
   '/biblioteca-negocio': typeof BibliotecaNegocioRoute
+  '/contatos-localizacao': typeof ContatosLocalizacaoRoute
   '/conteudo': typeof ConteudoRoute
+  '/faq': typeof FaqRoute
   '/hub': typeof HubRoute
   '/informacoes-pessoais': typeof InformacoesPessoaisRoute
   '/jornada-de-desenvolvimento': typeof JornadaDeDesenvolvimentoRoute
@@ -131,11 +152,14 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/administracao': typeof AdministracaoRoute
   '/arquivos-compartilhados': typeof ArquivosCompartilhadosRoute
+  '/assistente': typeof AssistenteRoute
   '/biblioteca-equipe': typeof BibliotecaEquipeRoute
   '/biblioteca-individuo': typeof BibliotecaIndividuoRoute
   '/biblioteca-mercado': typeof BibliotecaMercadoRoute
   '/biblioteca-negocio': typeof BibliotecaNegocioRoute
+  '/contatos-localizacao': typeof ContatosLocalizacaoRoute
   '/conteudo': typeof ConteudoRoute
+  '/faq': typeof FaqRoute
   '/hub': typeof HubRoute
   '/informacoes-pessoais': typeof InformacoesPessoaisRoute
   '/jornada-de-desenvolvimento': typeof JornadaDeDesenvolvimentoRoute
@@ -150,11 +174,14 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/administracao': typeof AdministracaoRoute
   '/arquivos-compartilhados': typeof ArquivosCompartilhadosRoute
+  '/assistente': typeof AssistenteRoute
   '/biblioteca-equipe': typeof BibliotecaEquipeRoute
   '/biblioteca-individuo': typeof BibliotecaIndividuoRoute
   '/biblioteca-mercado': typeof BibliotecaMercadoRoute
   '/biblioteca-negocio': typeof BibliotecaNegocioRoute
+  '/contatos-localizacao': typeof ContatosLocalizacaoRoute
   '/conteudo': typeof ConteudoRoute
+  '/faq': typeof FaqRoute
   '/hub': typeof HubRoute
   '/informacoes-pessoais': typeof InformacoesPessoaisRoute
   '/jornada-de-desenvolvimento': typeof JornadaDeDesenvolvimentoRoute
@@ -170,11 +197,14 @@ export interface FileRouteTypes {
     | '/'
     | '/administracao'
     | '/arquivos-compartilhados'
+    | '/assistente'
     | '/biblioteca-equipe'
     | '/biblioteca-individuo'
     | '/biblioteca-mercado'
     | '/biblioteca-negocio'
+    | '/contatos-localizacao'
     | '/conteudo'
+    | '/faq'
     | '/hub'
     | '/informacoes-pessoais'
     | '/jornada-de-desenvolvimento'
@@ -188,11 +218,14 @@ export interface FileRouteTypes {
     | '/'
     | '/administracao'
     | '/arquivos-compartilhados'
+    | '/assistente'
     | '/biblioteca-equipe'
     | '/biblioteca-individuo'
     | '/biblioteca-mercado'
     | '/biblioteca-negocio'
+    | '/contatos-localizacao'
     | '/conteudo'
+    | '/faq'
     | '/hub'
     | '/informacoes-pessoais'
     | '/jornada-de-desenvolvimento'
@@ -206,11 +239,14 @@ export interface FileRouteTypes {
     | '/'
     | '/administracao'
     | '/arquivos-compartilhados'
+    | '/assistente'
     | '/biblioteca-equipe'
     | '/biblioteca-individuo'
     | '/biblioteca-mercado'
     | '/biblioteca-negocio'
+    | '/contatos-localizacao'
     | '/conteudo'
+    | '/faq'
     | '/hub'
     | '/informacoes-pessoais'
     | '/jornada-de-desenvolvimento'
@@ -225,11 +261,14 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdministracaoRoute: typeof AdministracaoRoute
   ArquivosCompartilhadosRoute: typeof ArquivosCompartilhadosRoute
+  AssistenteRoute: typeof AssistenteRoute
   BibliotecaEquipeRoute: typeof BibliotecaEquipeRoute
   BibliotecaIndividuoRoute: typeof BibliotecaIndividuoRoute
   BibliotecaMercadoRoute: typeof BibliotecaMercadoRoute
   BibliotecaNegocioRoute: typeof BibliotecaNegocioRoute
+  ContatosLocalizacaoRoute: typeof ContatosLocalizacaoRoute
   ConteudoRoute: typeof ConteudoRoute
+  FaqRoute: typeof FaqRoute
   HubRoute: typeof HubRoute
   InformacoesPessoaisRoute: typeof InformacoesPessoaisRoute
   JornadaDeDesenvolvimentoRoute: typeof JornadaDeDesenvolvimentoRoute
@@ -263,6 +302,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ArquivosCompartilhadosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/assistente': {
+      id: '/assistente'
+      path: '/assistente'
+      fullPath: '/assistente'
+      preLoaderRoute: typeof AssistenteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/biblioteca-equipe': {
       id: '/biblioteca-equipe'
       path: '/biblioteca-equipe'
@@ -291,11 +337,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BibliotecaNegocioRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/contatos-localizacao': {
+      id: '/contatos-localizacao'
+      path: '/contatos-localizacao'
+      fullPath: '/contatos-localizacao'
+      preLoaderRoute: typeof ContatosLocalizacaoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/conteudo': {
       id: '/conteudo'
       path: '/conteudo'
       fullPath: '/conteudo'
       preLoaderRoute: typeof ConteudoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/hub': {
@@ -361,11 +421,14 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdministracaoRoute: AdministracaoRoute,
   ArquivosCompartilhadosRoute: ArquivosCompartilhadosRoute,
+  AssistenteRoute: AssistenteRoute,
   BibliotecaEquipeRoute: BibliotecaEquipeRoute,
   BibliotecaIndividuoRoute: BibliotecaIndividuoRoute,
   BibliotecaMercadoRoute: BibliotecaMercadoRoute,
   BibliotecaNegocioRoute: BibliotecaNegocioRoute,
+  ContatosLocalizacaoRoute: ContatosLocalizacaoRoute,
   ConteudoRoute: ConteudoRoute,
+  FaqRoute: FaqRoute,
   HubRoute: HubRoute,
   InformacoesPessoaisRoute: InformacoesPessoaisRoute,
   JornadaDeDesenvolvimentoRoute: JornadaDeDesenvolvimentoRoute,
