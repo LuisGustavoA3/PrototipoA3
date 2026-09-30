@@ -221,7 +221,7 @@ function SummaryCard({
       className={cn(
         "flex w-full items-center justify-between rounded-md border bg-card p-5 text-left shadow-[var(--shadow-card)] transition-colors",
         active
-          ? "border-primary bg-primary/5"
+          ? "border-primary ring-1 ring-primary/20"
           : "border-border hover:border-primary/50",
       )}
     >
