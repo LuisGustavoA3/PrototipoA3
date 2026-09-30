@@ -5,6 +5,7 @@ import { AppSidebar } from "@/components/AppSidebar";
 import { TopBar } from "@/components/TopBar";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/PageHeader";
+
 import {
   Dialog,
   DialogContent,
@@ -21,6 +22,7 @@ import {
   updatePdiAction,
   usePdiActions,
   isValidPdiDate,
+  isValidPdiDateRange,
 } from "@/lib/pdi-store";
 import { cn } from "@/lib/utils";
 
@@ -273,7 +275,10 @@ function PlanoDeAcao() {
               dateError={
                 (form.startDate.length > 0 &&
                   !isValidPdiDate(form.startDate)) ||
-                (form.endDate.length > 0 && !isValidPdiDate(form.endDate))
+                (form.endDate.length > 0 && !isValidPdiDate(form.endDate)) ||
+                (form.startDate.length > 0 &&
+                  form.endDate.length > 0 &&
+                  !isValidPdiDateRange(form.startDate, form.endDate))
               }
               onCancel={() => setModal(modal === "edit" ? "details" : null)}
               onSave={saveAction}
@@ -320,7 +325,7 @@ function ActionCard({
         Prazo: {formatDate(action.startDate)} → {formatDate(action.endDate)}
       </div>
       <div className="mt-4 border-t border-border pt-3 text-xs text-muted-foreground">
-        <p>Criado em {formatDate(action.createdAt)}</p>
+        <p>Criado em {formatCreatedAt(action.createdAt)}</p>
         <p className="mt-1">Autor: {action.author}</p>
       </div>
     </article>
@@ -351,6 +356,16 @@ function ActionForm({
     !form.endDate ||
     dateError ||
     (form.status === "Concluído" && !form.evidence.trim());
+  const dateErrorMessage =
+    form.startDate.length > 0 &&
+    form.endDate.length > 0 &&
+    isValidPdiDate(form.startDate) &&
+    isValidPdiDate(form.endDate) &&
+    !isValidPdiDateRange(form.startDate, form.endDate)
+      ? "A data de fim deve ser igual ou posterior à data de início."
+      : dateError
+        ? "Informe datas válidas com ano de até 4 dígitos."
+        : "";
 
   return (
     <>
@@ -400,14 +415,16 @@ function ActionForm({
         <Field label="Fim *">
           <Input
             type="date"
+            min={form.startDate || undefined}
             max="9999-12-31"
             value={form.endDate}
+            disabled={!form.startDate}
             onChange={(event) => update({ endDate: event.target.value })}
           />
         </Field>
-        {dateError && (
+        {dateErrorMessage && (
           <p className="text-sm text-destructive sm:col-span-2">
-            Informe datas válidas com ano de até 4 dígitos.
+            {dateErrorMessage}
           </p>
         )}
         <Field label="Detalhes" className="sm:col-span-2">
@@ -467,7 +484,7 @@ function DetailsContent({
         </div>
         <Detail label="Início" value={formatDate(action.startDate)} />
         <Detail label="Fim" value={formatDate(action.endDate)} />
-        <Detail label="Criado em" value={formatDate(action.createdAt)} />
+        <Detail label="Criado em" value={formatCreatedAt(action.createdAt)} />
         <Detail label="Autor" value={action.author} />
         <Detail
           label="Detalhes"
@@ -535,4 +552,11 @@ function EmptyState({
 function formatDate(value: string) {
   if (!isValidPdiDate(value)) return "Data inválida";
   return new Intl.DateTimeFormat("pt-BR").format(new Date(`${value}T12:00:00`));
+}
+function formatCreatedAt(value: string) {
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) return "Data inválida";
+
+  return new Intl.DateTimeFormat("pt-BR").format(date);
 }
