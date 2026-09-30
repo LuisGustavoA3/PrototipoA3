@@ -415,8 +415,10 @@ function ActionForm({
         <Field label="Fim *">
           <Input
             type="date"
+            min={form.startDate || undefined}
             max="9999-12-31"
             value={form.endDate}
+            disabled={!form.startDate}
             onChange={(event) => update({ endDate: event.target.value })}
           />
         </Field>
