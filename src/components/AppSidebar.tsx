@@ -10,7 +10,6 @@ import {
   Lightbulb,
   LifeBuoy,
   Star,
-  MessageSquare,
   ChevronDown,
   Briefcase,
   Users,
@@ -72,7 +71,6 @@ const items: Item[] = [
     ],
   },
   { label: "Avalie-nos", icon: Star },
-  { label: "Fale com a A3", icon: MessageSquare },
 ];
 
 export function AppSidebar({ open }: { open: boolean }) {
