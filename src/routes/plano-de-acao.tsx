@@ -320,7 +320,7 @@ function ActionCard({
         Prazo: {formatDate(action.startDate)} → {formatDate(action.endDate)}
       </div>
       <div className="mt-4 border-t border-border pt-3 text-xs text-muted-foreground">
-        <p>Criado em {formatDate(action.createdAt)}</p>
+        <p>Criado em {formatCreatedAt(action.createdAt)}</p>
         <p className="mt-1">Autor: {action.author}</p>
       </div>
     </article>
@@ -467,7 +467,7 @@ function DetailsContent({
         </div>
         <Detail label="Início" value={formatDate(action.startDate)} />
         <Detail label="Fim" value={formatDate(action.endDate)} />
-        <Detail label="Criado em" value={formatDate(action.createdAt)} />
+        <Detail label="Criado em" value={formatCreatedAt(action.createdAt)} />
         <Detail label="Autor" value={action.author} />
         <Detail
           label="Detalhes"
@@ -535,4 +535,18 @@ function EmptyState({
 function formatDate(value: string) {
   if (!isValidPdiDate(value)) return "Data inválida";
   return new Intl.DateTimeFormat("pt-BR").format(new Date(`${value}T12:00:00`));
+}
+function formatCreatedAt(value: string) {
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) return "Data inválida";
+
+  return new Intl.DateTimeFormat("pt-BR").format(date);
+}
+export function isValidPdiDateRange(startDate: string, endDate: string) {
+  if (!isValidPdiDate(startDate) || !isValidPdiDate(endDate)) {
+    return false;
+  }
+
+  return endDate >= startDate;
 }
