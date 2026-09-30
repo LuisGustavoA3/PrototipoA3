@@ -80,13 +80,20 @@ export function subscribePdi(listener: () => void) {
 export function getPdiActions() {
   return actions;
 }
+export function isValidPdiDateRange(startDate: string, endDate: string) {
+  if (!isValidPdiDate(startDate) || !isValidPdiDate(endDate)) {
+    return false;
+  }
+
+  return endDate >= startDate;
+}
 
 export function usePdiActions() {
   return useSyncExternalStore(subscribePdi, getPdiActions, getPdiActions);
 }
 
 export function addPdiAction(action: Omit<PdiAction, "id" | "createdAt">) {
-  if (!isValidPdiDate(action.startDate) || !isValidPdiDate(action.endDate)) {
+  if (!isValidPdiDateRange(action.startDate, action.endDate)) {
     return;
   }
 

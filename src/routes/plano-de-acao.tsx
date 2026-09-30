@@ -543,10 +543,3 @@ function formatCreatedAt(value: string) {
 
   return new Intl.DateTimeFormat("pt-BR").format(date);
 }
-export function isValidPdiDateRange(startDate: string, endDate: string) {
-  if (!isValidPdiDate(startDate) || !isValidPdiDate(endDate)) {
-    return false;
-  }
-
-  return endDate >= startDate;
-}
