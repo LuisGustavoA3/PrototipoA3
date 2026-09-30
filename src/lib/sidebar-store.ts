@@ -31,14 +31,24 @@ export function getSidebarGroups(): Record<string, boolean> {
   if (typeof window === "undefined") return {};
   try {
     const stored = window.localStorage.getItem(SIDEBAR_GROUPS_KEY);
-    return stored ? (JSON.parse(stored) as Record<string, boolean>) : {};
+    return stored
+      ? (JSON.parse(stored) as Record<string, boolean>)
+      : { Ajuda: true };
   } catch {
     return {};
   }
 }
 
 export function setSidebarGroup(label: string, open: boolean) {
-  const groups = { ...getSidebarGroups(), [label]: open };
+  const groups = open ? { [label]: true } : { [label]: false };
+
   window.localStorage.setItem(SIDEBAR_GROUPS_KEY, JSON.stringify(groups));
+  notify();
+}
+export function resetSidebarGroups() {
+  const groups = { Ajuda: true };
+
+  window.localStorage.setItem(SIDEBAR_GROUPS_KEY, JSON.stringify(groups));
+
   notify();
 }

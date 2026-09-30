@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { resetSidebarGroups } from "@/lib/sidebar-store";
 import { Users, Presentation, UserSearch } from "lucide-react";
 
 export const Route = createFileRoute("/hub")({
@@ -60,6 +61,11 @@ function Hub() {
             <Link
               key={m.to}
               to={m.to}
+              onClick={() => {
+                if (m.to === "/") {
+                  resetSidebarGroups();
+                }
+              }}
               className={
                 "group flex h-56 w-full max-w-[340px] flex-col items-center justify-center gap-6 rounded-xl bg-card shadow-[0_4px_20px_rgba(0,0,0,0.06)] transition-transform duration-200 hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,0.1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" +
                 (i === 2 ? " sm:col-span-2" : "")
