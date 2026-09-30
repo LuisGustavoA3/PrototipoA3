@@ -5,6 +5,7 @@ import { AppSidebar } from "@/components/AppSidebar";
 import { TopBar } from "@/components/TopBar";
 import { Input } from "@/components/ui/input";
 import { useSidebarOpen } from "@/hooks/use-sidebar";
+import { PageHeader } from "@/components/PageHeader";
 import {
   type LibraryContent,
   setLibraryContentFinished,
@@ -26,7 +27,8 @@ export const Route = createFileRoute("/biblioteca-individuo")({
       { title: "Biblioteca: Indivíduo | A3 Digital" },
       {
         name: "description",
-        content: "Explore conteúdos do eixo Indivíduo e acompanhe seu progresso na Biblioteca.",
+        content:
+          "Explore conteúdos do eixo Indivíduo e acompanhe seu progresso na Biblioteca.",
       },
     ],
   }),
@@ -40,18 +42,32 @@ function BibliotecaIndividuo() {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const navigate = useNavigate({ from: "/biblioteca-individuo" });
 
-  const activePublicContents = contents.filter((content) => content.public && content.active);
-  const individualContents = activePublicContents.filter((content) => content.axis === "Indivíduo");
-  const finishedLibrary = activePublicContents.filter((content) => content.finished).length;
-  const finishedIndividual = individualContents.filter((content) => content.finished).length;
-  const libraryProgress = percentage(finishedLibrary, activePublicContents.length);
-  const individualProgress = percentage(finishedIndividual, individualContents.length);
+  const activePublicContents = contents.filter(
+    (content) => content.public && content.active,
+  );
+  const individualContents = activePublicContents.filter(
+    (content) => content.axis === "Indivíduo",
+  );
+  const finishedLibrary = activePublicContents.filter(
+    (content) => content.finished,
+  ).length;
+  const finishedIndividual = individualContents.filter(
+    (content) => content.finished,
+  ).length;
+  const libraryProgress = percentage(
+    finishedLibrary,
+    activePublicContents.length,
+  );
+  const individualProgress = percentage(
+    finishedIndividual,
+    individualContents.length,
+  );
 
   const visibleContents = useMemo(() => {
     const query = search.toLowerCase().trim();
     return individualContents.filter((content) => {
-      const matchesSearch = [content.name, content.type, content.topic].some((value) =>
-        value.toLowerCase().includes(query),
+      const matchesSearch = [content.name, content.type, content.topic].some(
+        (value) => value.toLowerCase().includes(query),
       );
       const matchesStatus =
         statusFilter === "all" ||
@@ -64,14 +80,20 @@ function BibliotecaIndividuo() {
   const groupedContents = useMemo(() => {
     const groups = new Map<string, LibraryContent[]>();
     visibleContents.forEach((content) => {
-      groups.set(content.topic, [...(groups.get(content.topic) ?? []), content]);
+      groups.set(content.topic, [
+        ...(groups.get(content.topic) ?? []),
+        content,
+      ]);
     });
     return [...groups.entries()];
   }, [visibleContents]);
 
   const openContent = (content: LibraryContent) => {
     if (!content.finished) setLibraryContentFinished(content.id, true);
-    navigate({ to: "/biblioteca/conteudo/$contentId", params: { contentId: content.id } });
+    navigate({
+      to: "/biblioteca/conteudo/$contentId",
+      params: { contentId: content.id },
+    });
   };
 
   const toggleFinished = (content: LibraryContent) => {
@@ -88,14 +110,12 @@ function BibliotecaIndividuo() {
           sidebarOpen ? "pl-[264px]" : "pl-0",
         )}
       >
-        <div className="space-y-6 p-6">
-          <header>
-            <p className="label-caps text-xs text-primary">Biblioteca</p>
-            <h1 className="mt-1 text-2xl text-foreground">Indivíduo</h1>
-            <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-              Desenvolva seu autoconhecimento, sua organização e sua capacidade de aprender continuamente.
-            </p>
-          </header>
+        <div className="space-y-6 p-6 ">
+          <PageHeader
+            section="Biblioteca"
+            title="Indivíduo"
+            description="Desenvolva seu autoconhecimento, sua organização e sua capacidade de aprender continuamente."
+          />
 
           <section className="grid gap-4 lg:grid-cols-2">
             <ProgressCard
@@ -111,7 +131,8 @@ function BibliotecaIndividuo() {
           </section>
 
           <p className="rounded-md border border-border bg-card px-4 py-3 text-xs text-muted-foreground">
-            Seu progresso considera todos os conteúdos públicos da Biblioteca e pode ser alterado caso o total de conteúdos seja atualizado.
+            Seu progresso considera todos os conteúdos públicos da Biblioteca e
+            pode ser alterado caso o total de conteúdos seja atualizado.
           </p>
 
           <section className="space-y-5">
@@ -240,7 +261,9 @@ function ContentItem({
         onClick={onOpen}
         className="min-w-0 flex-1 cursor-pointer rounded-sm px-2 py-1 text-left transition-colors hover:bg-primary-soft/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       >
-        <span className="label-caps text-[10px] text-muted-foreground">{content.type}</span>
+        <span className="label-caps text-[10px] text-muted-foreground">
+          {content.type}
+        </span>
         <span className="mx-2 text-xs text-muted-foreground">—</span>
         <span className="text-sm text-foreground">{content.name}</span>
       </button>

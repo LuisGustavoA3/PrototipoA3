@@ -11,6 +11,7 @@ import { AppSidebar } from "@/components/AppSidebar";
 import { TopBar } from "@/components/TopBar";
 import { useSidebarOpen } from "@/hooks/use-sidebar";
 import { cn } from "@/lib/utils";
+import { PageHeader } from "@/components/PageHeader";
 
 type AssessmentStatus = "completed" | "processing" | "not-started";
 
@@ -87,7 +88,10 @@ const statusConfig = {
     icon: FileQuestion,
     color: "text-muted-foreground",
   },
-} satisfies Record<AssessmentStatus, { label: string; icon: typeof CheckCircle2; color: string }>;
+} satisfies Record<
+  AssessmentStatus,
+  { label: string; icon: typeof CheckCircle2; color: string }
+>;
 
 const statusPriority: Record<AssessmentStatus, number> = {
   completed: 0,
@@ -112,7 +116,8 @@ export const Route = createFileRoute("/meu-assessment")({
 function MeuAssessment() {
   const [sidebarOpen, toggleSidebar] = useSidebarOpen();
   const orderedAssessments = [...assessments].sort(
-    (first, second) => statusPriority[first.status] - statusPriority[second.status],
+    (first, second) =>
+      statusPriority[first.status] - statusPriority[second.status],
   );
 
   return (
@@ -126,14 +131,11 @@ function MeuAssessment() {
         )}
       >
         <div className="space-y-6 p-6">
-          <header>
-            <p className="label-caps text-xs text-primary">Meu desenvolvimento</p>
-            <h1 className="mt-1 text-2xl text-foreground">Meu Assessment</h1>
-            <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-              Acompanhe os testes realizados e descubra quais avaliações podem apoiar sua jornada.
-            </p>
-          </header>
-
+          <PageHeader
+            section="Meu Desenvolvimento"
+            title="Meu Assessment"
+            description="Acompanhe os testes realizados e descubra quais avaliações podem apoiar sua jornada."
+          />
           <section className="grid gap-4 sm:grid-cols-3">
             <SummaryCard
               label="Testes disponíveis"
@@ -142,19 +144,29 @@ function MeuAssessment() {
             />
             <SummaryCard
               label="Resultados prontos"
-              value={assessments.filter((assessment) => assessment.status === "completed").length}
+              value={
+                assessments.filter(
+                  (assessment) => assessment.status === "completed",
+                ).length
+              }
               icon={CheckCircle2}
             />
             <SummaryCard
               label="Aguardando realização"
-              value={assessments.filter((assessment) => assessment.status === "not-started").length}
+              value={
+                assessments.filter(
+                  (assessment) => assessment.status === "not-started",
+                ).length
+              }
               icon={Clock3}
             />
           </section>
 
           <section>
             <div className="mb-4 flex items-center justify-between gap-4">
-              <h2 className="label-caps text-sm text-foreground">Testes de assessment</h2>
+              <h2 className="label-caps text-sm text-foreground">
+                Testes de assessment
+              </h2>
               <span className="text-xs text-muted-foreground">
                 {assessments.length} avaliações
               </span>
@@ -203,15 +215,22 @@ function AssessmentCard({ assessment }: { assessment: Assessment }) {
           <FileQuestion className="size-8 text-primary" />
         </div>
         <div className="min-w-0">
-          <h3 className="text-lg leading-tight text-foreground">{assessment.name}</h3>
-          <p className="mt-2 text-sm leading-5 text-muted-foreground">{assessment.description}</p>
+          <h3 className="text-lg leading-tight text-foreground">
+            {assessment.name}
+          </h3>
+          <p className="mt-2 text-sm leading-5 text-muted-foreground">
+            {assessment.description}
+          </p>
         </div>
       </div>
 
       <div className="mt-5 flex flex-1 flex-col justify-end border-t border-border pt-4">
         <div className={cn("flex items-center gap-2 text-sm", status.color)}>
           <StatusIcon
-            className={cn("size-4", assessment.status === "processing" && "animate-spin")}
+            className={cn(
+              "size-4",
+              assessment.status === "processing" && "animate-spin",
+            )}
           />
           <span>{status.label}</span>
         </div>
@@ -225,7 +244,8 @@ function AssessmentCard({ assessment }: { assessment: Assessment }) {
 
         {assessment.status === "processing" && (
           <p className="mt-3 text-xs text-muted-foreground">
-            Assim que a análise for concluída, seu resultado estará disponível aqui.
+            Assim que a análise for concluída, seu resultado estará disponível
+            aqui.
           </p>
         )}
 

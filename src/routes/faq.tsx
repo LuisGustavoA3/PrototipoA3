@@ -3,6 +3,7 @@ import { ArrowRight, Bot, MapPin, Search, SearchX, X } from "lucide-react";
 import { useMemo, useState } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { TopBar } from "@/components/TopBar";
+import { PageHeader } from "@/components/PageHeader";
 import {
   Accordion,
   AccordionContent,
@@ -52,21 +53,16 @@ function FAQ() {
       <AppSidebar open={sidebarOpen} />
       <main
         className={cn(
-          "h-full overflow-y-auto pt-16 transition-[padding-left] duration-300",
+          "h-full overflow-y-auto pt-10 transition-[padding-left] duration-300",
           sidebarOpen ? "pl-[264px]" : "pl-0",
         )}
       >
         <div className="mx-auto max-w-6xl space-y-12 px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
-          <header className="max-w-3xl space-y-3">
-            <p className="label-caps text-xs text-primary">Central de ajuda</p>
-            <h1 className="text-3xl text-foreground sm:text-4xl">
-              Como podemos ajudar?
-            </h1>
-            <p className="max-w-2xl text-base text-muted-foreground">
-              Encontre respostas para suas dúvidas sobre o A3 Digital.
-            </p>
-          </header>
-
+          <PageHeader
+            section="Ajuda"
+            title="Frequently Asked Questions"
+            description=" Encontre respostas para suas dúvidas sobre o A3 Digital."
+          />
           <section aria-label="Buscar no FAQ" className="max-w-3xl">
             <label htmlFor="faq-search" className="sr-only">
               Busque por uma dúvida ou funcionalidade

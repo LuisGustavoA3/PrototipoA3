@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useSidebarOpen } from "@/hooks/use-sidebar";
+import { PageHeader } from "@/components/PageHeader";
 import { cn } from "@/lib/utils";
 import {
   addSharedFile,
@@ -222,18 +223,11 @@ function ArquivosCompartilhados() {
         )}
       >
         <div className="space-y-6 p-6">
-          <header>
-            <p className="label-caps text-xs text-primary">
-              Meu desenvolvimento
-            </p>
-            <h1 className="mt-1 text-2xl text-foreground">
-              Arquivos Compartilhados
-            </h1>
-            <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-              Compartilhe documentos e mantenha os materiais da sua jornada
-              organizados.
-            </p>
-          </header>
+          <PageHeader
+            section="Meu desenvolvimento"
+            title="Arquivos Compartilhados"
+            description="Desenvolva seu autoconhecimento, sua organização e sua capacidade de aprender continuamente."
+          />
 
           <section className="rounded-md border border-border bg-card p-6 shadow-[var(--shadow-card)]">
             <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">

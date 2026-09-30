@@ -12,17 +12,12 @@ import { AppSidebar } from "@/components/AppSidebar";
 import { TopBar } from "@/components/TopBar";
 import { useSidebarOpen } from "@/hooks/use-sidebar";
 import { cn } from "@/lib/utils";
-import {
-  type LibraryContent,
-  useLibraryContents,
-} from "@/lib/library-store";
-
+import { type LibraryContent, useLibraryContents } from "@/lib/library-store";
+import { PageHeader } from "@/components/PageHeader";
 
 type Axis = "Todos" | "Indivíduo" | "Equipe" | "Negócio" | "Mercado";
 
 const axes: Axis[] = ["Todos", "Indivíduo", "Equipe", "Negócio", "Mercado"];
-
-
 
 export const Route = createFileRoute("/conteudo")({
   head: () => ({
@@ -45,24 +40,23 @@ function Conteudo() {
 
   const navigate = useNavigate({ from: "/conteudo" });
   const contents = useLibraryContents();
-const activePublicContents = contents.filter(
-  (content) => content.public && content.active,
-);
-
-const filteredContents = activePublicContents.filter((content) => {
-  const matchesAxis =
-    selectedAxis === "Todos" || content.axis === selectedAxis;
-
-  const query = search.toLowerCase().trim();
-
-  return (
-    matchesAxis &&
-    `${content.name} ${content.description} ${content.topic}`
-      .toLowerCase()
-      .includes(query)
+  const activePublicContents = contents.filter(
+    (content) => content.public && content.active,
   );
-});
 
+  const filteredContents = activePublicContents.filter((content) => {
+    const matchesAxis =
+      selectedAxis === "Todos" || content.axis === selectedAxis;
+
+    const query = search.toLowerCase().trim();
+
+    return (
+      matchesAxis &&
+      `${content.name} ${content.description} ${content.topic}`
+        .toLowerCase()
+        .includes(query)
+    );
+  });
 
   return (
     <div className="h-screen w-full overflow-hidden bg-background">
@@ -75,15 +69,11 @@ const filteredContents = activePublicContents.filter((content) => {
         )}
       >
         <div className="space-y-6 p-6">
-          <header>
-            <p className="label-caps text-xs text-primary">
-              Meu desenvolvimento
-            </p>
-            <h1 className="mt-1 text-2xl text-foreground">Conteúdo</h1>
-            <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-              Encontre leituras, vídeos e áudios para continuar sua jornada.
-            </p>
-          </header>
+          <PageHeader
+            section="Meu Desenvolvimento"
+            title="Conteúdo"
+            description="Encontre leituras, vídeos e áudios para continuar sua jornada."
+          />
 
           <section className="grid gap-5 lg:grid-cols-[1.4fr_1fr]">
             <div className="rounded-md bg-primary p-6 text-primary-foreground">
@@ -156,27 +146,26 @@ const filteredContents = activePublicContents.filter((content) => {
             {filteredContents.length > 0 ? (
               <div className="grid gap-4 md:grid-cols-2">
                 {filteredContents.map((content) => (
-<article
-  key={content.id}
-  onClick={() =>
-    navigate({
-      to: "/biblioteca/conteudo/$contentId",
-      params: { contentId: content.id },
-    })
-  }
-  className="cursor-pointer rounded-md border border-border bg-card p-5 shadow-[var(--shadow-card)] transition-all hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-md"
->
-  
+                  <article
+                    key={content.id}
+                    onClick={() =>
+                      navigate({
+                        to: "/biblioteca/conteudo/$contentId",
+                        params: { contentId: content.id },
+                      })
+                    }
+                    className="cursor-pointer rounded-md border border-border bg-card p-5 shadow-[var(--shadow-card)] transition-all hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-md"
+                  >
                     <div className="flex items-start justify-between gap-4">
                       {content.format === "pdf" && (
-  <FileText className="size-9 shrink-0 text-primary" />
-)}
-{content.format === "video" && (
-  <PlayCircle className="size-9 shrink-0 text-primary" />
-)}
-{content.format === "audio" && (
-  <BookOpen className="size-9 shrink-0 text-primary" />
-)}
+                        <FileText className="size-9 shrink-0 text-primary" />
+                      )}
+                      {content.format === "video" && (
+                        <PlayCircle className="size-9 shrink-0 text-primary" />
+                      )}
+                      {content.format === "audio" && (
+                        <BookOpen className="size-9 shrink-0 text-primary" />
+                      )}
                       <span className="label-caps rounded bg-primary-soft/60 px-2 py-1 text-[10px] text-accent-foreground">
                         {content.axis}
                       </span>
@@ -202,7 +191,5 @@ const filteredContents = activePublicContents.filter((content) => {
         </div>
       </main>
     </div>
-    
   );
-  
 }

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { TopBar } from "@/components/TopBar";
 import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/PageHeader";
 import {
   Dialog,
   DialogContent,
@@ -42,7 +43,8 @@ export const Route = createFileRoute("/jornada-de-desenvolvimento")({
       { title: "Jornada de Desenvolvimento | A3 Digital" },
       {
         name: "description",
-        content: "Organize os pontos de partida e acompanhamento da sua jornada de desenvolvimento.",
+        content:
+          "Organize os pontos de partida e acompanhamento da sua jornada de desenvolvimento.",
       },
     ],
   }),
@@ -52,7 +54,8 @@ export const Route = createFileRoute("/jornada-de-desenvolvimento")({
 function JornadaDeDesenvolvimento() {
   const [sidebarOpen, toggleSidebar] = useSidebarOpen();
   const items = useJourneyItems();
-  const [selectedSection, setSelectedSection] = useState<EditableSection | null>(null);
+  const [selectedSection, setSelectedSection] =
+    useState<EditableSection | null>(null);
   const [title, setTitle] = useState("");
 
   const openNewItem = (section: EditableSection) => {
@@ -83,14 +86,11 @@ function JornadaDeDesenvolvimento() {
         )}
       >
         <div className="space-y-6 p-6">
-          <header>
-            <p className="label-caps text-xs text-primary">Meu desenvolvimento</p>
-            <h1 className="mt-1 text-2xl text-foreground">Jornada de Desenvolvimento</h1>
-            <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-              Registre os pontos que orientam seu desenvolvimento e acompanhe sua evolução.
-            </p>
-          </header>
-
+          <PageHeader
+            section="Meu Desenvolvimento"
+            title="Jornada de Desenvolvimento"
+            description="Registre os pontos que orientam seu desenvolvimento e acompanhe sua evolução"
+          />
           <JourneyBoard
             title="Ponto de partida"
             sections={startingPointSections}
@@ -98,22 +98,38 @@ function JornadaDeDesenvolvimento() {
             onNewItem={openNewItem}
           />
 
-          <JourneyBoard title="Pontos de verificação" sections={checkpointSections} items={items} />
+          <JourneyBoard
+            title="Pontos de verificação"
+            sections={checkpointSections}
+            items={items}
+          />
         </div>
       </main>
 
-      <Dialog open={selectedSection !== null} onOpenChange={(open) => !open && closeNewItem()}>
+      <Dialog
+        open={selectedSection !== null}
+        onOpenChange={(open) => !open && closeNewItem()}
+      >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Novo item</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-2">
             <div>
-              <label className="label-caps mb-2 block text-xs text-muted-foreground">Tipo</label>
-              <Input value={selectedSection ?? ""} readOnly aria-label="Tipo do item" />
+              <label className="label-caps mb-2 block text-xs text-muted-foreground">
+                Tipo
+              </label>
+              <Input
+                value={selectedSection ?? ""}
+                readOnly
+                aria-label="Tipo do item"
+              />
             </div>
             <div>
-              <label htmlFor="journey-item-title" className="label-caps mb-2 block text-xs text-muted-foreground">
+              <label
+                htmlFor="journey-item-title"
+                className="label-caps mb-2 block text-xs text-muted-foreground"
+              >
                 Título
               </label>
               <Input
@@ -184,7 +200,7 @@ function JourneySection({
   title: Section;
   items: JourneyItem[];
   canCreate: boolean;
-  onNewItem?: (section: EditableSection) => void;
+  onNewItem?: ((section: EditableSection) => void) | undefined;
 }) {
   return (
     <div className="rounded-md border border-border bg-background p-4">
@@ -209,7 +225,10 @@ function JourneySection({
       ) : (
         <div className="mt-4 space-y-2">
           {items.map((item) => (
-            <div key={item.id} className="rounded-md border border-border bg-card px-3 py-3">
+            <div
+              key={item.id}
+              className="rounded-md border border-border bg-card px-3 py-3"
+            >
               <p className="text-sm text-foreground">{item.title}</p>
               <p className="mt-2 text-xs text-muted-foreground">
                 Última atualização: {item.updatedAt}

@@ -5,8 +5,10 @@ import {
   createRootRouteWithContext,
   HeadContent,
   Scripts,
+  useRouter,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
+import { recordNavigation } from "../lib/navigation-history";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -126,6 +128,19 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const router = useRouter();
+
+  useEffect(() => {
+    // Registra a rota inicial.
+    recordNavigation(router.state.location.pathname);
+
+    // Registra as próximas navegações.
+    const unsubscribe = router.subscribe("onResolved", () => {
+      recordNavigation(router.state.location.pathname);
+    });
+
+    return unsubscribe;
+  }, [router]);
 
   return (
     <QueryClientProvider client={queryClient}>

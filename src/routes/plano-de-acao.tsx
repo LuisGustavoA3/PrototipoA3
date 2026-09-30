@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { TopBar } from "@/components/TopBar";
 import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/PageHeader";
 import {
   Dialog,
   DialogContent,
@@ -89,15 +90,21 @@ function PlanoDeAcao() {
   const [sidebarOpen, toggleSidebar] = useSidebarOpen();
   const actions = usePdiActions();
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState<"Todos" | ActionStatus>("Todos");
-  const [modal, setModal] = useState<"create" | "details" | "edit" | null>(null);
+  const [statusFilter, setStatusFilter] = useState<"Todos" | ActionStatus>(
+    "Todos",
+  );
+  const [modal, setModal] = useState<"create" | "details" | "edit" | null>(
+    null,
+  );
   const [selectedAction, setSelectedAction] = useState<PdiAction | null>(null);
   const [form, setForm] = useState<FormValues>(emptyForm);
 
   const filteredActions = useMemo(() => {
     const query = search.toLowerCase().trim();
     return [...actions]
-      .filter((action) => statusFilter === "Todos" || action.status === statusFilter)
+      .filter(
+        (action) => statusFilter === "Todos" || action.status === statusFilter,
+      )
       .filter((action) =>
         [action.name, action.author, action.competency].some((value) =>
           value.toLowerCase().includes(query),
@@ -173,17 +180,17 @@ function PlanoDeAcao() {
         )}
       >
         <div className="space-y-6 p-6">
-          <header>
-            <p className="label-caps text-xs text-primary">Meu desenvolvimento</p>
-            <h1 className="mt-1 text-2xl text-foreground">Plano de Ação (PDI)</h1>
-            <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-              Crie, organize e acompanhe suas ações de desenvolvimento em um só lugar.
-            </p>
-          </header>
+          <PageHeader
+            section="Meu Desenvolvimento"
+            title="Plano de Ação (PDI)"
+            description="Crie, organize e acompanhe suas ações de desenvolvimento em um só lugar."
+          />
 
           <section className="flex flex-col gap-4 rounded-md border border-border bg-card p-6 shadow-[var(--shadow-card)] sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 className="label-caps text-sm text-foreground">Adicionar ação</h2>
+              <h2 className="label-caps text-sm text-foreground">
+                Adicionar ação
+              </h2>
               <p className="mt-2 text-sm text-muted-foreground">
                 Registre uma ação para acompanhar seu desenvolvimento.
               </p>
@@ -208,7 +215,9 @@ function PlanoDeAcao() {
               </label>
               <select
                 value={statusFilter}
-                onChange={(event) => setStatusFilter(event.target.value as "Todos" | ActionStatus)}
+                onChange={(event) =>
+                  setStatusFilter(event.target.value as "Todos" | ActionStatus)
+                }
                 aria-label="Filtrar por status"
                 className="h-9 rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none focus:ring-1 focus:ring-ring"
               >
@@ -222,13 +231,26 @@ function PlanoDeAcao() {
             </div>
 
             {actions.length === 0 ? (
-              <EmptyState onAdd={openCreate} message="Você ainda não possui ações no seu PDI." />
+              <EmptyState
+                onAdd={openCreate}
+                message="Você ainda não possui ações no seu PDI."
+              />
             ) : filteredActions.length === 0 ? (
-              <EmptyState onAdd={() => { setSearch(""); setStatusFilter("Todos"); }} message="Nenhuma ação encontrada." />
+              <EmptyState
+                onAdd={() => {
+                  setSearch("");
+                  setStatusFilter("Todos");
+                }}
+                message="Nenhuma ação encontrada."
+              />
             ) : (
               <div className="grid gap-4 md:grid-cols-2">
                 {filteredActions.map((action) => (
-                  <ActionCard key={action.id} action={action} onClick={() => openDetails(action)} />
+                  <ActionCard
+                    key={action.id}
+                    action={action}
+                    onClick={() => openDetails(action)}
+                  />
                 ))}
               </div>
             )}
@@ -236,7 +258,10 @@ function PlanoDeAcao() {
         </div>
       </main>
 
-      <Dialog open={modal !== null} onOpenChange={(open) => !open && setModal(null)}>
+      <Dialog
+        open={modal !== null}
+        onOpenChange={(open) => !open && setModal(null)}
+      >
         <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
           {modal === "details" && selectedAction ? (
             <DetailsContent action={selectedAction} onEdit={openEdit} />
@@ -246,7 +271,8 @@ function PlanoDeAcao() {
               setForm={setForm}
               isEditing={modal === "edit"}
               dateError={
-                (form.startDate.length > 0 && !isValidPdiDate(form.startDate)) ||
+                (form.startDate.length > 0 &&
+                  !isValidPdiDate(form.startDate)) ||
                 (form.endDate.length > 0 && !isValidPdiDate(form.endDate))
               }
               onCancel={() => setModal(modal === "edit" ? "details" : null)}
@@ -259,7 +285,13 @@ function PlanoDeAcao() {
   );
 }
 
-function ActionCard({ action, onClick }: { action: PdiAction; onClick: () => void }) {
+function ActionCard({
+  action,
+  onClick,
+}: {
+  action: PdiAction;
+  onClick: () => void;
+}) {
   return (
     <article
       role="button"
@@ -269,12 +301,19 @@ function ActionCard({ action, onClick }: { action: PdiAction; onClick: () => voi
       className="cursor-pointer rounded-md border border-border bg-card p-5 shadow-[var(--shadow-card)] transition-all hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary/30"
     >
       <div className="flex items-start justify-between gap-4">
-        <span className={cn("label-caps rounded px-2.5 py-1 text-[10px]", statusStyles[action.status])}>
+        <span
+          className={cn(
+            "label-caps rounded px-2.5 py-1 text-[10px]",
+            statusStyles[action.status],
+          )}
+        >
           {action.status}
         </span>
         <ChevronRight className="size-5 text-muted-foreground" />
       </div>
-      <h2 className="mt-4 text-lg font-semibold text-foreground">{action.name}</h2>
+      <h2 className="mt-4 text-lg font-semibold text-foreground">
+        {action.name}
+      </h2>
       <p className="mt-1 text-sm text-primary">{action.competency}</p>
       <div className="mt-5 flex items-center gap-2 text-sm text-muted-foreground">
         <CalendarDays className="size-4 text-primary" />
@@ -303,7 +342,8 @@ function ActionForm({
   onCancel: () => void;
   onSave: () => void;
 }) {
-  const update = (changes: Partial<FormValues>) => setForm({ ...form, ...changes });
+  const update = (changes: Partial<FormValues>) =>
+    setForm({ ...form, ...changes });
   const invalid =
     !form.name.trim() ||
     !form.competency ||
@@ -319,7 +359,10 @@ function ActionForm({
       </DialogHeader>
       <div className="grid gap-4 py-2 sm:grid-cols-2">
         <Field label="Nome da ação *" className="sm:col-span-2">
-          <Input value={form.name} onChange={(event) => update({ name: event.target.value })} />
+          <Input
+            value={form.name}
+            onChange={(event) => update({ name: event.target.value })}
+          />
         </Field>
         <Field label="Competência *">
           <select
@@ -328,16 +371,22 @@ function ActionForm({
             className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none focus:ring-1 focus:ring-ring"
           >
             <option value="">Selecione</option>
-            {competencies.map((competency) => <option key={competency}>{competency}</option>)}
+            {competencies.map((competency) => (
+              <option key={competency}>{competency}</option>
+            ))}
           </select>
         </Field>
         <Field label="Status *">
           <select
             value={form.status}
-            onChange={(event) => update({ status: event.target.value as ActionStatus })}
+            onChange={(event) =>
+              update({ status: event.target.value as ActionStatus })
+            }
             className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none focus:ring-1 focus:ring-ring"
           >
-            {statuses.map((status) => <option key={status}>{status}</option>)}
+            {statuses.map((status) => (
+              <option key={status}>{status}</option>
+            ))}
           </select>
         </Field>
         <Field label="Início *">
@@ -379,14 +428,24 @@ function ActionForm({
         )}
       </div>
       <DialogFooter>
-        <Button type="button" variant="outline" onClick={onCancel}>Cancelar</Button>
-        <Button type="button" onClick={onSave} disabled={invalid}>Salvar</Button>
+        <Button type="button" variant="outline" onClick={onCancel}>
+          Cancelar
+        </Button>
+        <Button type="button" onClick={onSave} disabled={invalid}>
+          Salvar
+        </Button>
       </DialogFooter>
     </>
   );
 }
 
-function DetailsContent({ action, onEdit }: { action: PdiAction; onEdit: () => void }) {
+function DetailsContent({
+  action,
+  onEdit,
+}: {
+  action: PdiAction;
+  onEdit: () => void;
+}) {
   return (
     <>
       <DialogHeader>
@@ -394,33 +453,83 @@ function DetailsContent({ action, onEdit }: { action: PdiAction; onEdit: () => v
       </DialogHeader>
       <div className="space-y-4 py-2 text-sm">
         <div className="flex flex-wrap gap-2">
-          <span className={cn("label-caps rounded px-2.5 py-1 text-[10px]", statusStyles[action.status])}>{action.status}</span>
-          <span className="rounded bg-primary-soft px-2.5 py-1 text-xs text-primary">{action.competency}</span>
+          <span
+            className={cn(
+              "label-caps rounded px-2.5 py-1 text-[10px]",
+              statusStyles[action.status],
+            )}
+          >
+            {action.status}
+          </span>
+          <span className="rounded bg-primary-soft px-2.5 py-1 text-xs text-primary">
+            {action.competency}
+          </span>
         </div>
         <Detail label="Início" value={formatDate(action.startDate)} />
         <Detail label="Fim" value={formatDate(action.endDate)} />
         <Detail label="Criado em" value={formatDate(action.createdAt)} />
         <Detail label="Autor" value={action.author} />
-        <Detail label="Detalhes" value={action.details || "Nenhum detalhe informado."} />
-        {action.evidence && <Detail label="Evidência" value={action.evidence} />}
+        <Detail
+          label="Detalhes"
+          value={action.details || "Nenhum detalhe informado."}
+        />
+        {action.evidence && (
+          <Detail label="Evidência" value={action.evidence} />
+        )}
       </div>
       <DialogFooter>
-        <Button type="button" onClick={onEdit}>Editar ação</Button>
+        <Button type="button" onClick={onEdit}>
+          Editar ação
+        </Button>
       </DialogFooter>
     </>
   );
 }
 
 function Detail({ label, value }: { label: string; value: string }) {
-  return <div><p className="label-caps text-[10px] text-muted-foreground">{label}</p><p className="mt-1 text-foreground">{value}</p></div>;
+  return (
+    <div>
+      <p className="label-caps text-[10px] text-muted-foreground">{label}</p>
+      <p className="mt-1 text-foreground">{value}</p>
+    </div>
+  );
 }
 
-function Field({ label, className, children }: { label: string; className?: string; children: React.ReactNode }) {
-  return <label className={cn("block", className)}><span className="label-caps mb-2 block text-xs text-muted-foreground">{label}</span>{children}</label>;
+function Field({
+  label,
+  className,
+  children,
+}: {
+  label: string;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <label className={cn("block", className)}>
+      <span className="label-caps mb-2 block text-xs text-muted-foreground">
+        {label}
+      </span>
+      {children}
+    </label>
+  );
 }
 
-function EmptyState({ message, onAdd }: { message: string; onAdd: () => void }) {
-  return <div className="rounded-md border border-dashed border-border bg-card px-6 py-12 text-center"><p className="text-sm text-muted-foreground">{message}</p><Button className="mt-4" onClick={onAdd}><Plus className="size-4" />Adicionar ação</Button></div>;
+function EmptyState({
+  message,
+  onAdd,
+}: {
+  message: string;
+  onAdd: () => void;
+}) {
+  return (
+    <div className="rounded-md border border-dashed border-border bg-card px-6 py-12 text-center">
+      <p className="text-sm text-muted-foreground">{message}</p>
+      <Button className="mt-4" onClick={onAdd}>
+        <Plus className="size-4" />
+        Adicionar ação
+      </Button>
+    </div>
+  );
 }
 
 function formatDate(value: string) {

@@ -11,6 +11,7 @@ import { AppSidebar } from "@/components/AppSidebar";
 import { TopBar } from "@/components/TopBar";
 import { useSidebarOpen } from "@/hooks/use-sidebar";
 import { cn } from "@/lib/utils";
+import { PageHeader } from "@/components/PageHeader";
 
 const googleMapsUrl =
   "https://www.google.com/maps/place/A3+Consultoria/@-16.7047275,-49.2427718,17z/data=!3m1!4b1!4m6!3m5!1s0x935ef3c03b85ca77:0x278f946c1c105fa2!8m2!3d-16.7047327!4d-49.2401969!16s%2Fg%2F1tfp_xy2?entry=ttu&g_ep=EgoyMDI2MDkyMy4wIKXMDSoASAFQAw%3D%3D";
@@ -63,14 +64,12 @@ function ContatosLocalizacao() {
         )}
       >
         <div className="mx-auto w-full max-w-7xl space-y-8 p-4 sm:p-6">
-          <header>
-            <h1 className="text-2xl text-foreground">Contatos e localização</h1>
-            <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-              Fale com a equipe da A3 Consultoria ou encontre nossa unidade em
-              Goiânia.
-            </p>
-          </header>
-
+          <PageHeader
+            section="Ajuda"
+            title="Contatos e Localização"
+            description="Fale com a equipe da A3 Consultoria ou encontre nossa unidade em
+              Goiânia."
+          />
           <section aria-labelledby="contatos-heading" className="space-y-4">
             <h2 id="contatos-heading" className="text-xl text-foreground">
               Fale com a A3

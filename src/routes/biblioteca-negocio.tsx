@@ -5,6 +5,7 @@ import { AppSidebar } from "@/components/AppSidebar";
 import { TopBar } from "@/components/TopBar";
 import { Input } from "@/components/ui/input";
 import { useSidebarOpen } from "@/hooks/use-sidebar";
+import { PageHeader } from "@/components/PageHeader";
 import {
   type LibraryContent,
   setLibraryContentFinished,
@@ -26,7 +27,8 @@ export const Route = createFileRoute("/biblioteca-negocio")({
       { title: "Biblioteca: Negócio | A3 Digital" },
       {
         name: "description",
-        content: "Explore conteúdos do eixo Negócio e acompanhe seu progresso na Biblioteca.",
+        content:
+          "Explore conteúdos do eixo Negócio e acompanhe seu progresso na Biblioteca.",
       },
     ],
   }),
@@ -40,18 +42,32 @@ function BibliotecaNegocio() {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const navigate = useNavigate({ from: "/biblioteca-negocio" });
 
-  const activePublicContents = contents.filter((content) => content.public && content.active);
-  const businessContents = activePublicContents.filter((content) => content.axis === "Negócio");
-  const finishedLibrary = activePublicContents.filter((content) => content.finished).length;
-  const finishedBusiness = businessContents.filter((content) => content.finished).length;
-  const libraryProgress = percentage(finishedLibrary, activePublicContents.length);
-  const businessProgress = percentage(finishedBusiness, businessContents.length);
+  const activePublicContents = contents.filter(
+    (content) => content.public && content.active,
+  );
+  const businessContents = activePublicContents.filter(
+    (content) => content.axis === "Negócio",
+  );
+  const finishedLibrary = activePublicContents.filter(
+    (content) => content.finished,
+  ).length;
+  const finishedBusiness = businessContents.filter(
+    (content) => content.finished,
+  ).length;
+  const libraryProgress = percentage(
+    finishedLibrary,
+    activePublicContents.length,
+  );
+  const businessProgress = percentage(
+    finishedBusiness,
+    businessContents.length,
+  );
 
   const visibleContents = useMemo(() => {
     const query = search.toLowerCase().trim();
     return businessContents.filter((content) => {
-      const matchesSearch = [content.name, content.type, content.topic].some((value) =>
-        value.toLowerCase().includes(query),
+      const matchesSearch = [content.name, content.type, content.topic].some(
+        (value) => value.toLowerCase().includes(query),
       );
       const matchesStatus =
         statusFilter === "all" ||
@@ -64,14 +80,20 @@ function BibliotecaNegocio() {
   const groupedContents = useMemo(() => {
     const groups = new Map<string, LibraryContent[]>();
     visibleContents.forEach((content) => {
-      groups.set(content.topic, [...(groups.get(content.topic) ?? []), content]);
+      groups.set(content.topic, [
+        ...(groups.get(content.topic) ?? []),
+        content,
+      ]);
     });
     return [...groups.entries()];
   }, [visibleContents]);
 
   const openContent = (content: LibraryContent) => {
     if (!content.finished) setLibraryContentFinished(content.id, true);
-    navigate({ to: "/biblioteca/conteudo/$contentId", params: { contentId: content.id } });
+    navigate({
+      to: "/biblioteca/conteudo/$contentId",
+      params: { contentId: content.id },
+    });
   };
 
   const toggleFinished = (content: LibraryContent) => {
@@ -89,13 +111,11 @@ function BibliotecaNegocio() {
         )}
       >
         <div className="space-y-6 p-6">
-          <header>
-            <p className="label-caps text-xs text-primary">Biblioteca</p>
-            <h1 className="mt-1 text-2xl text-foreground">Negócio</h1>
-            <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-              Desenvolva sua visão de negócio, estratégia e capacidade de tomar decisões com impacto.
-            </p>
-          </header>
+          <PageHeader
+            section="Biblioteca"
+            title="Negocio"
+            description="Desenvolva seu autoconhecimento, sua organização e sua capacidade de aprender continuamente."
+          />
 
           <section className="grid gap-4 lg:grid-cols-2">
             <ProgressCard
@@ -111,7 +131,8 @@ function BibliotecaNegocio() {
           </section>
 
           <p className="rounded-md border border-border bg-card px-4 py-3 text-xs text-muted-foreground">
-            Seu progresso considera todos os conteúdos públicos da Biblioteca e pode ser alterado caso o total de conteúdos seja atualizado.
+            Seu progresso considera todos os conteúdos públicos da Biblioteca e
+            pode ser alterado caso o total de conteúdos seja atualizado.
           </p>
 
           <section className="space-y-5">
@@ -171,7 +192,6 @@ function BibliotecaNegocio() {
           </section>
         </div>
       </main>
-
     </div>
   );
 }
@@ -195,7 +215,10 @@ function ProgressCard({
         <BookOpen className="size-7 shrink-0 text-primary" />
       </div>
       <div className="mt-4 h-2 rounded-full bg-muted">
-        <div className="h-full rounded-full bg-primary transition-[width]" style={{ width: `${value}%` }} />
+        <div
+          className="h-full rounded-full bg-primary transition-[width]"
+          style={{ width: `${value}%` }}
+        />
       </div>
     </div>
   );
@@ -218,7 +241,11 @@ function ContentItem({
           event.stopPropagation();
           onToggle();
         }}
-        aria-label={content.finished ? `Marcar ${content.name} como não finalizado` : `Marcar ${content.name} como finalizado`}
+        aria-label={
+          content.finished
+            ? `Marcar ${content.name} como não finalizado`
+            : `Marcar ${content.name} como finalizado`
+        }
         className="flex size-7 shrink-0 items-center justify-center rounded-full text-primary transition-colors hover:bg-primary-soft/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       >
         <span
@@ -237,7 +264,9 @@ function ContentItem({
           content.finished && "text-foreground",
         )}
       >
-        <span className="label-caps text-[10px] text-muted-foreground">{content.type}</span>
+        <span className="label-caps text-[10px] text-muted-foreground">
+          {content.type}
+        </span>
         <span className="mx-2 text-xs text-muted-foreground">—</span>
         <span className="text-sm text-foreground">{content.name}</span>
       </button>
