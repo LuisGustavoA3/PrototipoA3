@@ -27,7 +27,7 @@ const modules = [
   {
     label: ["Desenvolvimento", "Profissional"],
     icon: Users,
-    to: "/" as const,
+    to: "/dashboard" as const,
   },
   {
     label: ["Treinamentos"],
@@ -62,7 +62,7 @@ function Hub() {
               key={m.to}
               to={m.to}
               onClick={() => {
-                if (m.to === "/") {
+                if (m.to === "/dashboard") {
                   resetSidebarGroups();
                 }
               }}

@@ -19,6 +19,7 @@ import { Route as BibliotecaMercadoRouteImport } from './routes/biblioteca-merca
 import { Route as BibliotecaNegocioRouteImport } from './routes/biblioteca-negocio'
 import { Route as ContatosLocalizacaoRouteImport } from './routes/contatos-localizacao'
 import { Route as ConteudoRouteImport } from './routes/conteudo'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as HubRouteImport } from './routes/hub'
 import { Route as InformacoesPessoaisRouteImport } from './routes/informacoes-pessoais'
@@ -77,6 +78,11 @@ const ContatosLocalizacaoRoute = ContatosLocalizacaoRouteImport.update({
 const ConteudoRoute = ConteudoRouteImport.update({
   id: '/conteudo',
   path: '/conteudo',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FaqRoute = FaqRouteImport.update({
@@ -138,6 +144,7 @@ export interface FileRoutesByFullPath {
   '/biblioteca-negocio': typeof BibliotecaNegocioRoute
   '/contatos-localizacao': typeof ContatosLocalizacaoRoute
   '/conteudo': typeof ConteudoRoute
+  '/dashboard': typeof DashboardRoute
   '/faq': typeof FaqRoute
   '/hub': typeof HubRoute
   '/informacoes-pessoais': typeof InformacoesPessoaisRoute
@@ -159,6 +166,7 @@ export interface FileRoutesByTo {
   '/biblioteca-negocio': typeof BibliotecaNegocioRoute
   '/contatos-localizacao': typeof ContatosLocalizacaoRoute
   '/conteudo': typeof ConteudoRoute
+  '/dashboard': typeof DashboardRoute
   '/faq': typeof FaqRoute
   '/hub': typeof HubRoute
   '/informacoes-pessoais': typeof InformacoesPessoaisRoute
@@ -181,6 +189,7 @@ export interface FileRoutesById {
   '/biblioteca-negocio': typeof BibliotecaNegocioRoute
   '/contatos-localizacao': typeof ContatosLocalizacaoRoute
   '/conteudo': typeof ConteudoRoute
+  '/dashboard': typeof DashboardRoute
   '/faq': typeof FaqRoute
   '/hub': typeof HubRoute
   '/informacoes-pessoais': typeof InformacoesPessoaisRoute
@@ -204,6 +213,7 @@ export interface FileRouteTypes {
     | '/biblioteca-negocio'
     | '/contatos-localizacao'
     | '/conteudo'
+    | '/dashboard'
     | '/faq'
     | '/hub'
     | '/informacoes-pessoais'
@@ -225,6 +235,7 @@ export interface FileRouteTypes {
     | '/biblioteca-negocio'
     | '/contatos-localizacao'
     | '/conteudo'
+    | '/dashboard'
     | '/faq'
     | '/hub'
     | '/informacoes-pessoais'
@@ -246,6 +257,7 @@ export interface FileRouteTypes {
     | '/biblioteca-negocio'
     | '/contatos-localizacao'
     | '/conteudo'
+    | '/dashboard'
     | '/faq'
     | '/hub'
     | '/informacoes-pessoais'
@@ -268,6 +280,7 @@ export interface RootRouteChildren {
   BibliotecaNegocioRoute: typeof BibliotecaNegocioRoute
   ContatosLocalizacaoRoute: typeof ContatosLocalizacaoRoute
   ConteudoRoute: typeof ConteudoRoute
+  DashboardRoute: typeof DashboardRoute
   FaqRoute: typeof FaqRoute
   HubRoute: typeof HubRoute
   InformacoesPessoaisRoute: typeof InformacoesPessoaisRoute
@@ -351,6 +364,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConteudoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/faq': {
       id: '/faq'
       path: '/faq'
@@ -428,6 +448,7 @@ const rootRouteChildren: RootRouteChildren = {
   BibliotecaNegocioRoute: BibliotecaNegocioRoute,
   ContatosLocalizacaoRoute: ContatosLocalizacaoRoute,
   ConteudoRoute: ConteudoRoute,
+  DashboardRoute: DashboardRoute,
   FaqRoute: FaqRoute,
   HubRoute: HubRoute,
   InformacoesPessoaisRoute: InformacoesPessoaisRoute,
