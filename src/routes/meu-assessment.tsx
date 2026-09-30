@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import {
   ArrowRight,
   BarChart3,
@@ -112,13 +113,23 @@ export const Route = createFileRoute("/meu-assessment")({
   }),
   component: MeuAssessment,
 });
-
 function MeuAssessment() {
   const [sidebarOpen, toggleSidebar] = useSidebarOpen();
+  const [activeFilter, setActiveFilter] = useState<"all" | AssessmentStatus>(
+    "all",
+  );
+
   const orderedAssessments = [...assessments].sort(
     (first, second) =>
       statusPriority[first.status] - statusPriority[second.status],
   );
+
+  const filteredAssessments =
+    activeFilter === "all"
+      ? orderedAssessments
+      : orderedAssessments.filter(
+          (assessment) => assessment.status === activeFilter,
+        );
 
   return (
     <div className="h-screen w-full overflow-hidden bg-background">
@@ -141,6 +152,8 @@ function MeuAssessment() {
               label="Testes disponíveis"
               value={assessments.length}
               icon={BarChart3}
+              active={activeFilter === "all"}
+              onClick={() => setActiveFilter("all")}
             />
             <SummaryCard
               label="Resultados prontos"
@@ -150,6 +163,8 @@ function MeuAssessment() {
                 ).length
               }
               icon={CheckCircle2}
+              active={activeFilter === "completed"}
+              onClick={() => setActiveFilter("completed")}
             />
             <SummaryCard
               label="Aguardando realização"
@@ -159,6 +174,8 @@ function MeuAssessment() {
                 ).length
               }
               icon={Clock3}
+              active={activeFilter === "not-started"}
+              onClick={() => setActiveFilter("not-started")}
             />
           </section>
 
@@ -173,7 +190,7 @@ function MeuAssessment() {
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
-              {orderedAssessments.map((assessment) => (
+              {filteredAssessments.map((assessment) => (
                 <AssessmentCard key={assessment.name} assessment={assessment} />
               ))}
             </div>
@@ -188,19 +205,32 @@ function SummaryCard({
   label,
   value,
   icon: Icon,
+  active,
+  onClick,
 }: {
   label: string;
   value: number;
   icon: typeof BarChart3;
+  active: boolean;
+  onClick: () => void;
 }) {
   return (
-    <div className="flex items-center justify-between rounded-md border border-border bg-card p-5 shadow-[var(--shadow-card)]">
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "flex w-full items-center justify-between rounded-md border bg-card p-5 text-left shadow-[var(--shadow-card)] transition-colors",
+        active
+          ? "border-primary bg-primary/5"
+          : "border-border hover:border-primary/50",
+      )}
+    >
       <div>
         <p className="label-caps text-[10px] text-muted-foreground">{label}</p>
         <p className="mt-2 text-2xl font-semibold text-foreground">{value}</p>
       </div>
       <Icon className="size-8 text-primary" />
-    </div>
+    </button>
   );
 }
 
