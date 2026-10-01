@@ -145,8 +145,31 @@ export const Route = createFileRoute("/minhas-estatisticas")({
   component: MinhasEstatisticas,
 });
 
-function CustomRadarTick(props: any) {
-  const { x, y, cx, cy, payload } = props;
+type RadarTickProps = {
+  x?: number;
+  y?: number;
+  cx?: number;
+  cy?: number;
+  textAnchor?: React.SVGAttributes<SVGTextElement>["textAnchor"];
+  payload?: { value?: string | number };
+};
+
+function CustomRadarTick({
+  x,
+  y,
+  cx,
+  cy,
+  textAnchor,
+  payload,
+}: RadarTickProps) {
+  if (
+    x === undefined ||
+    y === undefined ||
+    cx === undefined ||
+    cy === undefined
+  ) {
+    return null;
+  }
 
   const dx = x - cx;
   const dy = y - cy;
@@ -160,11 +183,11 @@ function CustomRadarTick(props: any) {
     <text
       x={adjustedX}
       y={adjustedY}
-      textAnchor={props.textAnchor}
+      textAnchor={textAnchor}
       fill="var(--foreground)"
       fontSize={12}
     >
-      {payload.value}
+      {payload?.value}
     </text>
   );
 }
