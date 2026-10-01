@@ -3,6 +3,7 @@ import { AppSidebar } from "@/components/AppSidebar";
 import { useSidebarOpen } from "@/hooks/use-sidebar";
 import { TopBar } from "@/components/TopBar";
 import { DashboardContent } from "@/components/DashboardContent";
+import { PageHeader } from "@/components/PageHeader";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/dashboard")({
@@ -40,13 +41,13 @@ function Index() {
           sidebarOpen ? "pl-[264px]" : "pl-0",
         )}
       >
-        <h1 className="label-caps px-6 pt-6 text-lg text-foreground">
-          Dashboard
-        </h1>
-        <p className="max-w-2xl px-6 pt-2 text-sm text-muted-foreground">
-          Acompanhe seu progresso, suas sessões, conteúdos e principais
-          atividades de desenvolvimento.
-        </p>
+        <div className="px-6 pt-6">
+          <PageHeader
+            title="Dashboard"
+            description="Acompanhe seu progresso, suas sessões, conteúdos e principais atividades de desenvolvimento."
+          />
+        </div>
+
         <DashboardContent />
       </main>
     </div>
