@@ -238,96 +238,6 @@ export function DashboardContent() {
       </div>
 
       <div className="grid gap-5 lg:grid-cols-[1.5fr_1.35fr]">
-        <Card className="min-h-[280px]">
-          <CardHeader
-            title="Meus dados"
-            action={
-              <Link
-                to="/informacoes-pessoais"
-                className="label-caps rounded bg-primary px-2.5 py-1 text-[10px] text-primary-foreground"
-              >
-                Ver meus dados
-              </Link>
-            }
-          />
-          <div className="flex items-center gap-3">
-            <div className="flex size-16 shrink-0 items-center justify-center rounded bg-muted">
-              <UserCircle2 className="size-9 text-muted-foreground" />
-            </div>
-            <div>
-              <p className="font-medium text-foreground">
-                Luis Gustavo Ribeiro
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                A3 Consultoria
-              </p>
-              <p className="text-sm text-muted-foreground">
-                Coach: Juliano Ribeiro
-              </p>
-            </div>
-          </div>
-          <Link
-            to="/minhas-estatisticas"
-            className="mt-5 flex items-center gap-1 text-sm text-primary hover:underline"
-          >
-            Ver minhas estatísticas <ArrowRight className="size-4" />
-          </Link>
-          <div className="mt-4 border-t border-border pt-3">
-            <div className="flex justify-between gap-3 text-sm text-foreground">
-              <span>Progresso geral da biblioteca</span>
-              <span>{libraryProgress}%</span>
-            </div>
-            <div className="mt-2">
-              <ProgressBar value={libraryProgress} />
-            </div>
-          </div>
-          <Link
-            to="/biblioteca-negocio"
-            className="mt-2 flex items-center gap-1 text-xs text-muted-foreground hover:text-primary"
-          >
-            Ver biblioteca <ArrowRight className="size-3" />
-          </Link>
-        </Card>
-        <Card className="min-h-[280px]">
-          <CardHeader
-            title="Conteúdo do dia!"
-            action={
-              dailyContent && (
-                <Link
-                  to="/biblioteca/conteudo/$contentId"
-                  params={{ contentId: dailyContent.id }}
-                  className="label-caps rounded bg-primary px-2.5 py-1 text-[10px] text-primary-foreground"
-                >
-                  Ver conteúdo
-                </Link>
-              )
-            }
-          />
-          {dailyContent ? (
-            <div className="flex gap-4">
-              <FileText className="size-10 shrink-0 text-primary" />
-              <div className="min-w-0">
-                <p className="label-caps text-[10px] text-muted-foreground">
-                  {dailyContent.type} · {dailyContent.axis}
-                </p>
-                <h3 className="mt-1 text-base font-semibold text-foreground">
-                  {dailyContent.name}
-                </h3>
-                <p className="mt-2 line-clamp-4 text-sm leading-5 text-muted-foreground">
-                  {dailyContent.description}
-                </p>
-                <p className="mt-3 text-xs text-primary">
-                  {dailyContent.topic}
-                </p>
-              </div>
-            </div>
-          ) : (
-            <EmptyState text="Você concluiu todos os conteúdos disponíveis!" />
-          )}
-        </Card>
-      </div>
-
-      <div className="grid gap-5 lg:grid-cols-[1.35fr_1.15fr]">
         <Card className="h-[430px]">
           <CardHeader
             title="Minhas ações"
@@ -406,6 +316,45 @@ export function DashboardContent() {
             </div>
           )}
         </Card>
+
+        <Card className="min-h-[280px]">
+          <CardHeader
+            title="Conteúdo do dia!"
+            action={
+              dailyContent && (
+                <Link
+                  to="/biblioteca/conteudo/$contentId"
+                  params={{ contentId: dailyContent.id }}
+                  className="label-caps rounded bg-primary px-2.5 py-1 text-[10px] text-primary-foreground"
+                >
+                  Ver conteúdo
+                </Link>
+              )
+            }
+          />
+          {dailyContent ? (
+            <div className="flex gap-4">
+              <FileText className="size-10 shrink-0 text-primary" />
+              <div className="min-w-0">
+                <p className="label-caps text-[10px] text-muted-foreground">
+                  {dailyContent.type} · {dailyContent.axis}
+                </p>
+                <h3 className="mt-1 text-base font-semibold text-foreground">
+                  {dailyContent.name}
+                </h3>
+                <p className="mt-2 line-clamp-4 text-sm leading-5 text-muted-foreground">
+                  {dailyContent.description}
+                </p>
+                <p className="mt-3 text-xs text-primary">
+                  {dailyContent.topic}
+                </p>
+              </div>
+            </div>
+          ) : (
+            <EmptyState text="Você concluiu todos os conteúdos disponíveis!" />
+          )}
+        </Card>
+
         <Card className="h-[430px]">
           <CardHeader
             title="Prioridades da jornada"
@@ -443,7 +392,60 @@ export function DashboardContent() {
             </ul>
           )}
         </Card>
+
+        <Card className="min-h-[280px]">
+          <CardHeader
+            title="Meus dados"
+            action={
+              <Link
+                to="/informacoes-pessoais"
+                className="label-caps rounded bg-primary px-2.5 py-1 text-[10px] text-primary-foreground"
+              >
+                Ver meus dados
+              </Link>
+            }
+          />
+          <div className="flex items-center gap-3">
+            <div className="flex size-16 shrink-0 items-center justify-center rounded bg-muted">
+              <UserCircle2 className="size-9 text-muted-foreground" />
+            </div>
+            <div>
+              <p className="font-medium text-foreground">
+                Luis Gustavo Ribeiro
+              </p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                A3 Consultoria
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Coach: Juliano Ribeiro
+              </p>
+            </div>
+          </div>
+          <Link
+            to="/minhas-estatisticas"
+            className="mt-5 flex items-center gap-1 text-sm text-primary hover:underline"
+          >
+            Ver minhas estatísticas <ArrowRight className="size-4" />
+          </Link>
+          <div className="mt-4 border-t border-border pt-3">
+            <div className="flex justify-between gap-3 text-sm text-foreground">
+              <span>Progresso geral da biblioteca</span>
+              <span>{libraryProgress}%</span>
+            </div>
+            <div className="mt-2">
+              <ProgressBar value={libraryProgress} />
+            </div>
+          </div>
+          <Link
+            to="/biblioteca-negocio"
+            className="mt-2 flex items-center gap-1 text-xs text-muted-foreground hover:text-primary"
+          >
+            Ver biblioteca <ArrowRight className="size-3" />
+          </Link>
+        </Card>
       </div>
+
+      <div className="grid gap-5 lg:grid-cols-[1.35fr_1.15fr]"></div>
 
       <div className="grid gap-5 lg:grid-cols-1">
         <Card className="min-h-[300px]">
