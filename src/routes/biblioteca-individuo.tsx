@@ -113,7 +113,7 @@ function BibliotecaIndividuo() {
         <div className="space-y-6 p-6 ">
           <PageHeader
             section="Biblioteca"
-            title="Indivíduo"
+            title="Eixo: Indivíduo"
             description="Desenvolva seu autoconhecimento, sua organização e sua capacidade de aprender continuamente."
           />
 

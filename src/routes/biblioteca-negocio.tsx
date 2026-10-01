@@ -113,7 +113,7 @@ function BibliotecaNegocio() {
         <div className="space-y-6 p-6">
           <PageHeader
             section="Biblioteca"
-            title="Negocio"
+            title="Eixo: Negócio"
             description="Desenvolva seu autoconhecimento, sua organização e sua capacidade de aprender continuamente."
           />
 

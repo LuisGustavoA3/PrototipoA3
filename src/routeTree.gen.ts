@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdministracaoRouteImport } from './routes/administracao'
 import { Route as ArquivosCompartilhadosRouteImport } from './routes/arquivos-compartilhados'
 import { Route as AssistenteRouteImport } from './routes/assistente'
+import { Route as AvalieNosRouteImport } from './routes/avalie-nos'
 import { Route as BibliotecaEquipeRouteImport } from './routes/biblioteca-equipe'
 import { Route as BibliotecaIndividuoRouteImport } from './routes/biblioteca-individuo'
 import { Route as BibliotecaMercadoRouteImport } from './routes/biblioteca-mercado'
@@ -48,6 +49,11 @@ const ArquivosCompartilhadosRoute = ArquivosCompartilhadosRouteImport.update({
 const AssistenteRoute = AssistenteRouteImport.update({
   id: '/assistente',
   path: '/assistente',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AvalieNosRoute = AvalieNosRouteImport.update({
+  id: '/avalie-nos',
+  path: '/avalie-nos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BibliotecaEquipeRoute = BibliotecaEquipeRouteImport.update({
@@ -138,6 +144,7 @@ export interface FileRoutesByFullPath {
   '/administracao': typeof AdministracaoRoute
   '/arquivos-compartilhados': typeof ArquivosCompartilhadosRoute
   '/assistente': typeof AssistenteRoute
+  '/avalie-nos': typeof AvalieNosRoute
   '/biblioteca-equipe': typeof BibliotecaEquipeRoute
   '/biblioteca-individuo': typeof BibliotecaIndividuoRoute
   '/biblioteca-mercado': typeof BibliotecaMercadoRoute
@@ -160,6 +167,7 @@ export interface FileRoutesByTo {
   '/administracao': typeof AdministracaoRoute
   '/arquivos-compartilhados': typeof ArquivosCompartilhadosRoute
   '/assistente': typeof AssistenteRoute
+  '/avalie-nos': typeof AvalieNosRoute
   '/biblioteca-equipe': typeof BibliotecaEquipeRoute
   '/biblioteca-individuo': typeof BibliotecaIndividuoRoute
   '/biblioteca-mercado': typeof BibliotecaMercadoRoute
@@ -183,6 +191,7 @@ export interface FileRoutesById {
   '/administracao': typeof AdministracaoRoute
   '/arquivos-compartilhados': typeof ArquivosCompartilhadosRoute
   '/assistente': typeof AssistenteRoute
+  '/avalie-nos': typeof AvalieNosRoute
   '/biblioteca-equipe': typeof BibliotecaEquipeRoute
   '/biblioteca-individuo': typeof BibliotecaIndividuoRoute
   '/biblioteca-mercado': typeof BibliotecaMercadoRoute
@@ -207,6 +216,7 @@ export interface FileRouteTypes {
     | '/administracao'
     | '/arquivos-compartilhados'
     | '/assistente'
+    | '/avalie-nos'
     | '/biblioteca-equipe'
     | '/biblioteca-individuo'
     | '/biblioteca-mercado'
@@ -229,6 +239,7 @@ export interface FileRouteTypes {
     | '/administracao'
     | '/arquivos-compartilhados'
     | '/assistente'
+    | '/avalie-nos'
     | '/biblioteca-equipe'
     | '/biblioteca-individuo'
     | '/biblioteca-mercado'
@@ -251,6 +262,7 @@ export interface FileRouteTypes {
     | '/administracao'
     | '/arquivos-compartilhados'
     | '/assistente'
+    | '/avalie-nos'
     | '/biblioteca-equipe'
     | '/biblioteca-individuo'
     | '/biblioteca-mercado'
@@ -274,6 +286,7 @@ export interface RootRouteChildren {
   AdministracaoRoute: typeof AdministracaoRoute
   ArquivosCompartilhadosRoute: typeof ArquivosCompartilhadosRoute
   AssistenteRoute: typeof AssistenteRoute
+  AvalieNosRoute: typeof AvalieNosRoute
   BibliotecaEquipeRoute: typeof BibliotecaEquipeRoute
   BibliotecaIndividuoRoute: typeof BibliotecaIndividuoRoute
   BibliotecaMercadoRoute: typeof BibliotecaMercadoRoute
@@ -320,6 +333,13 @@ declare module '@tanstack/react-router' {
       path: '/assistente'
       fullPath: '/assistente'
       preLoaderRoute: typeof AssistenteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/avalie-nos': {
+      id: '/avalie-nos'
+      path: '/avalie-nos'
+      fullPath: '/avalie-nos'
+      preLoaderRoute: typeof AvalieNosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/biblioteca-equipe': {
@@ -442,6 +462,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdministracaoRoute: AdministracaoRoute,
   ArquivosCompartilhadosRoute: ArquivosCompartilhadosRoute,
   AssistenteRoute: AssistenteRoute,
+  AvalieNosRoute: AvalieNosRoute,
   BibliotecaEquipeRoute: BibliotecaEquipeRoute,
   BibliotecaIndividuoRoute: BibliotecaIndividuoRoute,
   BibliotecaMercadoRoute: BibliotecaMercadoRoute,
