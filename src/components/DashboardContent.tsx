@@ -237,8 +237,8 @@ export function DashboardContent() {
         </div>
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-[1.5fr_1.35fr]">
-        <Card className="h-[430px]">
+      <div className="grid gap-5 lg:grid-cols-2">
+        <Card>
           <CardHeader
             title="Minhas ações"
             action={
@@ -259,7 +259,7 @@ export function DashboardContent() {
               }
             />
           ) : (
-            <div className="grid h-[336px] grid-rows-4 gap-2">
+            <div className="grid gap-2">
               {visibleActions.map((action) => (
                 <div
                   key={action.id}
@@ -355,7 +355,7 @@ export function DashboardContent() {
           )}
         </Card>
 
-        <Card className="h-[430px]">
+        <Card>
           <CardHeader
             title="Prioridades da jornada"
             action={
@@ -368,7 +368,9 @@ export function DashboardContent() {
             }
           />
           {journeyPriorities.length === 0 ? (
-            <EmptyState text="Nenhuma prioridade cadastrada." />
+            <div className="flex items-center justify-center rounded-md bg-muted px-4 py-6 text-sm text-muted-foreground">
+              Nenhuma prioridade cadastrada.
+            </div>
           ) : (
             <ul className="space-y-3">
               {journeyPriorities.slice(0, 8).map((priority) => (
@@ -427,12 +429,17 @@ export function DashboardContent() {
           >
             Ver minhas estatísticas <ArrowRight className="size-4" />
           </Link>
-          <div className="mt-4 border-t border-border pt-3">
-            <div className="flex justify-between gap-3 text-sm text-foreground">
-              <span>Progresso geral da biblioteca</span>
-              <span>{libraryProgress}%</span>
+          <div className="mt-4 max-w-md border-t border-border pt-3">
+            <div className="flex items-center justify-between gap-3">
+              <span className="text-sm text-foreground">
+                Progresso geral da biblioteca
+              </span>
+              <span className="text-sm font-medium text-foreground">
+                {libraryProgress}%
+              </span>
             </div>
-            <div className="mt-2">
+
+            <div className="mt-1.5">
               <ProgressBar value={libraryProgress} />
             </div>
           </div>
@@ -445,7 +452,7 @@ export function DashboardContent() {
         </Card>
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-[1.35fr_1.15fr]"></div>
+      <div className="grid gap-5 lg:grid-cols-2"></div>
 
       <div className="grid gap-5 lg:grid-cols-1">
         <Card className="min-h-[300px]">

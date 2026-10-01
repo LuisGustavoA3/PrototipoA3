@@ -26,16 +26,16 @@ import { useSidebarGroups } from "@/hooks/use-sidebar";
 type Item = {
   label: string;
   icon: React.ComponentType<{ className?: string }>;
-  to?: "/";
+  to?: "/dashboard" | "/avalie-nos";
   children?: {
     label: string;
     icon: React.ComponentType<{ className?: string }>;
-    to?: "/faq" | "/assistente" | "/contatos-localizacao";
+    to?: "/faq" | "/assistente" | "/contatos-localizacao" | "/avalie-nos";
   }[];
 };
 
 const items: Item[] = [
-  { label: "Dashboard", icon: LayoutDashboard, to: "/" },
+  { label: "Dashboard", icon: LayoutDashboard, to: "/dashboard" },
   {
     label: "Meu Desenvolvimento",
     icon: Sprout,
@@ -70,7 +70,7 @@ const items: Item[] = [
       },
     ],
   },
-  { label: "Avalie-nos", icon: Star },
+  { label: "Avalie-nos", icon: Star, to: "/avalie-nos" },
 ];
 
 export function AppSidebar({ open }: { open: boolean }) {
@@ -104,10 +104,9 @@ export function AppSidebar({ open }: { open: boolean }) {
         <nav className="flex-1 overflow-y-auto py-2">
           {items.map((item) => {
             const isActive =
-              !item.children &&
-              (item.label === "Dashboard"
-                ? location.pathname === "/"
-                : active === item.label);
+              item.label === "Dashboard"
+                ? location.pathname === "/dashboard"
+                : active === item.label;
             const groupOpen = openGroups[item.label] || isGroupActive(item);
             const itemClassName = cn(
               "label-caps flex w-full items-center gap-3 px-5 py-3 text-left text-xs transition-colors",

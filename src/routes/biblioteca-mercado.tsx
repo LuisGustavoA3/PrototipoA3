@@ -110,7 +110,7 @@ function BibliotecaMercado() {
         <div className="space-y-6 p-6">
           <PageHeader
             section="Biblioteca"
-            title="Mercado"
+            title="Eixo: Mercado"
             description="Desenvolva seu autoconhecimento, sua organização e sua capacidade de aprender continuamente."
           />
           <section className="grid gap-4 lg:grid-cols-2">
