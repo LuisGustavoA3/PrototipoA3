@@ -1,14 +1,27 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { getMentorshipSessions } from "@/lib/mentorship-session";
+import { getMondayMentorshipSessions } from "@/lib/monday-api";
 
 export const Route = createFileRoute("/api/sessoes")({
   server: {
     handlers: {
       GET: async () => {
-        return Response.json({
-          total: getMentorshipSessions().length,
-          sessoes: getMentorshipSessions(),
-        });
+        try {
+          const sessoes = await getMondayMentorshipSessions();
+
+          return Response.json({
+            total: sessoes.length,
+            sessoes,
+          });
+        } catch (error) {
+          console.error("Erro ao buscar sessões no Monday:", error);
+
+          return Response.json(
+            {
+              message: "Não foi possível buscar as sessões no Monday.",
+            },
+            { status: 500 },
+          );
+        }
       },
     },
   },
