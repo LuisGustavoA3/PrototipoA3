@@ -28,7 +28,11 @@ import { Route as JornadaDeDesenvolvimentoRouteImport } from './routes/jornada-d
 import { Route as MeuAssessmentRouteImport } from './routes/meu-assessment'
 import { Route as MinhasEstatisticasRouteImport } from './routes/minhas-estatisticas'
 import { Route as PlanoDeAcaoRouteImport } from './routes/plano-de-acao'
+import { Route as SessoesMentoriaRouteImport } from './routes/sessoes-mentoria'
 import { Route as TreinamentosRouteImport } from './routes/treinamentos'
+import { Route as ApiHealthRouteImport } from './routes/api/health'
+import { Route as ApiSessoesRouteImport } from './routes/api/sessoes'
+import { Route as ApiMondayWebhookRouteImport } from './routes/api/monday/webhook'
 import { Route as BibliotecaConteudoContentIdRouteImport } from './routes/biblioteca/conteudo/$contentId'
 
 const IndexRoute = IndexRouteImport.update({
@@ -127,9 +131,29 @@ const PlanoDeAcaoRoute = PlanoDeAcaoRouteImport.update({
   path: '/plano-de-acao',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SessoesMentoriaRoute = SessoesMentoriaRouteImport.update({
+  id: '/sessoes-mentoria',
+  path: '/sessoes-mentoria',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TreinamentosRoute = TreinamentosRouteImport.update({
   id: '/treinamentos',
   path: '/treinamentos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiHealthRoute = ApiHealthRouteImport.update({
+  id: '/api/health',
+  path: '/api/health',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiSessoesRoute = ApiSessoesRouteImport.update({
+  id: '/api/sessoes',
+  path: '/api/sessoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiMondayWebhookRoute = ApiMondayWebhookRouteImport.update({
+  id: '/api/monday/webhook',
+  path: '/api/monday/webhook',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BibliotecaConteudoContentIdRoute =
@@ -159,7 +183,11 @@ export interface FileRoutesByFullPath {
   '/meu-assessment': typeof MeuAssessmentRoute
   '/minhas-estatisticas': typeof MinhasEstatisticasRoute
   '/plano-de-acao': typeof PlanoDeAcaoRoute
+  '/sessoes-mentoria': typeof SessoesMentoriaRoute
   '/treinamentos': typeof TreinamentosRoute
+  '/api/health': typeof ApiHealthRoute
+  '/api/sessoes': typeof ApiSessoesRoute
+  '/api/monday/webhook': typeof ApiMondayWebhookRoute
   '/biblioteca/conteudo/$contentId': typeof BibliotecaConteudoContentIdRoute
 }
 export interface FileRoutesByTo {
@@ -182,7 +210,11 @@ export interface FileRoutesByTo {
   '/meu-assessment': typeof MeuAssessmentRoute
   '/minhas-estatisticas': typeof MinhasEstatisticasRoute
   '/plano-de-acao': typeof PlanoDeAcaoRoute
+  '/sessoes-mentoria': typeof SessoesMentoriaRoute
   '/treinamentos': typeof TreinamentosRoute
+  '/api/health': typeof ApiHealthRoute
+  '/api/sessoes': typeof ApiSessoesRoute
+  '/api/monday/webhook': typeof ApiMondayWebhookRoute
   '/biblioteca/conteudo/$contentId': typeof BibliotecaConteudoContentIdRoute
 }
 export interface FileRoutesById {
@@ -206,7 +238,11 @@ export interface FileRoutesById {
   '/meu-assessment': typeof MeuAssessmentRoute
   '/minhas-estatisticas': typeof MinhasEstatisticasRoute
   '/plano-de-acao': typeof PlanoDeAcaoRoute
+  '/sessoes-mentoria': typeof SessoesMentoriaRoute
   '/treinamentos': typeof TreinamentosRoute
+  '/api/health': typeof ApiHealthRoute
+  '/api/sessoes': typeof ApiSessoesRoute
+  '/api/monday/webhook': typeof ApiMondayWebhookRoute
   '/biblioteca/conteudo/$contentId': typeof BibliotecaConteudoContentIdRoute
 }
 export interface FileRouteTypes {
@@ -231,7 +267,11 @@ export interface FileRouteTypes {
     | '/meu-assessment'
     | '/minhas-estatisticas'
     | '/plano-de-acao'
+    | '/sessoes-mentoria'
     | '/treinamentos'
+    | '/api/health'
+    | '/api/sessoes'
+    | '/api/monday/webhook'
     | '/biblioteca/conteudo/$contentId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -254,7 +294,11 @@ export interface FileRouteTypes {
     | '/meu-assessment'
     | '/minhas-estatisticas'
     | '/plano-de-acao'
+    | '/sessoes-mentoria'
     | '/treinamentos'
+    | '/api/health'
+    | '/api/sessoes'
+    | '/api/monday/webhook'
     | '/biblioteca/conteudo/$contentId'
   id:
     | '__root__'
@@ -277,7 +321,11 @@ export interface FileRouteTypes {
     | '/meu-assessment'
     | '/minhas-estatisticas'
     | '/plano-de-acao'
+    | '/sessoes-mentoria'
     | '/treinamentos'
+    | '/api/health'
+    | '/api/sessoes'
+    | '/api/monday/webhook'
     | '/biblioteca/conteudo/$contentId'
   fileRoutesById: FileRoutesById
 }
@@ -301,7 +349,11 @@ export interface RootRouteChildren {
   MeuAssessmentRoute: typeof MeuAssessmentRoute
   MinhasEstatisticasRoute: typeof MinhasEstatisticasRoute
   PlanoDeAcaoRoute: typeof PlanoDeAcaoRoute
+  SessoesMentoriaRoute: typeof SessoesMentoriaRoute
   TreinamentosRoute: typeof TreinamentosRoute
+  ApiHealthRoute: typeof ApiHealthRoute
+  ApiSessoesRoute: typeof ApiSessoesRoute
+  ApiMondayWebhookRoute: typeof ApiMondayWebhookRoute
   BibliotecaConteudoContentIdRoute: typeof BibliotecaConteudoContentIdRoute
 }
 
@@ -440,11 +492,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlanoDeAcaoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sessoes-mentoria': {
+      id: '/sessoes-mentoria'
+      path: '/sessoes-mentoria'
+      fullPath: '/sessoes-mentoria'
+      preLoaderRoute: typeof SessoesMentoriaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/treinamentos': {
       id: '/treinamentos'
       path: '/treinamentos'
       fullPath: '/treinamentos'
       preLoaderRoute: typeof TreinamentosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/health': {
+      id: '/api/health'
+      path: '/api/health'
+      fullPath: '/api/health'
+      preLoaderRoute: typeof ApiHealthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/sessoes': {
+      id: '/api/sessoes'
+      path: '/api/sessoes'
+      fullPath: '/api/sessoes'
+      preLoaderRoute: typeof ApiSessoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/monday/webhook': {
+      id: '/api/monday/webhook'
+      path: '/api/monday/webhook'
+      fullPath: '/api/monday/webhook'
+      preLoaderRoute: typeof ApiMondayWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/biblioteca/conteudo/$contentId': {
@@ -477,7 +557,11 @@ const rootRouteChildren: RootRouteChildren = {
   MeuAssessmentRoute: MeuAssessmentRoute,
   MinhasEstatisticasRoute: MinhasEstatisticasRoute,
   PlanoDeAcaoRoute: PlanoDeAcaoRoute,
+  SessoesMentoriaRoute: SessoesMentoriaRoute,
   TreinamentosRoute: TreinamentosRoute,
+  ApiHealthRoute: ApiHealthRoute,
+  ApiSessoesRoute: ApiSessoesRoute,
+  ApiMondayWebhookRoute: ApiMondayWebhookRoute,
   BibliotecaConteudoContentIdRoute: BibliotecaConteudoContentIdRoute,
 }
 export const routeTree = rootRouteImport
