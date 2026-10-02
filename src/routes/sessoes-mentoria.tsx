@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { RefreshCw } from "lucide-react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { PageHeader } from "@/components/PageHeader";
@@ -40,48 +40,37 @@ function SessoesMentoriaPage() {
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const isFetchingRef = useRef(false);
+  const [isFetching, setIsFetching] = useState(false);
+
+  const loadSessions = useCallback(async () => {
+    if (isFetchingRef.current) return;
+
+    isFetchingRef.current = true;
+    setIsFetching(true);
+
+    try {
+      const response = await fetch("/PrototipoA3/api/sessoes");
+
+      if (!response.ok) {
+        throw new Error("Não foi possível carregar as sessões.");
+      }
+
+      const data: SessionsResponse = await response.json();
+
+      setSessions(data.sessoes);
+      setError(null);
+      setLastUpdated(new Date());
+    } catch {
+      setError("Não foi possível carregar as sessões. Tente novamente.");
+    } finally {
+      setLoading(false);
+      isFetchingRef.current = false;
+      setIsFetching(false);
+    }
+  }, []);
 
   useEffect(() => {
-    let isMounted = true;
-    let isFetching = false;
-
-    async function loadSessions(manual = false) {
-      if (isFetching) return;
-
-      isFetching = true;
-
-      if (manual && isMounted) {
-        setRefreshing(true);
-      }
-
-      try {
-        const response = await fetch("/PrototipoA3/api/sessoes");
-
-        if (!response.ok) {
-          throw new Error("Não foi possível carregar as sessões.");
-        }
-
-        const data: SessionsResponse = await response.json();
-
-        if (isMounted) {
-          setSessions(data.sessoes);
-          setError(null);
-          setLastUpdated(new Date());
-        }
-      } catch {
-        if (isMounted) {
-          setError("Não foi possível carregar as sessões. Tente novamente.");
-        }
-      } finally {
-        isFetching = false;
-
-        if (isMounted) {
-          setLoading(false);
-          setRefreshing(false);
-        }
-      }
-    }
-
     void loadSessions();
 
     const interval = window.setInterval(() => {
@@ -89,11 +78,9 @@ function SessoesMentoriaPage() {
     }, 30_000);
 
     return () => {
-      isMounted = false;
       window.clearInterval(interval);
     };
-  }, []);
-
+  }, [loadSessions]);
   return (
     <div className="h-screen w-full overflow-hidden bg-background">
       <TopBar onToggleSidebar={toggleSidebar} />
@@ -110,14 +97,18 @@ function SessoesMentoriaPage() {
               title="Sessões de Mentoria"
               description="Acompanhe as sessões de mentoria cadastradas no Monday."
             />
+
             <Button
               type="button"
-              onClick={() => window.location.reload()}
+              onClick={() => void loadSessions()}
               variant="outline"
               size="sm"
+              disabled={isFetching}
             >
-              <RefreshCw className="size-4" />
-              Atualizar
+              <RefreshCw
+                className={`size-4 ${isFetching ? "animate-spin" : ""}`}
+              />
+              {isFetching ? "Atualizando..." : "Atualizar"}
             </Button>
           </header>
 
