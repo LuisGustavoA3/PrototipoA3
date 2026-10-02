@@ -48,10 +48,19 @@ export function updateMentorshipSession(
     return undefined;
   }
 
-  sessions[index] = {
-    ...sessions[index],
+  const currentSession = sessions[index];
+
+  if (!currentSession) {
+    return undefined;
+  }
+
+  const updatedSession: MentorshipSession = {
+    ...currentSession,
     ...updates,
+    mondayItemId: currentSession.mondayItemId,
   };
 
-  return sessions[index];
+  sessions[index] = updatedSession;
+
+  return updatedSession;
 }
