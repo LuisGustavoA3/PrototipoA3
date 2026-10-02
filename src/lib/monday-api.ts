@@ -19,6 +19,7 @@ type MondayResponse = {
   data?: {
     boards: {
       items_page: {
+        cursor: string | null;
         items: MondayItem[];
       };
     }[];
@@ -189,45 +190,91 @@ export async function getMondayMentorshipSessions(): Promise<
     throw new Error("MONDAY_API_TOKEN não está configurado.");
   }
 
-  const query = `
-    query {
-      boards(ids: [${MENTORSHIP_BOARD_ID}]) {
-        items_page(limit: 100) {
-          items {
-            id
-            name
-            column_values {
+  const sessions: MentorshipSession[] = [];
+  let cursor: string | null = null;
+  let hasMore = true;
+
+  while (hasMore) {
+    const query = cursor
+      ? `
+        query {
+          next_items_page(limit: 100, cursor: "${cursor}") {
+            cursor
+            items {
               id
-              text
-              value
+              name
+              column_values {
+                id
+                text
+                value
+              }
             }
           }
         }
-      }
+      `
+      : `
+        query {
+          boards(ids: [${MENTORSHIP_BOARD_ID}]) {
+            items_page(limit: 100) {
+              cursor
+              items {
+                id
+                name
+                column_values {
+                  id
+                  text
+                  value
+                }
+              }
+            }
+          }
+        }
+      `;
+
+    const response = await fetch(MONDAY_API_URL, {
+      method: "POST",
+      headers: {
+        Authorization: token,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ query }),
+    });
+
+    const result = (await response.json()) as MondayResponse & {
+      data?: {
+        next_items_page?: {
+          cursor: string | null;
+          items: MondayItem[];
+        };
+      };
+    };
+
+    if (!response.ok || result.errors?.length) {
+      throw new Error(
+        `Erro ao consultar Monday: ${
+          result.errors?.map((error) => error.message).join("; ") ??
+          response.statusText
+        }`,
+      );
     }
-  `;
 
-  const response = await fetch(MONDAY_API_URL, {
-    method: "POST",
-    headers: {
-      Authorization: token,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ query }),
-  });
+    const page:
+      | {
+          cursor: string | null;
+          items: MondayItem[];
+        }
+      | undefined = cursor
+      ? result.data?.next_items_page
+      : result.data?.boards[0]?.items_page;
 
-  const result = (await response.json()) as MondayResponse;
+    if (!page) {
+      throw new Error("A resposta do Monday não contém os itens esperados.");
+    }
 
-  if (!response.ok || result.errors?.length) {
-    throw new Error(
-      `Erro ao consultar Monday: ${
-        result.errors?.map((error) => error.message).join("; ") ??
-        response.statusText
-      }`,
-    );
+    sessions.push(...page.items.map(mapMondayItem));
+    cursor = page.cursor;
+    hasMore = cursor !== null;
   }
 
-  const items = result.data?.boards[0]?.items_page.items ?? [];
-
-  return items.map(mapMondayItem);
+  return sessions;
 }
