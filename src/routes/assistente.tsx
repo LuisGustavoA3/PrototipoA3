@@ -10,6 +10,7 @@ import {
   UserRound,
 } from "lucide-react";
 import { AppSidebar } from "@/components/AppSidebar";
+import { PageHeader } from "@/components/PageHeader";
 import { TopBar } from "@/components/TopBar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -62,17 +63,13 @@ function Assistente() {
         )}
       >
         <div className="mx-auto flex h-full max-w-4xl flex-col px-4 sm:px-6">
-          <header className="flex shrink-0 items-center justify-between gap-4 border-b border-border py-4">
-            <div className="flex min-w-0 items-center gap-3">
-              <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <Bot className="size-5" aria-hidden="true" />
-              </span>
-              <div className="min-w-0">
-                <h1 className="text-xl text-foreground">Assistente A3</h1>
-                <p className="text-xs text-muted-foreground">
-                  Atendimento automatizado
-                </p>
-              </div>
+          <header className="flex shrink-0 items-start justify-between gap-4 border-b border-border py-4">
+            <div className="[&>div]:mb-0">
+              <PageHeader
+                section="Ajuda"
+                title="Assistente A3"
+                description="Atendimento automatizado"
+              />
             </div>
             <span className="inline-flex shrink-0 items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground">
               <span className="size-2 rounded-full bg-emerald-500" />
