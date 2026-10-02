@@ -19,6 +19,7 @@ import {
   CircleHelp,
   Bot,
   MapPin,
+  CalendarDays,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSidebarGroups } from "@/hooks/use-sidebar";

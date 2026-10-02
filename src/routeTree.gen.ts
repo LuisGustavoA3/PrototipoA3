@@ -29,6 +29,9 @@ import { Route as MeuAssessmentRouteImport } from './routes/meu-assessment'
 import { Route as MinhasEstatisticasRouteImport } from './routes/minhas-estatisticas'
 import { Route as PlanoDeAcaoRouteImport } from './routes/plano-de-acao'
 import { Route as TreinamentosRouteImport } from './routes/treinamentos'
+import { Route as ApiHealthRouteImport } from './routes/api/health'
+import { Route as ApiSessoesRouteImport } from './routes/api/sessoes'
+import { Route as ApiMondayWebhookRouteImport } from './routes/api/monday/webhook'
 import { Route as BibliotecaConteudoContentIdRouteImport } from './routes/biblioteca/conteudo/$contentId'
 
 const IndexRoute = IndexRouteImport.update({
@@ -132,6 +135,21 @@ const TreinamentosRoute = TreinamentosRouteImport.update({
   path: '/treinamentos',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiHealthRoute = ApiHealthRouteImport.update({
+  id: '/api/health',
+  path: '/api/health',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiSessoesRoute = ApiSessoesRouteImport.update({
+  id: '/api/sessoes',
+  path: '/api/sessoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiMondayWebhookRoute = ApiMondayWebhookRouteImport.update({
+  id: '/api/monday/webhook',
+  path: '/api/monday/webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BibliotecaConteudoContentIdRoute =
   BibliotecaConteudoContentIdRouteImport.update({
     id: '/biblioteca/conteudo/$contentId',
@@ -160,6 +178,9 @@ export interface FileRoutesByFullPath {
   '/minhas-estatisticas': typeof MinhasEstatisticasRoute
   '/plano-de-acao': typeof PlanoDeAcaoRoute
   '/treinamentos': typeof TreinamentosRoute
+  '/api/health': typeof ApiHealthRoute
+  '/api/sessoes': typeof ApiSessoesRoute
+  '/api/monday/webhook': typeof ApiMondayWebhookRoute
   '/biblioteca/conteudo/$contentId': typeof BibliotecaConteudoContentIdRoute
 }
 export interface FileRoutesByTo {
@@ -183,6 +204,9 @@ export interface FileRoutesByTo {
   '/minhas-estatisticas': typeof MinhasEstatisticasRoute
   '/plano-de-acao': typeof PlanoDeAcaoRoute
   '/treinamentos': typeof TreinamentosRoute
+  '/api/health': typeof ApiHealthRoute
+  '/api/sessoes': typeof ApiSessoesRoute
+  '/api/monday/webhook': typeof ApiMondayWebhookRoute
   '/biblioteca/conteudo/$contentId': typeof BibliotecaConteudoContentIdRoute
 }
 export interface FileRoutesById {
@@ -207,6 +231,9 @@ export interface FileRoutesById {
   '/minhas-estatisticas': typeof MinhasEstatisticasRoute
   '/plano-de-acao': typeof PlanoDeAcaoRoute
   '/treinamentos': typeof TreinamentosRoute
+  '/api/health': typeof ApiHealthRoute
+  '/api/sessoes': typeof ApiSessoesRoute
+  '/api/monday/webhook': typeof ApiMondayWebhookRoute
   '/biblioteca/conteudo/$contentId': typeof BibliotecaConteudoContentIdRoute
 }
 export interface FileRouteTypes {
@@ -232,6 +259,9 @@ export interface FileRouteTypes {
     | '/minhas-estatisticas'
     | '/plano-de-acao'
     | '/treinamentos'
+    | '/api/health'
+    | '/api/sessoes'
+    | '/api/monday/webhook'
     | '/biblioteca/conteudo/$contentId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -255,6 +285,9 @@ export interface FileRouteTypes {
     | '/minhas-estatisticas'
     | '/plano-de-acao'
     | '/treinamentos'
+    | '/api/health'
+    | '/api/sessoes'
+    | '/api/monday/webhook'
     | '/biblioteca/conteudo/$contentId'
   id:
     | '__root__'
@@ -278,6 +311,9 @@ export interface FileRouteTypes {
     | '/minhas-estatisticas'
     | '/plano-de-acao'
     | '/treinamentos'
+    | '/api/health'
+    | '/api/sessoes'
+    | '/api/monday/webhook'
     | '/biblioteca/conteudo/$contentId'
   fileRoutesById: FileRoutesById
 }
@@ -302,6 +338,9 @@ export interface RootRouteChildren {
   MinhasEstatisticasRoute: typeof MinhasEstatisticasRoute
   PlanoDeAcaoRoute: typeof PlanoDeAcaoRoute
   TreinamentosRoute: typeof TreinamentosRoute
+  ApiHealthRoute: typeof ApiHealthRoute
+  ApiSessoesRoute: typeof ApiSessoesRoute
+  ApiMondayWebhookRoute: typeof ApiMondayWebhookRoute
   BibliotecaConteudoContentIdRoute: typeof BibliotecaConteudoContentIdRoute
 }
 
@@ -447,6 +486,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TreinamentosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/health': {
+      id: '/api/health'
+      path: '/api/health'
+      fullPath: '/api/health'
+      preLoaderRoute: typeof ApiHealthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/sessoes': {
+      id: '/api/sessoes'
+      path: '/api/sessoes'
+      fullPath: '/api/sessoes'
+      preLoaderRoute: typeof ApiSessoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/monday/webhook': {
+      id: '/api/monday/webhook'
+      path: '/api/monday/webhook'
+      fullPath: '/api/monday/webhook'
+      preLoaderRoute: typeof ApiMondayWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/biblioteca/conteudo/$contentId': {
       id: '/biblioteca/conteudo/$contentId'
       path: '/biblioteca/conteudo/$contentId'
@@ -478,6 +538,9 @@ const rootRouteChildren: RootRouteChildren = {
   MinhasEstatisticasRoute: MinhasEstatisticasRoute,
   PlanoDeAcaoRoute: PlanoDeAcaoRoute,
   TreinamentosRoute: TreinamentosRoute,
+  ApiHealthRoute: ApiHealthRoute,
+  ApiSessoesRoute: ApiSessoesRoute,
+  ApiMondayWebhookRoute: ApiMondayWebhookRoute,
   BibliotecaConteudoContentIdRoute: BibliotecaConteudoContentIdRoute,
 }
 export const routeTree = rootRouteImport
