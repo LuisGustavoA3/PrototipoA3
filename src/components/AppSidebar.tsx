@@ -18,8 +18,8 @@ import {
   Sprout,
   CircleHelp,
   Bot,
-  MapPin,
   CalendarDays,
+  MapPin,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSidebarGroups } from "@/hooks/use-sidebar";
@@ -27,7 +27,7 @@ import { useSidebarGroups } from "@/hooks/use-sidebar";
 type Item = {
   label: string;
   icon: React.ComponentType<{ className?: string }>;
-  to?: "/dashboard" | "/avalie-nos";
+  to?: "/dashboard" | "/avalie-nos" | "/sessoes-mentoria";
   children?: {
     label: string;
     icon: React.ComponentType<{ className?: string }>;
@@ -37,6 +37,11 @@ type Item = {
 
 const items: Item[] = [
   { label: "Dashboard", icon: LayoutDashboard, to: "/dashboard" },
+  {
+    label: "Sessões de Mentoria",
+    icon: CalendarDays,
+    to: "/sessoes-mentoria",
+  },
   {
     label: "Meu Desenvolvimento",
     icon: Sprout,

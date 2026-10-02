@@ -179,3 +179,55 @@ export async function getMondayMentorshipSession(
 
   return item ? mapMondayItem(item) : null;
 }
+
+export async function getMondayMentorshipSessions(): Promise<
+  MentorshipSession[]
+> {
+  const token = process.env["MONDAY_API_TOKEN"];
+
+  if (!token) {
+    throw new Error("MONDAY_API_TOKEN não está configurado.");
+  }
+
+  const query = `
+    query {
+      boards(ids: [${MENTORSHIP_BOARD_ID}]) {
+        items_page(limit: 100) {
+          items {
+            id
+            name
+            column_values {
+              id
+              text
+              value
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const response = await fetch(MONDAY_API_URL, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ query }),
+  });
+
+  const result = (await response.json()) as MondayResponse;
+
+  if (!response.ok || result.errors?.length) {
+    throw new Error(
+      `Erro ao consultar Monday: ${
+        result.errors?.map((error) => error.message).join("; ") ??
+        response.statusText
+      }`,
+    );
+  }
+
+  const items = result.data?.boards[0]?.items_page.items ?? [];
+
+  return items.map(mapMondayItem);
+}

@@ -28,6 +28,7 @@ import { Route as JornadaDeDesenvolvimentoRouteImport } from './routes/jornada-d
 import { Route as MeuAssessmentRouteImport } from './routes/meu-assessment'
 import { Route as MinhasEstatisticasRouteImport } from './routes/minhas-estatisticas'
 import { Route as PlanoDeAcaoRouteImport } from './routes/plano-de-acao'
+import { Route as SessoesMentoriaRouteImport } from './routes/sessoes-mentoria'
 import { Route as TreinamentosRouteImport } from './routes/treinamentos'
 import { Route as ApiHealthRouteImport } from './routes/api/health'
 import { Route as ApiSessoesRouteImport } from './routes/api/sessoes'
@@ -130,6 +131,11 @@ const PlanoDeAcaoRoute = PlanoDeAcaoRouteImport.update({
   path: '/plano-de-acao',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SessoesMentoriaRoute = SessoesMentoriaRouteImport.update({
+  id: '/sessoes-mentoria',
+  path: '/sessoes-mentoria',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TreinamentosRoute = TreinamentosRouteImport.update({
   id: '/treinamentos',
   path: '/treinamentos',
@@ -177,6 +183,7 @@ export interface FileRoutesByFullPath {
   '/meu-assessment': typeof MeuAssessmentRoute
   '/minhas-estatisticas': typeof MinhasEstatisticasRoute
   '/plano-de-acao': typeof PlanoDeAcaoRoute
+  '/sessoes-mentoria': typeof SessoesMentoriaRoute
   '/treinamentos': typeof TreinamentosRoute
   '/api/health': typeof ApiHealthRoute
   '/api/sessoes': typeof ApiSessoesRoute
@@ -203,6 +210,7 @@ export interface FileRoutesByTo {
   '/meu-assessment': typeof MeuAssessmentRoute
   '/minhas-estatisticas': typeof MinhasEstatisticasRoute
   '/plano-de-acao': typeof PlanoDeAcaoRoute
+  '/sessoes-mentoria': typeof SessoesMentoriaRoute
   '/treinamentos': typeof TreinamentosRoute
   '/api/health': typeof ApiHealthRoute
   '/api/sessoes': typeof ApiSessoesRoute
@@ -230,6 +238,7 @@ export interface FileRoutesById {
   '/meu-assessment': typeof MeuAssessmentRoute
   '/minhas-estatisticas': typeof MinhasEstatisticasRoute
   '/plano-de-acao': typeof PlanoDeAcaoRoute
+  '/sessoes-mentoria': typeof SessoesMentoriaRoute
   '/treinamentos': typeof TreinamentosRoute
   '/api/health': typeof ApiHealthRoute
   '/api/sessoes': typeof ApiSessoesRoute
@@ -258,6 +267,7 @@ export interface FileRouteTypes {
     | '/meu-assessment'
     | '/minhas-estatisticas'
     | '/plano-de-acao'
+    | '/sessoes-mentoria'
     | '/treinamentos'
     | '/api/health'
     | '/api/sessoes'
@@ -284,6 +294,7 @@ export interface FileRouteTypes {
     | '/meu-assessment'
     | '/minhas-estatisticas'
     | '/plano-de-acao'
+    | '/sessoes-mentoria'
     | '/treinamentos'
     | '/api/health'
     | '/api/sessoes'
@@ -310,6 +321,7 @@ export interface FileRouteTypes {
     | '/meu-assessment'
     | '/minhas-estatisticas'
     | '/plano-de-acao'
+    | '/sessoes-mentoria'
     | '/treinamentos'
     | '/api/health'
     | '/api/sessoes'
@@ -337,6 +349,7 @@ export interface RootRouteChildren {
   MeuAssessmentRoute: typeof MeuAssessmentRoute
   MinhasEstatisticasRoute: typeof MinhasEstatisticasRoute
   PlanoDeAcaoRoute: typeof PlanoDeAcaoRoute
+  SessoesMentoriaRoute: typeof SessoesMentoriaRoute
   TreinamentosRoute: typeof TreinamentosRoute
   ApiHealthRoute: typeof ApiHealthRoute
   ApiSessoesRoute: typeof ApiSessoesRoute
@@ -479,6 +492,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlanoDeAcaoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sessoes-mentoria': {
+      id: '/sessoes-mentoria'
+      path: '/sessoes-mentoria'
+      fullPath: '/sessoes-mentoria'
+      preLoaderRoute: typeof SessoesMentoriaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/treinamentos': {
       id: '/treinamentos'
       path: '/treinamentos'
@@ -537,6 +557,7 @@ const rootRouteChildren: RootRouteChildren = {
   MeuAssessmentRoute: MeuAssessmentRoute,
   MinhasEstatisticasRoute: MinhasEstatisticasRoute,
   PlanoDeAcaoRoute: PlanoDeAcaoRoute,
+  SessoesMentoriaRoute: SessoesMentoriaRoute,
   TreinamentosRoute: TreinamentosRoute,
   ApiHealthRoute: ApiHealthRoute,
   ApiSessoesRoute: ApiSessoesRoute,
