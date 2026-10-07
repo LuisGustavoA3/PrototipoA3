@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useSidebarOpen } from "@/hooks/use-sidebar";
 import { createFileRoute, Link } from "@tanstack/react-router";
-
+import { getCompetencyProgress, useLibraryContents } from "@/lib/library-store";
 import {
   ArrowLeft,
   Check,
@@ -48,35 +48,27 @@ const axes: { key: Axis; label: string }[] = [
   { key: "mercado", label: "Mercado" },
 ];
 
-const dataByAxis: Record<
-  Axis,
-  { subject: string; value: number; fullMark: number }[]
-> = {
-  individuo: [
-    { subject: "Autoconhecimento", value: 100, fullMark: 100 },
-    { subject: "Gestão do Tempo", value: 70, fullMark: 100 },
-    { subject: "Planejamento e Organização", value: 78, fullMark: 100 },
-    { subject: "Proatividade", value: 92, fullMark: 100 },
-    { subject: "Resiliência", value: 88, fullMark: 100 },
-  ],
-  equipe: [
-    { subject: "Comunicação", value: 82, fullMark: 100 },
-    { subject: "Liderança e Gestão", value: 75, fullMark: 100 },
-    { subject: "Relacionamento Interpessoal", value: 90, fullMark: 100 },
-    { subject: "Negociação", value: 68, fullMark: 100 },
-  ],
-  negocio: [
-    { subject: "Capacidade Analítica", value: 80, fullMark: 100 },
-    { subject: "Foco em Resultados", value: 86, fullMark: 100 },
-    { subject: "Resolução de Problemas", value: 74, fullMark: 100 },
-    { subject: "Tomada de Decisão", value: 79, fullMark: 100 },
-    { subject: "Visão Integrada", value: 65, fullMark: 100 },
-  ],
-  mercado: [
-    { subject: "Visão de Negócio", value: 77, fullMark: 100 },
-    { subject: "Visão Estratégica", value: 72, fullMark: 100 },
-    { subject: "Inovação e Criatividade", value: 85, fullMark: 100 },
-  ],
+const competencyAxis: Record<string, Axis> = {
+  Autoconhecimento: "individuo",
+  "Gestão do Tempo": "individuo",
+  "Planejamento e Organização": "individuo",
+  Proatividade: "individuo",
+  Resiliência: "individuo",
+
+  Comunicação: "equipe",
+  "Liderança e Gestão": "equipe",
+  "Relacionamento Interpessoal": "equipe",
+  Negociação: "equipe",
+
+  "Capacidade Analítica": "negocio",
+  "Foco em Resultados": "negocio",
+  "Resolução de Problemas": "negocio",
+  "Tomada de Decisão": "negocio",
+  "Visão Integrada": "negocio",
+
+  "Visão de Negócio": "mercado",
+  "Visão Estratégica": "mercado",
+  "Inovação e Criatividade": "mercado",
 };
 
 const recommendations: Recommendation[] = [
@@ -197,14 +189,27 @@ function MinhasEstatisticas() {
   const [selectedAxis, setSelectedAxis] = useState<Axis>("individuo");
   const [addedToPdi, setAddedToPdi] = useState<Set<string>>(new Set());
 
-  const chartData = dataByAxis[selectedAxis];
+  useLibraryContents();
+
+  const competencyProgress = getCompetencyProgress();
+
+  const chartData = competencyProgress
+    .filter((item) => competencyAxis[item.competency] === selectedAxis)
+    .map((item) => ({
+      subject: item.competency,
+      value: item.percentage,
+      fullMark: 100,
+    }));
 
   const allCompetencies = useMemo(
     () =>
-      Object.values(dataByAxis)
-        .flat()
+      competencyProgress
+        .map((item) => ({
+          subject: item.competency,
+          value: item.percentage,
+        }))
         .sort((a, b) => a.subject.localeCompare(b.subject)),
-    [],
+    [competencyProgress],
   );
 
   const togglePdi = (id: string) => {
