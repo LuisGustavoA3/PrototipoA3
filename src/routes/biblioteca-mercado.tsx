@@ -63,9 +63,11 @@ function BibliotecaMercado() {
   const visibleContents = useMemo(() => {
     const query = search.toLowerCase().trim();
     return marketContents.filter((content) => {
-      const matchesSearch = [content.name, content.type, content.topic].some(
-        (value) => value.toLowerCase().includes(query),
-      );
+      const matchesSearch = [
+        content.name,
+        content.type,
+        content.competency,
+      ].some((value) => value.toLowerCase().includes(query));
       const matchesStatus =
         statusFilter === "all" ||
         (statusFilter === "finished" && content.finished) ||
@@ -77,8 +79,8 @@ function BibliotecaMercado() {
   const groupedContents = useMemo(() => {
     const groups = new Map<string, LibraryContent[]>();
     visibleContents.forEach((content) => {
-      groups.set(content.topic, [
-        ...(groups.get(content.topic) ?? []),
+      groups.set(content.competency, [
+        ...(groups.get(content.competency) ?? []),
         content,
       ]);
     });

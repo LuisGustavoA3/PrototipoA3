@@ -83,7 +83,7 @@ function ContentReaderPage() {
             {content.type} - {content.name}
           </h1>
           <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
-            {content.topic}
+            {content.competency}
           </p>
           {content.description ? (
             <p className="mt-2 max-w-3xl text-sm text-muted-foreground">

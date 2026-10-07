@@ -346,7 +346,7 @@ export function DashboardContent() {
                   {dailyContent.description}
                 </p>
                 <p className="mt-3 text-xs text-primary">
-                  {dailyContent.topic}
+                  {dailyContent.competency}
                 </p>
               </div>
             </div>

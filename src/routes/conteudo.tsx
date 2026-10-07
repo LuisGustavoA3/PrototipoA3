@@ -52,7 +52,7 @@ function Conteudo() {
 
     return (
       matchesAxis &&
-      `${content.name} ${content.description} ${content.topic}`
+      `${content.name} ${content.description} ${content.competency}`
         .toLowerCase()
         .includes(query)
     );
