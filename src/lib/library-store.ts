@@ -10,12 +10,31 @@ export type LibraryContentType =
 
 export type LibraryAxis = "Negócio" | "Equipe" | "Mercado" | "Indivíduo";
 
+export type LibraryCompetency =
+  | "Autoconhecimento"
+  | "Capacidade Analítica"
+  | "Comunicação"
+  | "Foco em Resultados"
+  | "Gestão do Tempo"
+  | "Inovação e Criatividade"
+  | "Liderança e Gestão"
+  | "Negociação"
+  | "Planejamento e Organização"
+  | "Proatividade"
+  | "Relacionamento Interpessoal"
+  | "Resiliência"
+  | "Resolução de Problemas"
+  | "Tomada de Decisão"
+  | "Visão de Negócio"
+  | "Visão Estratégica"
+  | "Visão Integrada";
 export type LibraryContent = {
   id: string;
   name: string;
   type: LibraryContentType;
-  topic: string;
+
   axis: LibraryAxis;
+  competency: LibraryCompetency;
   description: string;
   format: "pdf" | "video" | "audio";
   reference: string;
@@ -31,7 +50,7 @@ const businessContents: LibraryContent[] = [
     id: "negocio-01",
     name: "Ambidestria Organizacional",
     type: "Artigo",
-    topic: "Posicionamento Estratégico",
+    competency: "Visão Estratégica",
     axis: "Negócio",
     description:
       "Uma introdução prática à ambidestria e às escolhas estratégicas das organizações.",
@@ -47,7 +66,7 @@ const businessContents: LibraryContent[] = [
     id: "negocio-02",
     name: "Sua parte no quadro geral",
     type: "Capítulo de livro",
-    topic: "Posicionamento Estratégico",
+    competency: "Visão Estratégica",
     axis: "Negócio",
     description:
       "Capítulo sobre como reconhecer sua contribuição dentro de uma visão estratégica maior.",
@@ -62,7 +81,7 @@ const businessContents: LibraryContent[] = [
     id: "negocio-03",
     name: "Dirigindo em duas pistas",
     type: "Capítulo de livro",
-    topic: "Posicionamento Estratégico",
+    competency: "Visão Estratégica",
     axis: "Negócio",
     description:
       "Uma leitura sobre equilibrar a operação atual e a construção do futuro.",
@@ -78,7 +97,7 @@ const businessContents: LibraryContent[] = [
     id: "negocio-04",
     name: "Pensamento sistêmico nas decisões",
     type: "Vídeo",
-    topic: "Visão Integrada & Sistêmica",
+    competency: "Visão Integrada",
     axis: "Negócio",
     description:
       "Vídeo mockado para explorar relações e efeitos sistêmicos nas decisões.",
@@ -93,7 +112,7 @@ const businessContents: LibraryContent[] = [
     id: "negocio-05",
     name: "Mapa de stakeholders",
     type: "Ferramenta",
-    topic: "Visão Integrada & Sistêmica",
+    competency: "Visão Integrada",
     axis: "Negócio",
     description:
       "Uma ferramenta para mapear pessoas e grupos impactados por uma decisão.",
@@ -109,7 +128,7 @@ const businessContents: LibraryContent[] = [
     id: "negocio-06",
     name: "Cadeia de valor em foco",
     type: "Infográfico",
-    topic: "Visão Integrada & Sistêmica",
+    competency: "Visão Integrada",
     axis: "Negócio",
     description:
       "Infográfico sobre os principais elos que formam uma cadeia de valor.",
@@ -124,7 +143,7 @@ const businessContents: LibraryContent[] = [
     id: "negocio-07",
     name: "Escolhas que geram impacto",
     type: "Artigo",
-    topic: "Tomada de Decisão",
+    competency: "Tomada de Decisão",
     axis: "Negócio",
     description:
       "Artigo sobre escolhas conscientes e decisões conectadas aos resultados esperados.",
@@ -140,7 +159,7 @@ const businessContents: LibraryContent[] = [
     id: "negocio-08",
     name: "Critérios para decisões melhores",
     type: "Ferramenta",
-    topic: "Tomada de Decisão",
+    competency: "Tomada de Decisão",
     axis: "Negócio",
     description:
       "Ferramenta prática para organizar critérios antes de decidir.",
@@ -155,7 +174,7 @@ const businessContents: LibraryContent[] = [
     id: "negocio-09",
     name: "Indicadores que contam histórias",
     type: "Vídeo",
-    topic: "Gestão por Resultados",
+    competency: "Foco em Resultados",
     axis: "Negócio",
     description:
       "Vídeo mockado sobre indicadores e a leitura de sinais importantes do negócio.",
@@ -170,7 +189,7 @@ const businessContents: LibraryContent[] = [
     id: "negocio-10",
     name: "Decisões que movem o negócio",
     type: "Podcast",
-    topic: "Gestão por Resultados",
+    competency: "Foco em Resultados",
     axis: "Negócio",
     description:
       "Episódio mockado sobre transformar objetivos em resultados acompanháveis.",
@@ -188,7 +207,7 @@ const teamContents: LibraryContent[] = [
     id: "equipe-01",
     name: "Conversas que aproximam",
     type: "Artigo",
-    topic: "Comunicação na Equipe",
+    competency: "Relacionamento Interpessoal",
     axis: "Equipe",
     description:
       "Práticas para criar conversas mais claras, abertas e produtivas no dia a dia.",
@@ -204,7 +223,7 @@ const teamContents: LibraryContent[] = [
     id: "equipe-02",
     name: "Feedback como ferramenta de desenvolvimento",
     type: "Vídeo",
-    topic: "Comunicação na Equipe",
+    competency: "Relacionamento Interpessoal",
     axis: "Equipe",
     description:
       "Vídeo de exemplo sobre como transformar feedback em aprendizado compartilhado.",
@@ -219,7 +238,7 @@ const teamContents: LibraryContent[] = [
     id: "equipe-03",
     name: "Rituais de colaboração",
     type: "Capítulo de livro",
-    topic: "Colaboração e Confiança",
+    competency: "Relacionamento Interpessoal",
     axis: "Equipe",
     description:
       "Uma leitura sobre acordos e rituais que fortalecem a colaboração entre pessoas.",
@@ -234,7 +253,7 @@ const teamContents: LibraryContent[] = [
     id: "equipe-04",
     name: "Mapa de forças do time",
     type: "Ferramenta",
-    topic: "Colaboração e Confiança",
+    competency: "Relacionamento Interpessoal",
     axis: "Equipe",
     description:
       "Ferramenta para identificar talentos, contribuições e oportunidades de parceria.",
@@ -250,7 +269,7 @@ const teamContents: LibraryContent[] = [
     id: "equipe-05",
     name: "Liderança que desenvolve pessoas",
     type: "Podcast",
-    topic: "Liderança e Desenvolvimento",
+    competency: "Liderança e Gestão",
     axis: "Equipe",
     description:
       "Episódio de exemplo sobre liderança, autonomia e crescimento do time.",
@@ -265,7 +284,8 @@ const teamContents: LibraryContent[] = [
     id: "equipe-06",
     name: "Delegação com clareza",
     type: "Infográfico",
-    topic: "Liderança e Desenvolvimento",
+    competency: "Liderança e Gestão",
+
     axis: "Equipe",
     description:
       "Resumo visual para apoiar uma delegação mais clara e orientada a resultados.",
@@ -283,7 +303,7 @@ const marketContents: LibraryContent[] = [
     id: "mercado-01",
     name: "Leitura de cenário e tendências",
     type: "Artigo",
-    topic: "Visão de Mercado",
+    competency: "Visão de Negócio",
     axis: "Mercado",
     description:
       "Práticas para observar mudanças e reconhecer oportunidades no ambiente externo.",
@@ -299,7 +319,7 @@ const marketContents: LibraryContent[] = [
     id: "mercado-02",
     name: "Radar de oportunidades",
     type: "Ferramenta",
-    topic: "Visão de Mercado",
+    competency: "Visão de Negócio",
     axis: "Mercado",
     description:
       "Ferramenta de exemplo para organizar sinais, oportunidades e hipóteses de mercado.",
@@ -314,7 +334,7 @@ const marketContents: LibraryContent[] = [
     id: "mercado-03",
     name: "Comportamento do consumidor",
     type: "Vídeo",
-    topic: "Clientes e Contexto",
+    competency: "Visão de Negócio",
     axis: "Mercado",
     description:
       "Vídeo de exemplo sobre necessidades, escolhas e mudanças no comportamento do consumidor.",
@@ -329,7 +349,7 @@ const marketContents: LibraryContent[] = [
     id: "mercado-04",
     name: "Jornada de valor para o cliente",
     type: "Infográfico",
-    topic: "Clientes e Contexto",
+    competency: "Visão de Negócio",
     axis: "Mercado",
     description:
       "Resumo visual para analisar os principais pontos de contato com o cliente.",
@@ -345,7 +365,7 @@ const marketContents: LibraryContent[] = [
     id: "mercado-05",
     name: "Inovação conectada ao mercado",
     type: "Podcast",
-    topic: "Inovação e Competitividade",
+    competency: "Inovação e Criatividade",
     axis: "Mercado",
     description:
       "Episódio de exemplo sobre inovação, diferenciação e posicionamento competitivo.",
@@ -360,7 +380,7 @@ const marketContents: LibraryContent[] = [
     id: "mercado-06",
     name: "Matriz de diferenciação",
     type: "Capítulo de livro",
-    topic: "Inovação e Competitividade",
+    competency: "Inovação e Criatividade",
     axis: "Mercado",
     description:
       "Uma leitura de exemplo sobre escolhas que ajudam a construir diferenciação.",
@@ -378,7 +398,7 @@ const individualContents: LibraryContent[] = [
     id: "individuo-01",
     name: "Autoconhecimento na prática",
     type: "Artigo",
-    topic: "Autoconhecimento",
+    competency: "Autoconhecimento",
     axis: "Indivíduo",
     description:
       "Reflexões práticas para reconhecer padrões, valores e motivações pessoais.",
@@ -394,7 +414,7 @@ const individualContents: LibraryContent[] = [
     id: "individuo-02",
     name: "Diário de pontos fortes",
     type: "Ferramenta",
-    topic: "Autoconhecimento",
+    competency: "Autoconhecimento",
     axis: "Indivíduo",
     description:
       "Ferramenta de exemplo para identificar talentos e situações em que você rende melhor.",
@@ -409,7 +429,7 @@ const individualContents: LibraryContent[] = [
     id: "individuo-03",
     name: "Organização e foco no dia a dia",
     type: "Vídeo",
-    topic: "Gestão do Tempo",
+    competency: "Gestão do Tempo",
     axis: "Indivíduo",
     description:
       "Vídeo de exemplo com práticas para organizar prioridades e proteger o foco.",
@@ -424,7 +444,7 @@ const individualContents: LibraryContent[] = [
     id: "individuo-04",
     name: "Matriz de prioridades pessoais",
     type: "Infográfico",
-    topic: "Gestão do Tempo",
+    competency: "Gestão do Tempo",
     axis: "Indivíduo",
     description:
       "Resumo visual para apoiar decisões sobre urgência, importância e energia disponível.",
@@ -440,7 +460,7 @@ const individualContents: LibraryContent[] = [
     id: "individuo-05",
     name: "Resiliência em movimento",
     type: "Podcast",
-    topic: "Resiliência e Aprendizado",
+    competency: "Resiliência",
     axis: "Indivíduo",
     description:
       "Episódio de exemplo sobre adaptação, aprendizados e continuidade em momentos difíceis.",
@@ -455,7 +475,7 @@ const individualContents: LibraryContent[] = [
     id: "individuo-06",
     name: "Aprender com experiências",
     type: "Capítulo de livro",
-    topic: "Resiliência e Aprendizado",
+    competency: "Resiliência",
     axis: "Indivíduo",
     description:
       "Uma leitura de exemplo sobre transformar experiências em desenvolvimento contínuo.",
@@ -467,26 +487,37 @@ const individualContents: LibraryContent[] = [
     finished: false,
   },
 ];
+const competencyGroups: Array<{
+  competency: LibraryCompetency;
+  axis: LibraryAxis;
+}> = [
+  { competency: "Capacidade Analítica", axis: "Negócio" },
+  { competency: "Resolução de Problemas", axis: "Negócio" },
+  { competency: "Negociação", axis: "Equipe" },
+  { competency: "Planejamento e Organização", axis: "Indivíduo" },
+  { competency: "Proatividade", axis: "Indivíduo" },
+];
 
 const otherAxisContents: LibraryContent[] = [
-  ...Array.from({ length: 30 }, (_, index) => ({
-    id: `biblioteca-${index + 1}`,
-    name: `Conteúdo de desenvolvimento ${index + 1}`,
-    type: "Artigo" as const,
-    topic:
-      index % 2 === 0 ? "Desenvolvimento profissional" : "Aprendizado contínuo",
-    axis: ["Equipe", "Mercado", "Indivíduo"][
-      index % 3
-    ] as LibraryContent["axis"],
-    description:
-      "Conteúdo de exemplo da Biblioteca para cálculo do progresso geral.",
-    format: index % 3 === 0 ? "video" : ("pdf" as LibraryContent["format"]),
-    reference: "Biblioteca A3",
-    permitirDownload: false,
-    public: true,
-    active: true,
-    finished: index < 5,
-  })),
+  ...Array.from({ length: 30 }, (_, index) => {
+    const { competency, axis } = competencyGroups[Math.floor(index / 6)]!;
+
+    return {
+      id: `biblioteca-${index + 1}`,
+      name: `Conteúdo de desenvolvimento ${index + 1}`,
+      type: "Artigo" as const,
+      axis,
+      competency,
+      description:
+        "Conteúdo de exemplo da Biblioteca para cálculo do progresso geral.",
+      format: index % 3 === 0 ? "video" : ("pdf" as LibraryContent["format"]),
+      reference: "Biblioteca A3",
+      permitirDownload: false,
+      public: true,
+      active: true,
+      finished: index < 5,
+    };
+  }),
 ];
 
 const STORAGE_KEY = "a3:library-content-status";
@@ -540,6 +571,59 @@ export function getActivePublicContentsForAxis(axis: LibraryAxis) {
   );
 }
 
+export function getCompetencyProgress() {
+  const contents = getLibraryContents();
+
+  const competencies: LibraryCompetency[] = [
+    "Autoconhecimento",
+    "Capacidade Analítica",
+    "Comunicação",
+    "Foco em Resultados",
+    "Gestão do Tempo",
+    "Inovação e Criatividade",
+    "Liderança e Gestão",
+    "Negociação",
+    "Planejamento e Organização",
+    "Proatividade",
+    "Relacionamento Interpessoal",
+    "Resiliência",
+    "Resolução de Problemas",
+    "Tomada de Decisão",
+    "Visão de Negócio",
+    "Visão Estratégica",
+    "Visão Integrada",
+  ];
+
+  const progress = competencies.map((competency) => {
+    const competencyContents = contents.filter(
+      (content) => content.competency === competency,
+    );
+
+    const total = competencyContents.length;
+
+    if (total === 0) {
+      return {
+        competency,
+        total: 0,
+        finished: 0,
+        percentage: 100,
+      };
+    }
+
+    const finished = competencyContents.filter(
+      (content) => content.finished,
+    ).length;
+
+    return {
+      competency,
+      total,
+      finished,
+      percentage: Math.round((finished / total) * 100),
+    };
+  });
+
+  return progress;
+}
 export function useLibraryContents() {
   return useSyncExternalStore(
     subscribeLibrary,
@@ -550,6 +634,7 @@ export function useLibraryContents() {
 
 export function setLibraryContentFinished(id: string, finished: boolean) {
   const finishedAt = finished ? new Date().toISOString() : undefined;
+
   contents = contents.map((content) =>
     content.id === id
       ? {
@@ -564,8 +649,11 @@ export function setLibraryContentFinished(id: string, finished: boolean) {
     const current = JSON.parse(
       window.localStorage.getItem(STORAGE_KEY) ?? "{}",
     ) as Record<string, unknown>;
+
     current[id] = { finished, finishedAt };
+
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(current));
   }
+
   notify();
 }
