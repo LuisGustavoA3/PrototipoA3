@@ -53,6 +53,7 @@ const statuses: ActionStatus[] = [
   "Não iniciado",
   "Parado",
   "Cancelado",
+  "Atrasado",
 ];
 
 const statusStyles: Record<ActionStatus, string> = {
@@ -61,6 +62,7 @@ const statusStyles: Record<ActionStatus, string> = {
   "Não iniciado": "bg-muted text-muted-foreground",
   Parado: "bg-amber-100 text-amber-700",
   Cancelado: "bg-red-100 text-red-700",
+  Atrasado: "bg-red-100 text-red-700",
 };
 
 type FormValues = Omit<PdiAction, "id" | "createdAt" | "author">;

@@ -1,7 +1,12 @@
 import { useSyncExternalStore } from "react";
 
 export type ActionStatus =
-  "Concluído" | "Em andamento" | "Não iniciado" | "Parado" | "Cancelado";
+  | "Concluído"
+  | "Em andamento"
+  | "Não iniciado"
+  | "Parado"
+  | "Cancelado"
+  | "Atrasado";
 
 export type PdiAction = {
   id: string;

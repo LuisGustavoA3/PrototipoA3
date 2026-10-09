@@ -35,6 +35,7 @@ const statusColors: Record<ActionStatus, string> = {
   Concluído: "#65c996",
   "Em andamento": "#f58a2a",
   "Não iniciado": "#cbd0d3",
+  Atrasado: "#c96b6b",
   Parado: "#e8b44f",
   Cancelado: "#c96b6b",
 };
