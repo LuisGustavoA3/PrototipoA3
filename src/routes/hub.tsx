@@ -37,7 +37,7 @@ const modules = [
   {
     label: ["Administração"],
     icon: UserSearch,
-    to: "/administracao" as const,
+    to: "/mentor" as const,
   },
 ];
 

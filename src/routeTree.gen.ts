@@ -25,6 +25,7 @@ import { Route as FaqRouteImport } from './routes/faq'
 import { Route as HubRouteImport } from './routes/hub'
 import { Route as InformacoesPessoaisRouteImport } from './routes/informacoes-pessoais'
 import { Route as JornadaDeDesenvolvimentoRouteImport } from './routes/jornada-de-desenvolvimento'
+import { Route as MentorRouteImport } from './routes/mentor'
 import { Route as MeuAssessmentRouteImport } from './routes/meu-assessment'
 import { Route as MinhasEstatisticasRouteImport } from './routes/minhas-estatisticas'
 import { Route as PlanoDeAcaoRouteImport } from './routes/plano-de-acao'
@@ -116,6 +117,11 @@ const JornadaDeDesenvolvimentoRoute =
     path: '/jornada-de-desenvolvimento',
     getParentRoute: () => rootRouteImport,
   } as any)
+const MentorRoute = MentorRouteImport.update({
+  id: '/mentor',
+  path: '/mentor',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MeuAssessmentRoute = MeuAssessmentRouteImport.update({
   id: '/meu-assessment',
   path: '/meu-assessment',
@@ -180,6 +186,7 @@ export interface FileRoutesByFullPath {
   '/hub': typeof HubRoute
   '/informacoes-pessoais': typeof InformacoesPessoaisRoute
   '/jornada-de-desenvolvimento': typeof JornadaDeDesenvolvimentoRoute
+  '/mentor': typeof MentorRoute
   '/meu-assessment': typeof MeuAssessmentRoute
   '/minhas-estatisticas': typeof MinhasEstatisticasRoute
   '/plano-de-acao': typeof PlanoDeAcaoRoute
@@ -207,6 +214,7 @@ export interface FileRoutesByTo {
   '/hub': typeof HubRoute
   '/informacoes-pessoais': typeof InformacoesPessoaisRoute
   '/jornada-de-desenvolvimento': typeof JornadaDeDesenvolvimentoRoute
+  '/mentor': typeof MentorRoute
   '/meu-assessment': typeof MeuAssessmentRoute
   '/minhas-estatisticas': typeof MinhasEstatisticasRoute
   '/plano-de-acao': typeof PlanoDeAcaoRoute
@@ -235,6 +243,7 @@ export interface FileRoutesById {
   '/hub': typeof HubRoute
   '/informacoes-pessoais': typeof InformacoesPessoaisRoute
   '/jornada-de-desenvolvimento': typeof JornadaDeDesenvolvimentoRoute
+  '/mentor': typeof MentorRoute
   '/meu-assessment': typeof MeuAssessmentRoute
   '/minhas-estatisticas': typeof MinhasEstatisticasRoute
   '/plano-de-acao': typeof PlanoDeAcaoRoute
@@ -264,6 +273,7 @@ export interface FileRouteTypes {
     | '/hub'
     | '/informacoes-pessoais'
     | '/jornada-de-desenvolvimento'
+    | '/mentor'
     | '/meu-assessment'
     | '/minhas-estatisticas'
     | '/plano-de-acao'
@@ -291,6 +301,7 @@ export interface FileRouteTypes {
     | '/hub'
     | '/informacoes-pessoais'
     | '/jornada-de-desenvolvimento'
+    | '/mentor'
     | '/meu-assessment'
     | '/minhas-estatisticas'
     | '/plano-de-acao'
@@ -318,6 +329,7 @@ export interface FileRouteTypes {
     | '/hub'
     | '/informacoes-pessoais'
     | '/jornada-de-desenvolvimento'
+    | '/mentor'
     | '/meu-assessment'
     | '/minhas-estatisticas'
     | '/plano-de-acao'
@@ -346,6 +358,7 @@ export interface RootRouteChildren {
   HubRoute: typeof HubRoute
   InformacoesPessoaisRoute: typeof InformacoesPessoaisRoute
   JornadaDeDesenvolvimentoRoute: typeof JornadaDeDesenvolvimentoRoute
+  MentorRoute: typeof MentorRoute
   MeuAssessmentRoute: typeof MeuAssessmentRoute
   MinhasEstatisticasRoute: typeof MinhasEstatisticasRoute
   PlanoDeAcaoRoute: typeof PlanoDeAcaoRoute
@@ -471,6 +484,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof JornadaDeDesenvolvimentoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/mentor': {
+      id: '/mentor'
+      path: '/mentor'
+      fullPath: '/mentor'
+      preLoaderRoute: typeof MentorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/meu-assessment': {
       id: '/meu-assessment'
       path: '/meu-assessment'
@@ -554,6 +574,7 @@ const rootRouteChildren: RootRouteChildren = {
   HubRoute: HubRoute,
   InformacoesPessoaisRoute: InformacoesPessoaisRoute,
   JornadaDeDesenvolvimentoRoute: JornadaDeDesenvolvimentoRoute,
+  MentorRoute: MentorRoute,
   MeuAssessmentRoute: MeuAssessmentRoute,
   MinhasEstatisticasRoute: MinhasEstatisticasRoute,
   PlanoDeAcaoRoute: PlanoDeAcaoRoute,
