@@ -1,0 +1,1 @@
+export { ConteudoReaderPage } from "./ConteudoReaderPage";

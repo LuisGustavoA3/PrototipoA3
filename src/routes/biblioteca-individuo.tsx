@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { BibliotecaIndividuoPage } from "@/modules/biblioteca/individuo";
+import { BibliotecaIndividuoPage } from "@/modules/mentorias/mentorado/biblioteca/individuo";
 
 export const Route = createFileRoute("/biblioteca-individuo")({
   head: () => ({
