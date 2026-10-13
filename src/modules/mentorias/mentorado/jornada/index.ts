@@ -1,0 +1,1 @@
+export { JornadaDeDesenvolvimentoPage } from "./JornadaDeDesenvolvimentoPage";

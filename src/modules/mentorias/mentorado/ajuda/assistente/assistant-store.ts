@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from "react";
-import { faqQuestions, getFAQQuestion } from "@/lib/faq-data";
+import { faqQuestions, getFAQQuestion } from "../faq-data";
 
 const NO_ANSWER_TEXT =
   "Ainda não temos uma resposta oficial cadastrada para esta pergunta.\nVocê pode consultar o FAQ ou entrar em contato com nossa equipe para obter ajuda.";

@@ -1,0 +1,1 @@
+export { PlanoDeAcaoPage } from "./PlanoDeAcaoPage";

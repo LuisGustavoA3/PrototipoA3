@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { TopBar } from "@/components/TopBar";
-import { PersonalInfoForm } from "@/components/personal-info/PersonalInfoForm";
+import { PersonalInfoForm } from "@/modules/mentorias/mentorado/informacoes-pessoais";
 import { useSidebarOpen } from "@/hooks/use-sidebar";
 import { cn } from "@/lib/utils";
 

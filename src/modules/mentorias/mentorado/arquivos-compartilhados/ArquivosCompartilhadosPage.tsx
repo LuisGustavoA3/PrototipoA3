@@ -1,0 +1,597 @@
+import {
+  CalendarDays,
+  Download,
+  FileArchive,
+  FileAudio,
+  FileImage,
+  FileSpreadsheet,
+  FileText,
+  FileVideo,
+  Icon,
+  Presentation,
+  Search,
+  Trash2,
+  UploadCloud,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import { useMemo, useRef, useState } from "react";
+import { AppSidebar } from "@/components/AppSidebar";
+import { TopBar } from "@/components/TopBar";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { useSidebarOpen } from "@/hooks/use-sidebar";
+import { PageHeader } from "@/components/PageHeader";
+import { cn } from "@/lib/utils";
+import {
+  addSharedFile,
+  removeSharedFile,
+  useSharedFiles,
+  type SharedFile,
+} from "./shared-files-store";
+type FileFilter = "all" | "received" | "sent";
+
+const currentUser = "Luis Gustavo";
+
+function getFileStyle(format: string): {
+  Icon: LucideIcon;
+  colorClass: string;
+} {
+  const normalizedFormat = format.toLowerCase();
+
+  if (normalizedFormat === "pdf") {
+    return {
+      Icon: FileText,
+      colorClass: "bg-red-100 text-red-600",
+    };
+  }
+
+  if (["doc", "docx", "odt", "rtf", "txt"].includes(normalizedFormat)) {
+    return {
+      Icon: FileText,
+      colorClass: "bg-blue-100 text-blue-600",
+    };
+  }
+
+  if (["xls", "xlsx", "ods", "csv"].includes(normalizedFormat)) {
+    return {
+      Icon: FileSpreadsheet,
+      colorClass: "bg-green-100 text-green-600",
+    };
+  }
+
+  if (["ppt", "pptx", "odp", "key"].includes(normalizedFormat)) {
+    return {
+      Icon: Presentation,
+      colorClass: "bg-orange-100 text-orange-600",
+    };
+  }
+
+  if (["png", "jpg", "jpeg", "gif", "svg", "webp"].includes(normalizedFormat)) {
+    return {
+      Icon: FileImage,
+      colorClass: "bg-purple-100 text-purple-600",
+    };
+  }
+
+  if (["mp4", "mov", "avi", "webm"].includes(normalizedFormat)) {
+    return {
+      Icon: FileVideo,
+      colorClass: "bg-pink-100 text-pink-600",
+    };
+  }
+
+  if (["mp3", "wav", "ogg", "m4a"].includes(normalizedFormat)) {
+    return {
+      Icon: FileAudio,
+      colorClass: "bg-violet-100 text-violet-600",
+    };
+  }
+
+  if (["zip", "rar", "7z", "tar.gz"].includes(normalizedFormat)) {
+    return {
+      Icon: FileArchive,
+      colorClass: "bg-amber-100 text-amber-700",
+    };
+  }
+
+  return {
+    Icon: FileText,
+    colorClass: "bg-gray-100 text-gray-600",
+  };
+}
+
+const filters: { label: string; value: FileFilter }[] = [
+  { label: "Todos", value: "all" },
+  { label: "Recebidos", value: "received" },
+  { label: "Enviados", value: "sent" },
+];
+
+export function ArquivosCompartilhadosPage() {
+  const [sidebarOpen, toggleSidebar] = useSidebarOpen();
+  const files = useSharedFiles();
+  const [fileToDelete, setFileToDelete] = useState<string | null>(null);
+  const [filter, setFilter] = useState<FileFilter>("all");
+  const [search, setSearch] = useState("");
+  const [uploadOpen, setUploadOpen] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [selectedFileDetails, setSelectedFileDetails] =
+    useState<SharedFile | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const confirmDelete = () => {
+    if (!fileToDelete) return;
+
+    removeSharedFile(fileToDelete);
+    setFileToDelete(null);
+  };
+
+  const visibleFiles = useMemo(() => {
+    const query = search.toLowerCase().trim();
+
+    return files
+      .filter((file) => filter === "all" || file.direction === filter)
+      .filter((file) =>
+        [file.id, file.name, file.author, file.dateLabel].some((value) =>
+          value.toLowerCase().includes(query),
+        ),
+      )
+      .sort((first, second) => second.date.localeCompare(first.date));
+  }, [files, filter, search]);
+
+  const resetUpload = () => {
+    setUploadOpen(false);
+    setSelectedFile(null);
+    setTitle("");
+    setDescription("");
+    setIsDragging(false);
+  };
+
+  const chooseFile = (file: File | undefined) => {
+    if (!file) return;
+    setSelectedFile(file);
+    if (!title) setTitle(file.name.replace(/\.[^/.]+$/, ""));
+  };
+
+  const sendFile = () => {
+    if (!selectedFile || !title.trim()) return;
+
+    const now = new Date();
+    const extension = selectedFile.name.split(".").pop()?.toLowerCase();
+
+    if (!extension) return;
+
+    const newFile: SharedFile = {
+      id: `ARQ-${String(Date.now())}`,
+      name: selectedFile.name,
+      description: description.trim() || "Arquivo compartilhado.",
+      author: currentUser,
+      date: now.toISOString().slice(0, 10),
+      dateLabel: new Intl.DateTimeFormat("pt-BR").format(now),
+      direction: "sent",
+      format: extension as SharedFile["format"],
+    };
+
+    addSharedFile(newFile);
+    resetUpload();
+  };
+
+  const downloadFile = (file: SharedFile) => {
+    const blob = new Blob([`Arquivo demonstrativo: ${file.name}`], {
+      type: "text/plain",
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = file.name;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  return (
+    <div className="h-screen w-full overflow-hidden bg-background">
+      <TopBar onToggleSidebar={toggleSidebar} />
+      <AppSidebar open={sidebarOpen} />
+      <main
+        className={cn(
+          "h-full overflow-y-auto pt-16 transition-[padding-left] duration-300",
+          sidebarOpen ? "pl-[264px]" : "pl-0",
+        )}
+      >
+        <div className="space-y-6 p-6">
+          <PageHeader
+            section="Meu desenvolvimento"
+            title="Arquivos Compartilhados"
+            description="Desenvolva seu autoconhecimento, sua organização e sua capacidade de aprender continuamente."
+          />
+
+          <section className="rounded-md border border-border bg-card p-6 shadow-[var(--shadow-card)]">
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h2 className="label-caps text-sm text-foreground">
+                  Enviar um documento
+                </h2>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Compartilhe um material com seu mentor para manter o
+                  acompanhamento atualizado.
+                </p>
+              </div>
+              <Button onClick={() => setUploadOpen(true)}>
+                <UploadCloud className="size-4" />
+                Enviar arquivo
+              </Button>
+            </div>
+          </section>
+
+          <section className="space-y-4">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+              <div>
+                <h2 className="label-caps text-sm text-foreground">
+                  Arquivos compartilhados
+                </h2>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {visibleFiles.length} arquivo
+                  {visibleFiles.length === 1 ? "" : "s"} encontrado
+                  {visibleFiles.length === 1 ? "" : "s"}
+                </p>
+              </div>
+              <label className="relative block w-full lg:max-w-sm">
+                <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
+                  placeholder="Pesquisar por nome, autor ou data"
+                  aria-label="Pesquisar arquivos"
+                  className="pl-9"
+                />
+              </label>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              {filters.map((item) => (
+                <button
+                  key={item.value}
+                  type="button"
+                  onClick={() => setFilter(item.value)}
+                  className={cn(
+                    "label-caps rounded-md px-4 py-2 text-xs transition-colors cursor-pointer",
+                    filter === item.value
+                      ? "bg-primary text-primary-foreground cursor-pointer"
+                      : "border border-border bg-card text-foreground hover:bg-accent",
+                  )}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+
+            {visibleFiles.length === 0 ? (
+              <div className="rounded-md border border-dashed border-border bg-card px-6 py-12 text-center text-sm text-muted-foreground">
+                Nenhum arquivo encontrado.
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                {visibleFiles.map((file) => (
+                  <FileCard
+                    key={file.id}
+                    file={file}
+                    onClick={() => setSelectedFileDetails(file)}
+                    onDownload={downloadFile}
+                    onDelete={(id) => {
+                      setFileToDelete(id);
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+          </section>
+          <Dialog
+            open={!!selectedFileDetails}
+            onOpenChange={(open) => {
+              if (!open) setSelectedFileDetails(null);
+            }}
+          >
+            <DialogContent className="max-w-xl">
+              <DialogHeader>
+                <DialogTitle>Detalhes do arquivo</DialogTitle>
+              </DialogHeader>
+
+              {selectedFileDetails && (
+                <div className="space-y-4 py-2">
+                  <div>
+                    <p className="text-xs text-muted-foreground">
+                      Nome do arquivo
+                    </p>
+                    <p className="mt-1 break-words text-sm font-medium text-foreground">
+                      {selectedFileDetails.name}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-xs text-muted-foreground">Descrição</p>
+                    <p className="mt-1 whitespace-pre-wrap break-words text-sm text-foreground">
+                      {selectedFileDetails.description}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-xs text-muted-foreground">Autor</p>
+                    <p className="mt-1 text-sm text-foreground">
+                      {selectedFileDetails.author}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-xs text-muted-foreground">
+                      Data de compartilhamento
+                    </p>
+                    <p className="mt-1 text-sm text-foreground">
+                      {selectedFileDetails.dateLabel}
+                    </p>
+                  </div>
+                </div>
+              )}
+              <DialogFooter>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    if (selectedFileDetails) {
+                      downloadFile(selectedFileDetails);
+                    }
+                  }}
+                >
+                  <Download className="mr-2 h-4 w-4" />
+                  Baixar arquivo
+                </Button>
+
+                {selectedFileDetails?.author === currentUser && (
+                  <Button
+                    variant="destructive"
+                    onClick={() => {
+                      setFileToDelete(selectedFileDetails.id);
+                      setSelectedFileDetails(null);
+                    }}
+                  >
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    Remover arquivo
+                  </Button>
+                )}
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+          {fileToDelete && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+              <div
+                role="alertdialog"
+                aria-modal="true"
+                aria-labelledby="delete-dialog-title"
+                aria-describedby="delete-dialog-description"
+                className="w-full max-w-md rounded-xl border border-border bg-card p-6 shadow-xl"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-700">
+                    <Trash2 className="h-6 w-6" />
+                  </div>
+
+                  <h2
+                    id="delete-dialog-title"
+                    className="text-lg font-semibold text-foreground"
+                  >
+                    Excluir arquivo?
+                  </h2>
+                </div>
+
+                <p
+                  id="delete-dialog-description"
+                  className="mt-4 text-sm text-muted-foreground"
+                >
+                  Tem certeza de que deseja excluir este item? Essa ação não
+                  poderá ser desfeita.
+                </p>
+
+                <div className="mt-6 flex justify-end gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setFileToDelete(null)}
+                    className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+                  >
+                    Não
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={confirmDelete}
+                    className="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-red-700"
+                  >
+                    Sim, excluir
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </main>
+
+      <Dialog open={uploadOpen} onOpenChange={(open) => !open && resetUpload()}>
+        <DialogContent className="max-w-xl">
+          <DialogHeader>
+            <DialogTitle>Enviar arquivo</DialogTitle>
+          </DialogHeader>
+
+          <div className="space-y-4 py-2">
+            <div>
+              <label
+                htmlFor="file-title"
+                className="label-caps mb-2 block text-xs text-muted-foreground"
+              >
+                Título
+              </label>
+              <Input
+                id="file-title"
+                value={title}
+                onChange={(event) => setTitle(event.target.value)}
+                placeholder="Dê um título para o arquivo"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="file-description"
+                className="label-caps mb-2 block text-xs text-muted-foreground"
+              >
+                Descrição
+              </label>
+              <textarea
+                id="file-description"
+                value={description}
+                onChange={(event) => setDescription(event.target.value)}
+                placeholder="Descreva brevemente este arquivo"
+                className="min-h-20 w-full resize-y rounded-md border border-input bg-transparent px-3 py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring"
+              />
+            </div>
+            <div>
+              <span className="label-caps mb-2 block text-xs text-muted-foreground">
+                Arquivo
+              </span>
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                onDragOver={(event) => {
+                  event.preventDefault();
+                  setIsDragging(true);
+                }}
+                onDragLeave={() => setIsDragging(false)}
+                onDrop={(event) => {
+                  event.preventDefault();
+                  setIsDragging(false);
+                  chooseFile(event.dataTransfer.files[0]);
+                }}
+                className={cn(
+                  "flex min-h-32 w-full flex-col items-center justify-center rounded-md border border-dashed px-5 py-6 text-center transition-colors",
+                  isDragging
+                    ? "border-primary bg-primary-soft/50"
+                    : "border-border bg-muted/40 hover:border-primary hover:bg-primary-soft/30",
+                )}
+              >
+                <UploadCloud className="size-8 text-primary" />
+                <span className="mt-2 text-sm font-medium text-foreground">
+                  {selectedFile
+                    ? selectedFile.name
+                    : "Selecione ou arraste um arquivo aqui"}
+                </span>
+                <span className="mt-1 text-xs text-muted-foreground">
+                  Formatos aceitos: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, JPG e
+                  PNG. Máximo de 10 MB.
+                </span>
+              </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png"
+                onChange={(event) => chooseFile(event.target.files?.[0])}
+                className="sr-only"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={resetUpload}>
+              Cancelar
+            </Button>
+            <Button
+              type="button"
+              onClick={sendFile}
+              disabled={!selectedFile || !title.trim()}
+            >
+              Enviar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+function FileCard({
+  file,
+  onDownload,
+  onDelete,
+  onClick,
+}: {
+  file: SharedFile;
+  onDownload: (file: SharedFile) => void;
+  onDelete: (id: string) => void;
+  onClick: () => void;
+}) {
+  const { Icon, colorClass } = getFileStyle(file.format);
+
+  return (
+    <article
+      role="button"
+      tabIndex={0}
+      onClick={onClick}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" && event.target === event.currentTarget) {
+          onClick();
+        }
+      }}
+      className="relative flex cursor-pointer flex-col gap-4 rounded-md border border-border bg-card p-4 shadow-[var(--shadow-card)] transition-all hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary/30 sm:flex-row sm:items-center sm:justify-between"
+    >
+      <div className="flex min-w-0 gap-3 pr-20">
+        <div
+          className={cn(
+            "flex size-10 shrink-0 items-center justify-center rounded-md",
+            colorClass,
+          )}
+        >
+          <Icon className="size-5" />
+        </div>
+
+        <div className="min-w-0">
+          <h4 className="truncate text-sm font-medium text-foreground">
+            {file.name}
+          </h4>
+
+          <p className="mt-1 text-xs text-muted-foreground">
+            {file.description.length > 50
+              ? `${file.description.slice(0, 50)}...`
+              : file.description}
+          </p>
+
+          <p className="mt-2 text-xs text-muted-foreground">
+            Autor: <span className="text-foreground">{file.author}</span> ·{" "}
+            {file.dateLabel}
+          </p>
+        </div>
+      </div>
+
+      <div className="absolute right-3 top-3 flex items-center gap-2">
+        <button
+          type="button"
+          onClick={() => onDownload(file)}
+          aria-label={`Baixar ${file.name}`}
+          className="flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-primary cursor-pointer"
+        >
+          <Download className="size-4" />
+        </button>
+
+        {file.direction === "sent" && (
+          <button
+            type="button"
+            onClick={() => onDelete(file.id)}
+            aria-label={`Excluir ${file.name}`}
+            className="flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive cursor-pointer"
+          >
+            <Trash2 className="size-4" />
+          </button>
+        )}
+      </div>
+    </article>
+  );
+}

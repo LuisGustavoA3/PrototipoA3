@@ -1,0 +1,1 @@
+export { ContatosLocalizacaoPage } from "./ContatosLocalizacaoPage";
