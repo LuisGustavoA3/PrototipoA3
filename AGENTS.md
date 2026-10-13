@@ -2,6 +2,62 @@
 
 # Diretrizes para Uso Consciente de IA no Desenvolvimento
 
+# Regra — Economia de Tokens e Eficiência de Contexto
+
+## Objetivo
+
+Reduzir o consumo de tokens durante as tarefas de desenvolvimento e reestruturação, preservando a precisão técnica, a segurança das alterações e o contexto arquitetural do projeto.
+
+## Diretrizes
+
+**1. Leitura seletiva**
+
+- Consultar primeiro os arquivos diretamente relacionados à tarefa.
+- Evitar reler arquivos já analisados quando não houver alterações relevantes.
+- Pesquisar símbolos, imports e referências antes de abrir arquivos completos.
+- Não percorrer todo o repositório quando uma análise localizada for suficiente.
+
+**2. Respostas objetivas**
+
+- Evitar introduções, explicações repetidas e descrições extensas de procedimentos triviais.
+- Apresentar planos curtos, contendo somente arquivos envolvidos, alterações previstas e riscos relevantes.
+- Não reproduzir arquivos completos ou trechos extensos de código já disponíveis no repositório.
+- Priorizar caminhos de arquivos e referências a funções no lugar de copiar seu conteúdo.
+
+**3. Execução incremental**
+
+- Realizar somente as alterações aprovadas.
+- Evitar refatorações paralelas, abstrações antecipadas e alterações fora do escopo.
+- Não repetir verificações já realizadas quando nenhuma mudança relevante ocorreu.
+- Executar as validações necessárias ao impacto das alterações, preservando as verificações obrigatórias da fase.
+
+**4. Gerenciamento de contexto**
+
+- Utilizar os documentos de contexto existentes como referência, sem reproduzi-los integralmente nas respostas.
+- Registrar decisões arquiteturais duradouras no documento apropriado, evitando depender exclusivamente do histórico da conversa.
+- Antes de analisar novamente uma área, verificar se há diagnóstico anterior válido.
+- Priorizar informações atuais do código quando houver divergência com documentos.
+
+**5. Comunicação**
+
+- Antes de alterar o código, apresentar somente:
+  - Objetivo;
+  - Arquivos afetados;
+  - Estratégia resumida;
+  - Riscos ou dúvidas que bloqueiem a execução.
+- Aguardar aprovação quando exigida pelo fluxo do projeto.
+- Após executar, informar:
+  - Alterações realizadas;
+  - Validações e respectivos resultados;
+  - Pendências ou problemas identificados.
+- Não exibir logs completos, diffs extensos ou código integral, exceto quando solicitado ou necessário para diagnosticar um erro.
+
+## Princípio fundamental
+
+Economizar tokens eliminando informações redundantes e operações desnecessárias, nunca omitindo riscos relevantes, falhas de validação ou impactos arquiteturais.
+
+A correção e a segurança da implementação têm prioridade sobre a economia de tokens.
+
 ## 1. Princípio central
 
 > **Economizar tokens não significa fornecer menos informação. Significa evitar informação desnecessária, repetida ou fora do escopo.**
@@ -116,3 +172,4 @@ Quando o download não for permitido:
 - deve ficar desabilitado.
 
 Não altere layout ou outros comportamentos.
+```

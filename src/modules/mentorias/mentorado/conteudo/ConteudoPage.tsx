@@ -12,7 +12,10 @@ import { AppSidebar } from "@/components/AppSidebar";
 import { TopBar } from "@/components/TopBar";
 import { useSidebarOpen } from "@/hooks/use-sidebar";
 import { cn } from "@/lib/utils";
-import { type LibraryContent, useLibraryContents } from "@/lib/library-store";
+import {
+  type LibraryContent,
+  useLibraryContents,
+} from "@/modules/mentorias/shared/biblioteca";
 import { PageHeader } from "@/components/PageHeader";
 
 type Axis = "Todos" | "Indivíduo" | "Equipe" | "Negócio" | "Mercado";

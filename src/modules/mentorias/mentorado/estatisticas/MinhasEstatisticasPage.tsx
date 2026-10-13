@@ -1,7 +1,10 @@
 import { useMemo, useState } from "react";
 import { useSidebarOpen } from "@/hooks/use-sidebar";
 import { Link } from "@tanstack/react-router";
-import { getCompetencyProgress, useLibraryContents } from "@/lib/library-store";
+import {
+  getCompetencyProgress,
+  useLibraryContents,
+} from "@/modules/mentorias/shared/biblioteca";
 import {
   ArrowLeft,
   Check,

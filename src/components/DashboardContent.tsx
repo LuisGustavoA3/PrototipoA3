@@ -26,7 +26,7 @@ import {
   useHiddenDashboardActionIds,
   usePdiActions,
 } from "@/lib/pdi-store";
-import { useLibraryContents } from "@/lib/library-store";
+import { useLibraryContents } from "@/modules/mentorias/shared/biblioteca";
 import { useJourneyItems } from "@/lib/journey-store";
 
 const sessionProgress = { completed: 3, total: 10 };
