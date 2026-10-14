@@ -25,9 +25,9 @@ import {
   updatePdiAction,
   useHiddenDashboardActionIds,
   usePdiActions,
-} from "@/lib/pdi-store";
+} from "@/modules/mentorias/mentorado/pdi";
 import { useLibraryContents } from "@/modules/mentorias/shared/biblioteca";
-import { useJourneyItems } from "@/lib/journey-store";
+import { useJourneyItems } from "@/modules/mentorias/mentorado/jornada";
 
 const sessionProgress = { completed: 3, total: 10 };
 const dailyContentStorageKey = "a3:dashboard-daily-content";

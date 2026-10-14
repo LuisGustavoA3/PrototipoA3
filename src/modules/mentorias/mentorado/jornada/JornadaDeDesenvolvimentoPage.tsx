@@ -19,7 +19,7 @@ import {
   type JourneyItem,
   type Section,
   useJourneyItems,
-} from "@/lib/journey-store";
+} from "./journey-store";
 import { cn } from "@/lib/utils";
 
 const startingPointSections: EditableSection[] = [

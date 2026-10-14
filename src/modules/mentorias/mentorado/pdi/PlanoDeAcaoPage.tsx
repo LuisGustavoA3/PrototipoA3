@@ -22,7 +22,7 @@ import {
   usePdiActions,
   isValidPdiDate,
   isValidPdiDateRange,
-} from "@/lib/pdi-store";
+} from "./pdi-store";
 import { cn } from "@/lib/utils";
 
 const competencies = [
