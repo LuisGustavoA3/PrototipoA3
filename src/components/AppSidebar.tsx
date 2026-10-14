@@ -57,10 +57,10 @@ const items: Item[] = [
     label: "Biblioteca",
     icon: Lightbulb,
     children: [
-      { label: "Eixo: Negócio", icon: Briefcase },
-      { label: "Eixo: Equipe", icon: Users },
-      { label: "Eixo: Mercado", icon: TrendingUp },
       { label: "Eixo: Indivíduo", icon: User },
+      { label: "Eixo: Equipe", icon: Users },
+      { label: "Eixo: Negócio", icon: Briefcase },
+      { label: "Eixo: Mercado", icon: TrendingUp },
     ],
   },
   {

@@ -25,9 +25,9 @@ import {
   updatePdiAction,
   useHiddenDashboardActionIds,
   usePdiActions,
-} from "@/lib/pdi-store";
-import { useLibraryContents } from "@/lib/library-store";
-import { useJourneyItems } from "@/lib/journey-store";
+} from "@/modules/mentorias/mentorado/pdi";
+import { useLibraryContents } from "@/modules/mentorias/shared/biblioteca";
+import { useJourneyItems } from "@/modules/mentorias/mentorado/jornada";
 
 const sessionProgress = { completed: 3, total: 10 };
 const dailyContentStorageKey = "a3:dashboard-daily-content";
@@ -35,6 +35,7 @@ const statusColors: Record<ActionStatus, string> = {
   Concluído: "#65c996",
   "Em andamento": "#f58a2a",
   "Não iniciado": "#cbd0d3",
+  Atrasado: "#c96b6b",
   Parado: "#e8b44f",
   Cancelado: "#c96b6b",
 };
@@ -346,7 +347,7 @@ export function DashboardContent() {
                   {dailyContent.description}
                 </p>
                 <p className="mt-3 text-xs text-primary">
-                  {dailyContent.topic}
+                  {dailyContent.competency}
                 </p>
               </div>
             </div>

@@ -21,13 +21,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { AvatarUploader } from "@/components/personal-info/AvatarUploader";
-import {
-  Field,
-  PasswordField,
-  SelectField,
-  TextField,
-} from "@/components/personal-info/Field";
+import { AvatarUploader } from "./AvatarUploader";
+import { Field, PasswordField, SelectField, TextField } from "./Field";
 import {
   digitsOnly,
   initialAddress,
@@ -41,7 +36,7 @@ import {
   ufs,
   type Address,
   type Profile,
-} from "@/lib/personal-info";
+} from "../personal-info";
 
 type CepStatus = "idle" | "searching" | "found" | "notfound";
 
