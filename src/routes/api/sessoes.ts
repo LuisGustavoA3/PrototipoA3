@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { getMondayMentorshipByItemId } from "@/lib/monday-api";
+import { calculateMentorshipProgress } from "@/lib/mentorship-session";
 
 // Identificador provisório do acompanhamento no Monday.
 // Será substituído pela associação com o usuário autenticado
@@ -28,6 +29,7 @@ export const Route = createFileRoute("/api/sessoes")({
               mondayItemId: mentorship.mondayItemId,
               menteeName: mentorship.menteeName,
               status: mentorship.status,
+              progress: calculateMentorshipProgress(mentorship.sessions),
             },
             total: mentorship.sessions.length,
             sessoes: mentorship.sessions,

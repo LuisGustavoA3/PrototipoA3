@@ -97,3 +97,21 @@ export function updateMentorshipSession(
 
   return updatedSession;
 }
+
+export function calculateMentorshipProgress(
+  sessions: MondayMentorshipSession[],
+): number | null {
+  const validSessions = sessions.filter(
+    (session) => session.status !== "Cancelado",
+  );
+
+  if (validSessions.length === 0) {
+    return null;
+  }
+
+  const completedSessions = validSessions.filter(
+    (session) => session.status === "Feito",
+  ).length;
+
+  return Math.round((completedSessions / validSessions.length) * 100);
+}

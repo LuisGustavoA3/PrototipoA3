@@ -345,6 +345,28 @@ function getSubitemNumber(
   return Number.isFinite(number) ? number : null;
 }
 
+function getSubitemTrackedHours(
+  item: MondaySubitem,
+  columnId: string,
+): number | null {
+  const column = getSubitemColumn(item, columnId);
+  const value = parseColumnValue(column);
+
+  if (
+    typeof value !== "object" ||
+    value === null ||
+    !("duration" in value) ||
+    typeof value.duration !== "number" ||
+    !Number.isFinite(value.duration) ||
+    value.duration <= 0
+  ) {
+    return null;
+  }
+
+  // O Monday retorna a duração em segundos.
+  return value.duration / 3600;
+}
+
 export function mapMondaySubitem(
   item: MondaySubitem,
   parentItemId: string,
@@ -369,9 +391,10 @@ export function mapMondaySubitem(
 
     plannedHours: getSubitemNumber(item, SUBITEM_COLUMN_IDS.plannedHours),
 
-    // Conversão da coluna time_tracking será
-    // definida após verificarmos um valor real.
-    completedHours: null,
+    completedHours: getSubitemTrackedHours(
+      item,
+      SUBITEM_COLUMN_IDS.completedHours,
+    ),
 
     rescheduled: getSubitemText(item, SUBITEM_COLUMN_IDS.rescheduled),
 

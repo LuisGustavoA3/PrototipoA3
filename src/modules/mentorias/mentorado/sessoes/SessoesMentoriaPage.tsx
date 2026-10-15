@@ -15,6 +15,7 @@ type SessionsResponse = {
     mondayItemId: string;
     menteeName: string;
     status: string | null;
+    progress: number | null;
   };
   total: number;
   sessoes: MondayMentorshipSession[];
@@ -170,6 +171,46 @@ export function SessoesMentoriaPage() {
               <p className="mt-2 text-xl font-semibold">
                 {mentorship?.status ?? "—"}
               </p>
+            </div>
+          </section>
+
+          <section className="rounded-md border border-border bg-card p-5">
+            <div className="mb-3 flex items-center justify-between gap-4">
+              <div>
+                <h2 className="text-sm font-semibold">
+                  Progresso geral das sessões
+                </h2>
+
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Percentual de sessões concluídas, desconsiderando sessões
+                  canceladas.
+                </p>
+              </div>
+
+              <span className="text-xl font-semibold">
+                {mentorship?.progress != null ? `${mentorship.progress}%` : "—"}
+              </span>
+            </div>
+
+            <div
+              className="h-3 w-full overflow-hidden rounded-full bg-muted"
+              role={mentorship?.progress != null ? "progressbar" : undefined}
+              aria-label="Progresso geral das sessões"
+              aria-valuenow={mentorship?.progress ?? undefined}
+              aria-valuemin={mentorship?.progress != null ? 0 : undefined}
+              aria-valuemax={mentorship?.progress != null ? 100 : undefined}
+            >
+              {mentorship?.progress != null && (
+                <div
+                  className="h-full rounded-full bg-primary transition-all duration-300"
+                  style={{
+                    width: `${Math.min(
+                      100,
+                      Math.max(0, mentorship.progress),
+                    )}%`,
+                  }}
+                />
+              )}
             </div>
           </section>
 
