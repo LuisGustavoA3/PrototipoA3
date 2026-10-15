@@ -1,5 +1,38 @@
 export type MentorshipSessionStatus = "Agendada" | "Concluída" | "Cancelada";
 
+export type Mentorship = {
+  mondayItemId: string;
+  menteeName: string;
+  portalUserId: string | null;
+  status: string | null;
+  sessions: MondayMentorshipSession[];
+};
+
+export type MondayMentorshipSession = {
+  mondaySubitemId: string;
+  mondayParentItemId: string;
+
+  name: string;
+  consultant: string[];
+
+  scheduledDate: string | null;
+  completedDate: string | null;
+  deadline: string | null;
+
+  status: string | null;
+
+  plannedHours: number | null;
+  completedHours: number | null;
+
+  rescheduled: string | null;
+  realization: string | null;
+
+  comment: string | null;
+  monitoring: string[];
+
+  progress: number | null;
+};
+
 export type MentorshipSession = {
   mondayItemId: string;
   name: string;

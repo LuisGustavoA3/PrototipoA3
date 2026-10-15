@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { RefreshCw } from "lucide-react";
+
 import { AppSidebar } from "@/components/AppSidebar";
 import { PageHeader } from "@/components/PageHeader";
 import { TopBar } from "@/components/TopBar";
@@ -7,36 +8,78 @@ import { Button } from "@/components/ui/button";
 import { useSidebarOpen } from "@/hooks/use-sidebar";
 import { cn } from "@/lib/utils";
 
-type MentorshipSession = {
-  mondayItemId: string;
-  name: string;
-  date: string | null;
-  status: "Agendada" | "Concluída" | "Cancelada";
-  responsaveis: string[];
-  empresa: string | null;
-};
+import type { MondayMentorshipSession } from "@/lib/mentorship-session";
 
 type SessionsResponse = {
+  mentorship: {
+    mondayItemId: string;
+    menteeName: string;
+    status: string | null;
+  };
   total: number;
-  sessoes: MentorshipSession[];
+  sessoes: MondayMentorshipSession[];
 };
 
 function formatDate(date: string | null) {
   if (!date) return "—";
 
   const [year, month, day] = date.split("-");
+  if (!year || !month || !day) return "—";
+
   return `${day}/${month}/${year}`;
+}
+
+function formatHours(hours: number | null) {
+  if (hours === null) return "—";
+
+  return `${hours.toLocaleString("pt-BR")} h`;
+}
+
+function SessionProgress({ progress }: { progress: number | null }) {
+  const valid = progress !== null && Number.isFinite(progress);
+
+  const percentage = valid ? Math.min(100, Math.max(0, progress)) : 0;
+
+  return (
+    <div className="flex min-w-32 items-center gap-3">
+      <div
+        className="h-2 w-full overflow-hidden rounded-full bg-muted"
+        role={valid ? "progressbar" : undefined}
+        aria-valuenow={valid ? percentage : undefined}
+        aria-valuemin={valid ? 0 : undefined}
+        aria-valuemax={valid ? 100 : undefined}
+        aria-label="Progresso da sessão"
+      >
+        {valid && (
+          <div
+            className="h-full rounded-full bg-primary transition-all"
+            style={{ width: `${percentage}%` }}
+          />
+        )}
+      </div>
+
+      <span className="min-w-10 text-right text-xs text-muted-foreground">
+        {valid ? `${Math.round(percentage)}%` : "—"}
+      </span>
+    </div>
+  );
 }
 
 export function SessoesMentoriaPage() {
   const [sidebarOpen, toggleSidebar] = useSidebarOpen();
-  const [sessions, setSessions] = useState<MentorshipSession[]>([]);
+
+  const [sessions, setSessions] = useState<MondayMentorshipSession[]>([]);
+
+  const [mentorship, setMentorship] = useState<
+    SessionsResponse["mentorship"] | null
+  >(null);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-  const [refreshing, setRefreshing] = useState(false);
-  const isFetchingRef = useRef(false);
   const [isFetching, setIsFetching] = useState(false);
+
+  const isFetchingRef = useRef(false);
 
   const loadSessions = useCallback(async () => {
     if (isFetchingRef.current) return;
@@ -54,6 +97,7 @@ export function SessoesMentoriaPage() {
       const data: SessionsResponse = await response.json();
 
       setSessions(data.sessoes);
+      setMentorship(data.mentorship);
       setError(null);
       setLastUpdated(new Date());
     } catch {
@@ -76,10 +120,12 @@ export function SessoesMentoriaPage() {
       window.clearInterval(interval);
     };
   }, [loadSessions]);
+
   return (
     <div className="h-screen w-full overflow-hidden bg-background">
       <TopBar onToggleSidebar={toggleSidebar} />
       <AppSidebar open={sidebarOpen} />
+
       <main
         className={cn(
           "h-full overflow-y-auto pt-16 transition-[padding-left] duration-300",
@@ -90,7 +136,7 @@ export function SessoesMentoriaPage() {
           <header className="flex flex-wrap items-start justify-between gap-4">
             <PageHeader
               title="Sessões de Mentoria"
-              description="Acompanhe as sessões de mentoria cadastradas no Monday."
+              description="Acompanhe suas sessões de mentoria."
             />
 
             <Button
@@ -101,19 +147,30 @@ export function SessoesMentoriaPage() {
               disabled={isFetching}
             >
               <RefreshCw
-                className={`size-4 ${isFetching ? "animate-spin" : ""}`}
+                className={cn("size-4", isFetching && "animate-spin")}
               />
               {isFetching ? "Atualizando..." : "Atualizar"}
             </Button>
           </header>
 
-          <section className="rounded-md border border-border bg-card p-5 shadow-[var(--shadow-card)]">
-            <p className="label-caps text-xs text-muted-foreground">
-              Total de sessões
-            </p>
-            <p className="mt-2 text-3xl font-semibold">
-              {loading ? "—" : sessions.length}
-            </p>
+          <section className="grid gap-4 md:grid-cols-2">
+            <div className="rounded-md border border-border bg-card p-5">
+              <p className="text-xs text-muted-foreground">Total de sessões</p>
+
+              <p className="mt-2 text-3xl font-semibold">
+                {loading ? "—" : sessions.length}
+              </p>
+            </div>
+
+            <div className="rounded-md border border-border bg-card p-5">
+              <p className="text-xs text-muted-foreground">
+                Status do acompanhamento
+              </p>
+
+              <p className="mt-2 text-xl font-semibold">
+                {mentorship?.status ?? "—"}
+              </p>
+            </div>
           </section>
 
           {error && (
@@ -127,9 +184,14 @@ export function SessoesMentoriaPage() {
 
           <section className="overflow-hidden rounded-md border border-border bg-card shadow-[var(--shadow-card)]">
             <div className="border-b border-border px-5 py-4">
-              <h2 className="label-caps text-sm text-foreground">
-                Todas as sessões
-              </h2>
+              <h2 className="text-sm font-semibold">Minhas sessões</h2>
+
+              {mentorship && (
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {mentorship.menteeName}
+                </p>
+              )}
+
               {lastUpdated && (
                 <p className="mt-1 text-xs text-muted-foreground">
                   Última consulta: {lastUpdated.toLocaleTimeString("pt-BR")}
@@ -142,18 +204,21 @@ export function SessoesMentoriaPage() {
                 <thead className="bg-muted/50 text-muted-foreground">
                   <tr>
                     <th className="px-5 py-3 font-medium">Sessão</th>
-                    <th className="px-5 py-3 font-medium">Data</th>
+                    <th className="px-5 py-3 font-medium">Consultor</th>
+                    <th className="px-5 py-3 font-medium">Data prevista</th>
+                    <th className="px-5 py-3 font-medium">Data realizada</th>
                     <th className="px-5 py-3 font-medium">Status</th>
-                    <th className="px-5 py-3 font-medium">Responsáveis</th>
-                    <th className="px-5 py-3 font-medium">Empresa</th>
+                    <th className="px-5 py-3 font-medium">CH prevista</th>
+                    <th className="px-5 py-3 font-medium">CH realizada</th>
+                    <th className="px-5 py-3 font-medium">Progresso</th>
                   </tr>
                 </thead>
 
-                <tbody className="divide-y">
+                <tbody className="divide-y divide-border">
                   {loading ? (
                     <tr>
                       <td
-                        colSpan={5}
+                        colSpan={8}
                         className="px-5 py-8 text-center text-muted-foreground"
                       >
                         Carregando sessões...
@@ -162,7 +227,7 @@ export function SessoesMentoriaPage() {
                   ) : sessions.length === 0 ? (
                     <tr>
                       <td
-                        colSpan={5}
+                        colSpan={8}
                         className="px-5 py-8 text-center text-muted-foreground"
                       >
                         Nenhuma sessão encontrada.
@@ -171,26 +236,42 @@ export function SessoesMentoriaPage() {
                   ) : (
                     sessions.map((session) => (
                       <tr
-                        key={session.mondayItemId}
+                        key={session.mondaySubitemId}
                         className="hover:bg-muted/30"
                       >
                         <td className="px-5 py-4 font-medium">
                           {session.name}
                         </td>
-                        <td className="whitespace-nowrap px-5 py-4">
-                          {formatDate(session.date)}
+
+                        <td className="px-5 py-4">
+                          {session.consultant.join(", ") || "—"}
                         </td>
+
+                        <td className="whitespace-nowrap px-5 py-4">
+                          {formatDate(session.scheduledDate)}
+                        </td>
+
+                        <td className="whitespace-nowrap px-5 py-4">
+                          {formatDate(session.completedDate)}
+                        </td>
+
                         <td className="px-5 py-4">
                           <span className="inline-flex rounded-full bg-muted px-2.5 py-1 text-xs font-medium">
-                            {session.status}
+                            {session.status ?? "—"}
                           </span>
                         </td>
+
                         <td className="px-5 py-4">
-                          {session.responsaveis.length > 0
-                            ? session.responsaveis.join(", ")
-                            : "—"}
+                          {formatHours(session.plannedHours)}
                         </td>
-                        <td className="px-5 py-4">{session.empresa ?? "—"}</td>
+
+                        <td className="px-5 py-4">
+                          {formatHours(session.completedHours)}
+                        </td>
+
+                        <td className="px-5 py-4">
+                          <SessionProgress progress={session.progress} />
+                        </td>
                       </tr>
                     ))
                   )}
