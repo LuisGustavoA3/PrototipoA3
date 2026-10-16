@@ -597,3 +597,96 @@ export async function getMondayMentorshipByItemId(
 
   return mentorship;
 }
+
+export async function updateMondaySessionComment(
+  mondayParentItemId: string,
+  mondaySubitemId: string,
+  comment: string,
+): Promise<void> {
+  if (process.env["NODE_ENV"] !== "development") {
+    throw new Error(
+      "A edição de comentários está disponível apenas em desenvolvimento.",
+    );
+  }
+
+  const token = process.env["MONDAY_API_TOKEN"];
+
+  if (!token) {
+    throw new Error("MONDAY_API_TOKEN não está configurado.");
+  }
+
+  if (!/^\d+$/.test(mondayParentItemId) || !/^\d+$/.test(mondaySubitemId)) {
+    throw new Error("Identificador da sessão inválido.");
+  }
+
+  if (comment.length > 5000) {
+    throw new Error("O comentário excede o limite permitido.");
+  }
+
+  // Confirma que a sessão pertence ao acompanhamento informado.
+  const mentorship = await getMondayMentorshipByItemId(mondayParentItemId);
+
+  if (
+    !mentorship ||
+    !mentorship.sessions.some(
+      (session) => session.mondaySubitemId === mondaySubitemId,
+    )
+  ) {
+    throw new Error("A sessão não pertence ao acompanhamento informado.");
+  }
+
+  const query = `
+    mutation UpdateSessionComment(
+      $boardId: ID!
+      $itemId: ID!
+      $columnId: String!
+      $value: String!
+    ) {
+      change_simple_column_value(
+        board_id: $boardId
+        item_id: $itemId
+        column_id: $columnId
+        value: $value
+      ) {
+        id
+      }
+    }
+  `;
+
+  const response = await fetch(MONDAY_API_URL, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      query,
+      variables: {
+        boardId: "18435418849",
+        itemId: mondaySubitemId,
+        columnId: SUBITEM_COLUMN_IDS.comment,
+        value: comment,
+      },
+    }),
+  });
+
+  const result = (await response.json()) as {
+    data?: {
+      change_simple_column_value?: {
+        id: string;
+      } | null;
+    };
+    errors?: { message: string }[];
+  };
+
+  if (!response.ok || result.errors?.length) {
+    throw new Error(
+      result.errors?.map((error) => error.message).join("; ") ||
+        `Erro HTTP ao atualizar comentário: ${response.status}`,
+    );
+  }
+
+  if (!result.data?.change_simple_column_value?.id) {
+    throw new Error("O Monday não confirmou a atualização do comentário.");
+  }
+}

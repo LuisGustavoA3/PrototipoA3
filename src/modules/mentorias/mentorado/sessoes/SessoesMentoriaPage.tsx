@@ -91,11 +91,75 @@ export function SessoesMentoriaPage() {
 
   const [commentSessionId, setCommentSessionId] = useState<string | null>(null);
   const [commentDraft, setCommentDraft] = useState("");
+  const [isSavingComment, setIsSavingComment] = useState(false);
+  const [commentError, setCommentError] = useState<string | null>(null);
+  const [commentSuccess, setCommentSuccess] = useState<string | null>(null);
   const isFetchingRef = useRef(false);
+
   function openCommentDialog(session: MondayMentorshipSession) {
     setCommentSessionId(session.mondaySubitemId);
     setCommentDraft(session.comment ?? "");
+    setCommentError(null);
   }
+
+  function closeCommentDialog() {
+    if (isSavingComment) return;
+
+    setCommentSessionId(null);
+    setCommentDraft("");
+    setCommentError(null);
+  }
+
+  async function saveComment() {
+    if (!commentSessionId || isSavingComment) return;
+
+    setIsSavingComment(true);
+    setCommentError(null);
+
+    try {
+      const response = await fetch("/PrototipoA3/api/sessoes/comentario", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          mondaySubitemId: commentSessionId,
+          comment: commentDraft,
+        }),
+      });
+
+      const result: {
+        success?: boolean;
+        message?: string;
+        comment?: string;
+      } = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(
+          result.message ?? "Não foi possível salvar o comentário.",
+        );
+      }
+
+      setCommentSuccess("Comentário salvo no Monday com sucesso.");
+      closeCommentAfterSave();
+      await loadSessions();
+    } catch (error) {
+      setCommentError(
+        error instanceof Error
+          ? error.message
+          : "Não foi possível salvar o comentário.",
+      );
+    } finally {
+      setIsSavingComment(false);
+    }
+  }
+
+  function closeCommentAfterSave() {
+    setCommentSessionId(null);
+    setCommentDraft("");
+    setCommentError(null);
+  }
+
   const loadSessions = useCallback(async () => {
     if (isFetchingRef.current) return;
 
@@ -301,7 +365,14 @@ export function SessoesMentoriaPage() {
               {error}
             </div>
           )}
-
+          {commentSuccess && (
+            <div
+              role="status"
+              className="rounded-md border border-border bg-card p-4 text-sm"
+            >
+              {commentSuccess}
+            </div>
+          )}
           <section className="overflow-hidden rounded-md border border-border bg-card shadow-[var(--shadow-card)]">
             <div className="border-b border-border px-5 py-4">
               <h2 className="text-sm font-semibold">Minhas sessões</h2>
@@ -462,10 +533,7 @@ export function SessoesMentoriaPage() {
           <Dialog
             open={commentSessionId !== null}
             onOpenChange={(open) => {
-              if (!open) {
-                setCommentSessionId(null);
-                setCommentDraft("");
-              }
+              if (!open) closeCommentDialog();
             }}
           >
             <DialogContent className="sm:max-w-[500px]">
@@ -491,22 +559,31 @@ export function SessoesMentoriaPage() {
                   placeholder="Escreva seu comentário..."
                   rows={5}
                 />
+                {commentError && (
+                  <p role="alert" className="text-sm text-destructive">
+                    {commentError}
+                  </p>
+                )}
               </div>
 
               <DialogFooter>
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => {
-                    setCommentSessionId(null);
-                    setCommentDraft("");
-                  }}
+                  onClick={closeCommentDialog}
+                  disabled={isSavingComment}
                 >
                   Cancelar
                 </Button>
 
-                <Button type="button" disabled>
-                  Salvar comentário
+                <Button
+                  type="button"
+                  onClick={() => void saveComment()}
+                  disabled={
+                    isSavingComment || commentDraft.trim().length > 5000
+                  }
+                >
+                  {isSavingComment ? "Salvando..." : "Salvar comentário"}
                 </Button>
               </DialogFooter>
             </DialogContent>
