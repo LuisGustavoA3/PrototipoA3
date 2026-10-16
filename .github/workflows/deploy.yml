@@ -40,7 +40,7 @@ jobs:
       - name: Fazer upload do build
         uses: actions/upload-pages-artifact@v3
         with:
-          path: /workspaces/PrototipoA3/src/routes/index.tsx
+          path: "./workspaces/PrototipoA3/src/routes/index.tsx"
 
   deploy:
     environment:
