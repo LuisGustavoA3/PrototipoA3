@@ -40,7 +40,7 @@ jobs:
       - name: Fazer upload do build
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "./workspaces/PrototipoA3/.output/public"
+          path: "./.output/public"
 
   deploy:
     environment:
