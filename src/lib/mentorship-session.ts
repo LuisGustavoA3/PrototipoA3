@@ -4,7 +4,20 @@ export type Mentorship = {
   mondayItemId: string;
   menteeName: string;
   portalUserId: string | null;
+
   status: string | null;
+
+  manager: string[];
+  monitoring: string[];
+  attendance: string[];
+
+  contractDeadline: string | null;
+
+  schedule: {
+    from: string;
+    to: string;
+  } | null;
+
   sessions: MondayMentorshipSession[];
 };
 
@@ -101,17 +114,13 @@ export function updateMentorshipSession(
 export function calculateMentorshipProgress(
   sessions: MondayMentorshipSession[],
 ): number | null {
-  const validSessions = sessions.filter(
-    (session) => session.status !== "Cancelado",
-  );
-
-  if (validSessions.length === 0) {
+  if (sessions.length === 0) {
     return null;
   }
 
-  const completedSessions = validSessions.filter(
+  const completedSessions = sessions.filter(
     (session) => session.status === "Feito",
   ).length;
 
-  return Math.round((completedSessions / validSessions.length) * 100);
+  return Math.round((completedSessions / sessions.length) * 100);
 }

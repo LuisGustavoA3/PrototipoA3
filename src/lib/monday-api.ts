@@ -8,6 +8,14 @@ const MONDAY_API_URL = "https://api.monday.com/v2";
 const MENTORSHIP_BOARD_ID = "18432549548";
 const NEW_MENTORSHIP_BOARD_ID = "18435417982";
 
+const MENTORSHIP_COLUMN_IDS = {
+  manager: "person",
+  monitoring: "multiple_person_mm84d7pe",
+  attendance: "multiple_person_mm849v3a",
+  contractDeadline: "date_mm84z7j0",
+  schedule: "timerange_mm841xvq",
+} as const;
+
 const SUBITEM_COLUMN_IDS = {
   consultant: "dropdown_mm84vfed",
   scheduledDate: "date_mm84c3xg",
@@ -69,6 +77,54 @@ function parseColumnValue(column: MondayColumnValue | undefined): unknown {
   } catch {
     return null;
   }
+}
+
+function parseMondayPeople(column: MondayColumnValue | undefined): string[] {
+  if (!column) return [];
+
+  return column.text
+    ? column.text
+        .split(",")
+        .map((name) => name.trim())
+        .filter(Boolean)
+    : [];
+}
+
+function parseMondayDate(column: MondayColumnValue | undefined): string | null {
+  const value = parseColumnValue(column);
+
+  if (
+    typeof value === "object" &&
+    value !== null &&
+    "date" in value &&
+    typeof value.date === "string"
+  ) {
+    return value.date;
+  }
+
+  return null;
+}
+
+function parseMondayTimeline(
+  column: MondayColumnValue | undefined,
+): { from: string; to: string } | null {
+  const value = parseColumnValue(column);
+
+  if (
+    typeof value === "object" &&
+    value !== null &&
+    "from" in value &&
+    "to" in value &&
+    typeof value.from === "string" &&
+    typeof value.to === "string"
+  ) {
+    return {
+      from: value.from,
+      to: value.to,
+    };
+  }
+
+  return null;
 }
 
 function parseResponsaveis(column: MondayColumnValue | undefined): string[] {
@@ -424,32 +480,30 @@ export async function getMondayMentorshipByItemId(
   }
 
   const query = `
-    
-query GetMentorship($itemIds: [ID!]!) {
-  items(ids: $itemIds) {
-    id
-    name
-    board {
-      id
-    }
-    column_values {
-      id
-      text
-      value
-    }
-    subitems {
+  query GetMentorship($itemIds: [ID!]!) {
+    items(ids: $itemIds) {
       id
       name
+      board {
+        id
       }
       column_values {
         id
         text
         value
       }
+      subitems {
+        id
+        name
+        column_values {
+          id
+          text
+          value
+        }
+      }
     }
   }
-}
-  `;
+`;
 
   const response = await fetch(MONDAY_API_URL, {
     method: "POST",
@@ -507,11 +561,35 @@ query GetMentorship($itemIds: [ID!]!) {
   const status =
     item.column_values.find((column) => column.id === "status")?.text ?? null;
 
+  const getMentorshipColumn = (columnId: string) =>
+    item.column_values.find((column) => column.id === columnId);
+
   const mentorship: Mentorship = {
     mondayItemId: item.id,
     menteeName: item.name,
     portalUserId: null,
     status,
+
+    manager: parseMondayPeople(
+      getMentorshipColumn(MENTORSHIP_COLUMN_IDS.manager),
+    ),
+
+    monitoring: parseMondayPeople(
+      getMentorshipColumn(MENTORSHIP_COLUMN_IDS.monitoring),
+    ),
+
+    attendance: parseMondayPeople(
+      getMentorshipColumn(MENTORSHIP_COLUMN_IDS.attendance),
+    ),
+
+    contractDeadline: parseMondayDate(
+      getMentorshipColumn(MENTORSHIP_COLUMN_IDS.contractDeadline),
+    ),
+
+    schedule: parseMondayTimeline(
+      getMentorshipColumn(MENTORSHIP_COLUMN_IDS.schedule),
+    ),
+
     sessions: (item.subitems ?? []).map((subitem) =>
       mapMondaySubitem(subitem, item.id),
     ),

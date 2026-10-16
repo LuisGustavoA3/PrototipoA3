@@ -7,7 +7,18 @@ import { TopBar } from "@/components/TopBar";
 import { Button } from "@/components/ui/button";
 import { useSidebarOpen } from "@/hooks/use-sidebar";
 import { cn } from "@/lib/utils";
+import { MessageSquare } from "lucide-react";
 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
+import { Textarea } from "@/components/ui/textarea";
 import type { MondayMentorshipSession } from "@/lib/mentorship-session";
 
 type SessionsResponse = {
@@ -15,8 +26,20 @@ type SessionsResponse = {
     mondayItemId: string;
     menteeName: string;
     status: string | null;
+
+    manager: string[];
+    monitoring: string[];
+    attendance: string[];
+
+    contractDeadline: string | null;
+    schedule: {
+      from: string;
+      to: string;
+    } | null;
+
     progress: number | null;
   };
+
   total: number;
   sessoes: MondayMentorshipSession[];
 };
@@ -30,45 +53,31 @@ function formatDate(date: string | null) {
   return `${day}/${month}/${year}`;
 }
 
+function getContractDaysRemaining(deadline: string | null): number | null {
+  if (!deadline) return null;
+
+  const [year, month, day] = deadline.split("-").map(Number);
+
+  if (!year || !month || !day) {
+    return null;
+  }
+
+  const deadlineUtc = Date.UTC(year, month - 1, day);
+
+  const now = new Date();
+  const todayUtc = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+
+  return Math.round((deadlineUtc - todayUtc) / (1000 * 60 * 60 * 24));
+}
+
 function formatHours(hours: number | null) {
   if (hours === null) return "—";
 
   return `${hours.toLocaleString("pt-BR")} h`;
 }
 
-function SessionProgress({ progress }: { progress: number | null }) {
-  const valid = progress !== null && Number.isFinite(progress);
-
-  const percentage = valid ? Math.min(100, Math.max(0, progress)) : 0;
-
-  return (
-    <div className="flex min-w-32 items-center gap-3">
-      <div
-        className="h-2 w-full overflow-hidden rounded-full bg-muted"
-        role={valid ? "progressbar" : undefined}
-        aria-valuenow={valid ? percentage : undefined}
-        aria-valuemin={valid ? 0 : undefined}
-        aria-valuemax={valid ? 100 : undefined}
-        aria-label="Progresso da sessão"
-      >
-        {valid && (
-          <div
-            className="h-full rounded-full bg-primary transition-all"
-            style={{ width: `${percentage}%` }}
-          />
-        )}
-      </div>
-
-      <span className="min-w-10 text-right text-xs text-muted-foreground">
-        {valid ? `${Math.round(percentage)}%` : "—"}
-      </span>
-    </div>
-  );
-}
-
 export function SessoesMentoriaPage() {
   const [sidebarOpen, toggleSidebar] = useSidebarOpen();
-
   const [sessions, setSessions] = useState<MondayMentorshipSession[]>([]);
 
   const [mentorship, setMentorship] = useState<
@@ -80,8 +89,13 @@ export function SessoesMentoriaPage() {
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [isFetching, setIsFetching] = useState(false);
 
+  const [commentSessionId, setCommentSessionId] = useState<string | null>(null);
+  const [commentDraft, setCommentDraft] = useState("");
   const isFetchingRef = useRef(false);
-
+  function openCommentDialog(session: MondayMentorshipSession) {
+    setCommentSessionId(session.mondaySubitemId);
+    setCommentDraft(session.comment ?? "");
+  }
   const loadSessions = useCallback(async () => {
     if (isFetchingRef.current) return;
 
@@ -182,8 +196,8 @@ export function SessoesMentoriaPage() {
                 </h2>
 
                 <p className="mt-1 text-xs text-muted-foreground">
-                  Percentual de sessões concluídas, desconsiderando sessões
-                  canceladas.
+                  Percentual de sessões concluídas em relação ao total de
+                  sessões cadastradas.
                 </p>
               </div>
 
@@ -214,6 +228,71 @@ export function SessoesMentoriaPage() {
             </div>
           </section>
 
+          <section className="rounded-md border border-border bg-card p-5">
+            <h2 className="mb-4 text-sm font-semibold">
+              Informações do acompanhamento
+            </h2>
+
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              <div>
+                <p className="text-xs text-muted-foreground">Gestor</p>
+                <p className="mt-1 text-sm font-medium">
+                  {mentorship?.manager.join(", ") || "—"}
+                </p>
+              </div>
+
+              <div>
+                <p className="text-xs text-muted-foreground">Monitoramento</p>
+                <p className="mt-1 text-sm font-medium">
+                  {mentorship?.monitoring.join(", ") || "—"}
+                </p>
+              </div>
+
+              <div>
+                <p className="text-xs text-muted-foreground">Atendimento</p>
+                <p className="mt-1 text-sm font-medium">
+                  {mentorship?.attendance.join(", ") || "—"}
+                </p>
+              </div>
+
+              <div>
+                <p className="text-xs text-muted-foreground">
+                  Prazo do contrato
+                </p>
+                <p className="mt-1 text-sm font-medium">
+                  {formatDate(mentorship?.contractDeadline ?? null)}
+                </p>
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground">
+                  Dias restantes do contrato
+                </p>
+
+                <p className="mt-1 text-sm font-medium">
+                  {(() => {
+                    const days = getContractDaysRemaining(
+                      mentorship?.contractDeadline ?? null,
+                    );
+
+                    if (days === null) return "—";
+                    if (days < 0) return `Vencido há ${Math.abs(days)} dias`;
+                    if (days === 0) return "Vence hoje";
+
+                    return `${days} dias restantes`;
+                  })()}
+                </p>
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground">Cronograma</p>
+                <p className="mt-1 text-sm font-medium">
+                  {mentorship?.schedule
+                    ? `${formatDate(mentorship.schedule.from)} até ${formatDate(mentorship.schedule.to)}`
+                    : "—"}
+                </p>
+              </div>
+            </div>
+          </section>
+
           {error && (
             <div
               role="alert"
@@ -240,18 +319,51 @@ export function SessoesMentoriaPage() {
               )}
             </div>
 
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm">
+            <div
+              className="w-full overflow-x-auto"
+              role="region"
+              aria-label="Tabela de sessões com rolagem horizontal"
+              tabIndex={0}
+            >
+              <table className="min-w-[1650px] w-full text-left text-sm">
                 <thead className="bg-muted/50 text-muted-foreground">
                   <tr>
-                    <th className="px-5 py-3 font-medium">Sessão</th>
-                    <th className="px-5 py-3 font-medium">Consultor</th>
-                    <th className="px-5 py-3 font-medium">Data prevista</th>
-                    <th className="px-5 py-3 font-medium">Data realizada</th>
-                    <th className="px-5 py-3 font-medium">Status</th>
-                    <th className="px-5 py-3 font-medium">CH prevista</th>
-                    <th className="px-5 py-3 font-medium">CH realizada</th>
-                    <th className="px-5 py-3 font-medium">Progresso</th>
+                    <th className="whitespace-nowrap px-5 py-3 font-medium">
+                      Sessão
+                    </th>
+                    <th className="whitespace-nowrap px-5 py-3 font-medium">
+                      Consultor
+                    </th>
+                    <th className="whitespace-nowrap px-5 py-3 font-medium">
+                      Data prevista
+                    </th>
+                    <th className="whitespace-nowrap px-5 py-3 font-medium">
+                      Data realizada
+                    </th>
+                    <th className="whitespace-nowrap px-5 py-3 font-medium">
+                      Prazo limite
+                    </th>
+                    <th className="whitespace-nowrap px-5 py-3 font-medium">
+                      Status
+                    </th>
+                    <th className="whitespace-nowrap px-5 py-3 font-medium">
+                      CH prevista
+                    </th>
+                    <th className="whitespace-nowrap px-5 py-3 font-medium">
+                      CH realizada
+                    </th>
+                    <th className="whitespace-nowrap px-5 py-3 font-medium">
+                      Reagendamento
+                    </th>
+                    <th className="whitespace-nowrap px-5 py-3 font-medium">
+                      Realização
+                    </th>
+                    <th className="whitespace-nowrap px-5 py-3 font-medium">
+                      Acompanhamento
+                    </th>
+                    <th className="whitespace-nowrap px-5 py-3 text-center font-medium">
+                      Comentário
+                    </th>
                   </tr>
                 </thead>
 
@@ -259,7 +371,7 @@ export function SessoesMentoriaPage() {
                   {loading ? (
                     <tr>
                       <td
-                        colSpan={8}
+                        colSpan={12}
                         className="px-5 py-8 text-center text-muted-foreground"
                       >
                         Carregando sessões...
@@ -268,7 +380,7 @@ export function SessoesMentoriaPage() {
                   ) : sessions.length === 0 ? (
                     <tr>
                       <td
-                        colSpan={8}
+                        colSpan={12}
                         className="px-5 py-8 text-center text-muted-foreground"
                       >
                         Nenhuma sessão encontrada.
@@ -280,7 +392,7 @@ export function SessoesMentoriaPage() {
                         key={session.mondaySubitemId}
                         className="hover:bg-muted/30"
                       >
-                        <td className="px-5 py-4 font-medium">
+                        <td className="whitespace-nowrap px-5 py-4 font-medium">
                           {session.name}
                         </td>
 
@@ -296,22 +408,48 @@ export function SessoesMentoriaPage() {
                           {formatDate(session.completedDate)}
                         </td>
 
+                        <td className="whitespace-nowrap px-5 py-4">
+                          {formatDate(session.deadline)}
+                        </td>
+
                         <td className="px-5 py-4">
-                          <span className="inline-flex rounded-full bg-muted px-2.5 py-1 text-xs font-medium">
+                          <span className="inline-flex whitespace-nowrap rounded-full bg-muted px-2.5 py-1 text-xs font-medium">
                             {session.status ?? "—"}
                           </span>
                         </td>
 
-                        <td className="px-5 py-4">
+                        <td className="whitespace-nowrap px-5 py-4">
                           {formatHours(session.plannedHours)}
                         </td>
 
-                        <td className="px-5 py-4">
+                        <td className="whitespace-nowrap px-5 py-4">
                           {formatHours(session.completedHours)}
                         </td>
 
+                        <td className="whitespace-nowrap px-5 py-4">
+                          {session.rescheduled ?? "—"}
+                        </td>
+
+                        <td className="whitespace-nowrap px-5 py-4">
+                          {session.realization ?? "—"}
+                        </td>
+
                         <td className="px-5 py-4">
-                          <SessionProgress progress={session.progress} />
+                          {session.monitoring.join(", ") || "—"}
+                        </td>
+
+                        <td className="px-5 py-4 text-center">
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => openCommentDialog(session)}
+                            aria-label={`Comentar a sessão ${session.name}`}
+                            title="Mande um comentário sobre a sessão, ele será visível para o gestor e monitoramento do acompanhamento."
+                            className="transition-colors hover:bg-muted"
+                          >
+                            <MessageSquare className="size-4" />
+                          </Button>
                         </td>
                       </tr>
                     ))
@@ -320,6 +458,59 @@ export function SessoesMentoriaPage() {
               </table>
             </div>
           </section>
+
+          <Dialog
+            open={commentSessionId !== null}
+            onOpenChange={(open) => {
+              if (!open) {
+                setCommentSessionId(null);
+                setCommentDraft("");
+              }
+            }}
+          >
+            <DialogContent className="sm:max-w-[500px]">
+              <DialogHeader>
+                <DialogTitle>Comentário da sessão</DialogTitle>
+
+                <DialogDescription>
+                  Mande um comentário sobre a sessão de mentoria, ele será
+                  visível para o gestor e monitoramento do acompanhamento.
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="space-y-3 py-2">
+                <p className="text-sm font-medium">
+                  {sessions.find(
+                    (session) => session.mondaySubitemId === commentSessionId,
+                  )?.name ?? "Sessão"}
+                </p>
+
+                <Textarea
+                  value={commentDraft}
+                  onChange={(event) => setCommentDraft(event.target.value)}
+                  placeholder="Escreva seu comentário..."
+                  rows={5}
+                />
+              </div>
+
+              <DialogFooter>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    setCommentSessionId(null);
+                    setCommentDraft("");
+                  }}
+                >
+                  Cancelar
+                </Button>
+
+                <Button type="button" disabled>
+                  Salvar comentário
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </main>
     </div>

@@ -29,8 +29,17 @@ export const Route = createFileRoute("/api/sessoes")({
               mondayItemId: mentorship.mondayItemId,
               menteeName: mentorship.menteeName,
               status: mentorship.status,
+
+              manager: mentorship.manager,
+              monitoring: mentorship.monitoring,
+              attendance: mentorship.attendance,
+
+              contractDeadline: mentorship.contractDeadline,
+              schedule: mentorship.schedule,
+
               progress: calculateMentorshipProgress(mentorship.sessions),
             },
+
             total: mentorship.sessions.length,
             sessoes: mentorship.sessions,
           });
