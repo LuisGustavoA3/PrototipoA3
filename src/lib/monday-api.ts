@@ -406,8 +406,6 @@ export function mapMondaySubitem(
       getSubitemColumn(item, SUBITEM_COLUMN_IDS.monitoring),
     ),
 
-    // O formato da coluna progress também
-    // precisa ser confirmado com dados reais.
     progress: null,
   };
 }
@@ -426,29 +424,31 @@ export async function getMondayMentorshipByItemId(
   }
 
   const query = `
-    query GetMentorship($itemIds: [ID!]!) {
-      items(ids: $itemIds) {
+    
+query GetMentorship($itemIds: [ID!]!) {
+  items(ids: $itemIds) {
+    id
+    name
+    board {
+      id
+    }
+    column_values {
+      id
+      text
+      value
+    }
+    subitems {
+      id
+      name
+      }
+      column_values {
         id
-        name
-        board {
-          id
-        }
-        column_values {
-          id
-          text
-          value
-        }
-        subitems {
-          id
-          name
-          column_values {
-            id
-            text
-            value
-          }
-        }
+        text
+        value
       }
     }
+  }
+}
   `;
 
   const response = await fetch(MONDAY_API_URL, {
