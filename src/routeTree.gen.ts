@@ -34,6 +34,7 @@ import { Route as TreinamentosRouteImport } from './routes/treinamentos'
 import { Route as ApiHealthRouteImport } from './routes/api/health'
 import { Route as ApiSessoesRouteImport } from './routes/api/sessoes'
 import { Route as ApiMondayWebhookRouteImport } from './routes/api/monday/webhook'
+import { Route as ApiSessoesComentarioRouteImport } from './routes/api/sessoes/comentario'
 import { Route as BibliotecaConteudoContentIdRouteImport } from './routes/biblioteca/conteudo/$contentId'
 
 const IndexRoute = IndexRouteImport.update({
@@ -162,6 +163,11 @@ const ApiMondayWebhookRoute = ApiMondayWebhookRouteImport.update({
   path: '/api/monday/webhook',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiSessoesComentarioRoute = ApiSessoesComentarioRouteImport.update({
+  id: '/comentario',
+  path: '/comentario',
+  getParentRoute: () => ApiSessoesRoute,
+} as any)
 const BibliotecaConteudoContentIdRoute =
   BibliotecaConteudoContentIdRouteImport.update({
     id: '/biblioteca/conteudo/$contentId',
@@ -193,8 +199,9 @@ export interface FileRoutesByFullPath {
   '/sessoes-mentoria': typeof SessoesMentoriaRoute
   '/treinamentos': typeof TreinamentosRoute
   '/api/health': typeof ApiHealthRoute
-  '/api/sessoes': typeof ApiSessoesRoute
+  '/api/sessoes': typeof ApiSessoesRouteWithChildren
   '/api/monday/webhook': typeof ApiMondayWebhookRoute
+  '/api/sessoes/comentario': typeof ApiSessoesComentarioRoute
   '/biblioteca/conteudo/$contentId': typeof BibliotecaConteudoContentIdRoute
 }
 export interface FileRoutesByTo {
@@ -221,8 +228,9 @@ export interface FileRoutesByTo {
   '/sessoes-mentoria': typeof SessoesMentoriaRoute
   '/treinamentos': typeof TreinamentosRoute
   '/api/health': typeof ApiHealthRoute
-  '/api/sessoes': typeof ApiSessoesRoute
+  '/api/sessoes': typeof ApiSessoesRouteWithChildren
   '/api/monday/webhook': typeof ApiMondayWebhookRoute
+  '/api/sessoes/comentario': typeof ApiSessoesComentarioRoute
   '/biblioteca/conteudo/$contentId': typeof BibliotecaConteudoContentIdRoute
 }
 export interface FileRoutesById {
@@ -250,8 +258,9 @@ export interface FileRoutesById {
   '/sessoes-mentoria': typeof SessoesMentoriaRoute
   '/treinamentos': typeof TreinamentosRoute
   '/api/health': typeof ApiHealthRoute
-  '/api/sessoes': typeof ApiSessoesRoute
+  '/api/sessoes': typeof ApiSessoesRouteWithChildren
   '/api/monday/webhook': typeof ApiMondayWebhookRoute
+  '/api/sessoes/comentario': typeof ApiSessoesComentarioRoute
   '/biblioteca/conteudo/$contentId': typeof BibliotecaConteudoContentIdRoute
 }
 export interface FileRouteTypes {
@@ -282,6 +291,7 @@ export interface FileRouteTypes {
     | '/api/health'
     | '/api/sessoes'
     | '/api/monday/webhook'
+    | '/api/sessoes/comentario'
     | '/biblioteca/conteudo/$contentId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -310,6 +320,7 @@ export interface FileRouteTypes {
     | '/api/health'
     | '/api/sessoes'
     | '/api/monday/webhook'
+    | '/api/sessoes/comentario'
     | '/biblioteca/conteudo/$contentId'
   id:
     | '__root__'
@@ -338,6 +349,7 @@ export interface FileRouteTypes {
     | '/api/health'
     | '/api/sessoes'
     | '/api/monday/webhook'
+    | '/api/sessoes/comentario'
     | '/biblioteca/conteudo/$contentId'
   fileRoutesById: FileRoutesById
 }
@@ -365,7 +377,7 @@ export interface RootRouteChildren {
   SessoesMentoriaRoute: typeof SessoesMentoriaRoute
   TreinamentosRoute: typeof TreinamentosRoute
   ApiHealthRoute: typeof ApiHealthRoute
-  ApiSessoesRoute: typeof ApiSessoesRoute
+  ApiSessoesRoute: typeof ApiSessoesRouteWithChildren
   ApiMondayWebhookRoute: typeof ApiMondayWebhookRoute
   BibliotecaConteudoContentIdRoute: typeof BibliotecaConteudoContentIdRoute
 }
@@ -547,6 +559,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMondayWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/sessoes/comentario': {
+      id: '/api/sessoes/comentario'
+      path: '/comentario'
+      fullPath: '/api/sessoes/comentario'
+      preLoaderRoute: typeof ApiSessoesComentarioRouteImport
+      parentRoute: typeof ApiSessoesRoute
+    }
     '/biblioteca/conteudo/$contentId': {
       id: '/biblioteca/conteudo/$contentId'
       path: '/biblioteca/conteudo/$contentId'
@@ -556,6 +575,18 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface ApiSessoesRouteChildren {
+  ApiSessoesComentarioRoute: typeof ApiSessoesComentarioRoute
+}
+
+const ApiSessoesRouteChildren: ApiSessoesRouteChildren = {
+  ApiSessoesComentarioRoute: ApiSessoesComentarioRoute,
+}
+
+const ApiSessoesRouteWithChildren = ApiSessoesRoute._addFileChildren(
+  ApiSessoesRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -581,7 +612,7 @@ const rootRouteChildren: RootRouteChildren = {
   SessoesMentoriaRoute: SessoesMentoriaRoute,
   TreinamentosRoute: TreinamentosRoute,
   ApiHealthRoute: ApiHealthRoute,
-  ApiSessoesRoute: ApiSessoesRoute,
+  ApiSessoesRoute: ApiSessoesRouteWithChildren,
   ApiMondayWebhookRoute: ApiMondayWebhookRoute,
   BibliotecaConteudoContentIdRoute: BibliotecaConteudoContentIdRoute,
 }

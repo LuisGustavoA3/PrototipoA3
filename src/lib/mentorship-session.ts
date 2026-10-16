@@ -1,5 +1,51 @@
 export type MentorshipSessionStatus = "Agendada" | "Concluída" | "Cancelada";
 
+export type Mentorship = {
+  mondayItemId: string;
+  menteeName: string;
+  portalUserId: string | null;
+
+  status: string | null;
+
+  manager: string[];
+  monitoring: string[];
+  attendance: string[];
+
+  contractDeadline: string | null;
+
+  schedule: {
+    from: string;
+    to: string;
+  } | null;
+
+  sessions: MondayMentorshipSession[];
+};
+
+export type MondayMentorshipSession = {
+  mondaySubitemId: string;
+  mondayParentItemId: string;
+
+  name: string;
+  consultant: string[];
+
+  scheduledDate: string | null;
+  completedDate: string | null;
+  deadline: string | null;
+
+  status: string | null;
+
+  plannedHours: number | null;
+  completedHours: number | null;
+
+  rescheduled: string | null;
+  realization: string | null;
+
+  comment: string | null;
+  monitoring: string[];
+
+  progress: number | null;
+};
+
 export type MentorshipSession = {
   mondayItemId: string;
   name: string;
@@ -63,4 +109,18 @@ export function updateMentorshipSession(
   sessions[index] = updatedSession;
 
   return updatedSession;
+}
+
+export function calculateMentorshipProgress(
+  sessions: MondayMentorshipSession[],
+): number | null {
+  if (sessions.length === 0) {
+    return null;
+  }
+
+  const completedSessions = sessions.filter(
+    (session) => session.status === "Feito",
+  ).length;
+
+  return Math.round((completedSessions / sessions.length) * 100);
 }
