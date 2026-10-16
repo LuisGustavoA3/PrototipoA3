@@ -8,585 +8,585 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as AdministracaoRouteImport } from './routes/administracao'
-import { Route as ArquivosCompartilhadosRouteImport } from './routes/arquivos-compartilhados'
-import { Route as AssistenteRouteImport } from './routes/assistente'
-import { Route as AvalieNosRouteImport } from './routes/avalie-nos'
-import { Route as BibliotecaEquipeRouteImport } from './routes/biblioteca-equipe'
-import { Route as BibliotecaIndividuoRouteImport } from './routes/biblioteca-individuo'
-import { Route as BibliotecaMercadoRouteImport } from './routes/biblioteca-mercado'
-import { Route as BibliotecaNegocioRouteImport } from './routes/biblioteca-negocio'
-import { Route as ContatosLocalizacaoRouteImport } from './routes/contatos-localizacao'
-import { Route as ConteudoRouteImport } from './routes/conteudo'
-import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as FaqRouteImport } from './routes/faq'
-import { Route as HubRouteImport } from './routes/hub'
-import { Route as InformacoesPessoaisRouteImport } from './routes/informacoes-pessoais'
-import { Route as JornadaDeDesenvolvimentoRouteImport } from './routes/jornada-de-desenvolvimento'
-import { Route as MentorRouteImport } from './routes/mentor'
-import { Route as MeuAssessmentRouteImport } from './routes/meu-assessment'
-import { Route as MinhasEstatisticasRouteImport } from './routes/minhas-estatisticas'
-import { Route as PlanoDeAcaoRouteImport } from './routes/plano-de-acao'
-import { Route as SessoesMentoriaRouteImport } from './routes/sessoes-mentoria'
-import { Route as TreinamentosRouteImport } from './routes/treinamentos'
-import { Route as ApiHealthRouteImport } from './routes/api/health'
-import { Route as ApiSessoesRouteImport } from './routes/api/sessoes'
-import { Route as ApiMondayWebhookRouteImport } from './routes/api/monday/webhook'
-import { Route as ApiSessoesComentarioRouteImport } from './routes/api/sessoes/comentario'
-import { Route as BibliotecaConteudoContentIdRouteImport } from './routes/biblioteca/conteudo/$contentId'
+import { Route as rootRouteImport } from "./routes/__root";
+import { Route as IndexRouteImport } from "./index";
+import { Route as AdministracaoRouteImport } from "./routes/administracao";
+import { Route as ArquivosCompartilhadosRouteImport } from "./routes/arquivos-compartilhados";
+import { Route as AssistenteRouteImport } from "./routes/assistente";
+import { Route as AvalieNosRouteImport } from "./routes/avalie-nos";
+import { Route as BibliotecaEquipeRouteImport } from "./routes/biblioteca-equipe";
+import { Route as BibliotecaIndividuoRouteImport } from "./routes/biblioteca-individuo";
+import { Route as BibliotecaMercadoRouteImport } from "./routes/biblioteca-mercado";
+import { Route as BibliotecaNegocioRouteImport } from "./routes/biblioteca-negocio";
+import { Route as ContatosLocalizacaoRouteImport } from "./routes/contatos-localizacao";
+import { Route as ConteudoRouteImport } from "./routes/conteudo";
+import { Route as DashboardRouteImport } from "./routes/dashboard";
+import { Route as FaqRouteImport } from "./routes/faq";
+import { Route as HubRouteImport } from "./routes/hub";
+import { Route as InformacoesPessoaisRouteImport } from "./routes/informacoes-pessoais";
+import { Route as JornadaDeDesenvolvimentoRouteImport } from "./routes/jornada-de-desenvolvimento";
+import { Route as MentorRouteImport } from "./routes/mentor";
+import { Route as MeuAssessmentRouteImport } from "./routes/meu-assessment";
+import { Route as MinhasEstatisticasRouteImport } from "./routes/minhas-estatisticas";
+import { Route as PlanoDeAcaoRouteImport } from "./routes/plano-de-acao";
+import { Route as SessoesMentoriaRouteImport } from "./routes/sessoes-mentoria";
+import { Route as TreinamentosRouteImport } from "./routes/treinamentos";
+import { Route as ApiHealthRouteImport } from "./routes/api/health";
+import { Route as ApiSessoesRouteImport } from "./routes/api/sessoes";
+import { Route as ApiMondayWebhookRouteImport } from "./routes/api/monday/webhook";
+import { Route as ApiSessoesComentarioRouteImport } from "./routes/api/sessoes/comentario";
+import { Route as BibliotecaConteudoContentIdRouteImport } from "./routes/biblioteca/conteudo/$contentId";
 
 const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+  id: "/",
+  path: "/",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const AdministracaoRoute = AdministracaoRouteImport.update({
-  id: '/administracao',
-  path: '/administracao',
+  id: "/administracao",
+  path: "/administracao",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ArquivosCompartilhadosRoute = ArquivosCompartilhadosRouteImport.update({
-  id: '/arquivos-compartilhados',
-  path: '/arquivos-compartilhados',
+  id: "/arquivos-compartilhados",
+  path: "/arquivos-compartilhados",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const AssistenteRoute = AssistenteRouteImport.update({
-  id: '/assistente',
-  path: '/assistente',
+  id: "/assistente",
+  path: "/assistente",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const AvalieNosRoute = AvalieNosRouteImport.update({
-  id: '/avalie-nos',
-  path: '/avalie-nos',
+  id: "/avalie-nos",
+  path: "/avalie-nos",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const BibliotecaEquipeRoute = BibliotecaEquipeRouteImport.update({
-  id: '/biblioteca-equipe',
-  path: '/biblioteca-equipe',
+  id: "/biblioteca-equipe",
+  path: "/biblioteca-equipe",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const BibliotecaIndividuoRoute = BibliotecaIndividuoRouteImport.update({
-  id: '/biblioteca-individuo',
-  path: '/biblioteca-individuo',
+  id: "/biblioteca-individuo",
+  path: "/biblioteca-individuo",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const BibliotecaMercadoRoute = BibliotecaMercadoRouteImport.update({
-  id: '/biblioteca-mercado',
-  path: '/biblioteca-mercado',
+  id: "/biblioteca-mercado",
+  path: "/biblioteca-mercado",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const BibliotecaNegocioRoute = BibliotecaNegocioRouteImport.update({
-  id: '/biblioteca-negocio',
-  path: '/biblioteca-negocio',
+  id: "/biblioteca-negocio",
+  path: "/biblioteca-negocio",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ContatosLocalizacaoRoute = ContatosLocalizacaoRouteImport.update({
-  id: '/contatos-localizacao',
-  path: '/contatos-localizacao',
+  id: "/contatos-localizacao",
+  path: "/contatos-localizacao",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ConteudoRoute = ConteudoRouteImport.update({
-  id: '/conteudo',
-  path: '/conteudo',
+  id: "/conteudo",
+  path: "/conteudo",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
+  id: "/dashboard",
+  path: "/dashboard",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const FaqRoute = FaqRouteImport.update({
-  id: '/faq',
-  path: '/faq',
+  id: "/faq",
+  path: "/faq",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const HubRoute = HubRouteImport.update({
-  id: '/hub',
-  path: '/hub',
+  id: "/hub",
+  path: "/hub",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const InformacoesPessoaisRoute = InformacoesPessoaisRouteImport.update({
-  id: '/informacoes-pessoais',
-  path: '/informacoes-pessoais',
+  id: "/informacoes-pessoais",
+  path: "/informacoes-pessoais",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const JornadaDeDesenvolvimentoRoute =
   JornadaDeDesenvolvimentoRouteImport.update({
-    id: '/jornada-de-desenvolvimento',
-    path: '/jornada-de-desenvolvimento',
+    id: "/jornada-de-desenvolvimento",
+    path: "/jornada-de-desenvolvimento",
     getParentRoute: () => rootRouteImport,
-  } as any)
+  } as any);
 const MentorRoute = MentorRouteImport.update({
-  id: '/mentor',
-  path: '/mentor',
+  id: "/mentor",
+  path: "/mentor",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const MeuAssessmentRoute = MeuAssessmentRouteImport.update({
-  id: '/meu-assessment',
-  path: '/meu-assessment',
+  id: "/meu-assessment",
+  path: "/meu-assessment",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const MinhasEstatisticasRoute = MinhasEstatisticasRouteImport.update({
-  id: '/minhas-estatisticas',
-  path: '/minhas-estatisticas',
+  id: "/minhas-estatisticas",
+  path: "/minhas-estatisticas",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const PlanoDeAcaoRoute = PlanoDeAcaoRouteImport.update({
-  id: '/plano-de-acao',
-  path: '/plano-de-acao',
+  id: "/plano-de-acao",
+  path: "/plano-de-acao",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const SessoesMentoriaRoute = SessoesMentoriaRouteImport.update({
-  id: '/sessoes-mentoria',
-  path: '/sessoes-mentoria',
+  id: "/sessoes-mentoria",
+  path: "/sessoes-mentoria",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const TreinamentosRoute = TreinamentosRouteImport.update({
-  id: '/treinamentos',
-  path: '/treinamentos',
+  id: "/treinamentos",
+  path: "/treinamentos",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ApiHealthRoute = ApiHealthRouteImport.update({
-  id: '/api/health',
-  path: '/api/health',
+  id: "/api/health",
+  path: "/api/health",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ApiSessoesRoute = ApiSessoesRouteImport.update({
-  id: '/api/sessoes',
-  path: '/api/sessoes',
+  id: "/api/sessoes",
+  path: "/api/sessoes",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ApiMondayWebhookRoute = ApiMondayWebhookRouteImport.update({
-  id: '/api/monday/webhook',
-  path: '/api/monday/webhook',
+  id: "/api/monday/webhook",
+  path: "/api/monday/webhook",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ApiSessoesComentarioRoute = ApiSessoesComentarioRouteImport.update({
-  id: '/comentario',
-  path: '/comentario',
+  id: "/comentario",
+  path: "/comentario",
   getParentRoute: () => ApiSessoesRoute,
-} as any)
+} as any);
 const BibliotecaConteudoContentIdRoute =
   BibliotecaConteudoContentIdRouteImport.update({
-    id: '/biblioteca/conteudo/$contentId',
-    path: '/biblioteca/conteudo/$contentId',
+    id: "/biblioteca/conteudo/$contentId",
+    path: "/biblioteca/conteudo/$contentId",
     getParentRoute: () => rootRouteImport,
-  } as any)
+  } as any);
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/administracao': typeof AdministracaoRoute
-  '/arquivos-compartilhados': typeof ArquivosCompartilhadosRoute
-  '/assistente': typeof AssistenteRoute
-  '/avalie-nos': typeof AvalieNosRoute
-  '/biblioteca-equipe': typeof BibliotecaEquipeRoute
-  '/biblioteca-individuo': typeof BibliotecaIndividuoRoute
-  '/biblioteca-mercado': typeof BibliotecaMercadoRoute
-  '/biblioteca-negocio': typeof BibliotecaNegocioRoute
-  '/contatos-localizacao': typeof ContatosLocalizacaoRoute
-  '/conteudo': typeof ConteudoRoute
-  '/dashboard': typeof DashboardRoute
-  '/faq': typeof FaqRoute
-  '/hub': typeof HubRoute
-  '/informacoes-pessoais': typeof InformacoesPessoaisRoute
-  '/jornada-de-desenvolvimento': typeof JornadaDeDesenvolvimentoRoute
-  '/mentor': typeof MentorRoute
-  '/meu-assessment': typeof MeuAssessmentRoute
-  '/minhas-estatisticas': typeof MinhasEstatisticasRoute
-  '/plano-de-acao': typeof PlanoDeAcaoRoute
-  '/sessoes-mentoria': typeof SessoesMentoriaRoute
-  '/treinamentos': typeof TreinamentosRoute
-  '/api/health': typeof ApiHealthRoute
-  '/api/sessoes': typeof ApiSessoesRouteWithChildren
-  '/api/monday/webhook': typeof ApiMondayWebhookRoute
-  '/api/sessoes/comentario': typeof ApiSessoesComentarioRoute
-  '/biblioteca/conteudo/$contentId': typeof BibliotecaConteudoContentIdRoute
+  "/": typeof IndexRoute;
+  "/administracao": typeof AdministracaoRoute;
+  "/arquivos-compartilhados": typeof ArquivosCompartilhadosRoute;
+  "/assistente": typeof AssistenteRoute;
+  "/avalie-nos": typeof AvalieNosRoute;
+  "/biblioteca-equipe": typeof BibliotecaEquipeRoute;
+  "/biblioteca-individuo": typeof BibliotecaIndividuoRoute;
+  "/biblioteca-mercado": typeof BibliotecaMercadoRoute;
+  "/biblioteca-negocio": typeof BibliotecaNegocioRoute;
+  "/contatos-localizacao": typeof ContatosLocalizacaoRoute;
+  "/conteudo": typeof ConteudoRoute;
+  "/dashboard": typeof DashboardRoute;
+  "/faq": typeof FaqRoute;
+  "/hub": typeof HubRoute;
+  "/informacoes-pessoais": typeof InformacoesPessoaisRoute;
+  "/jornada-de-desenvolvimento": typeof JornadaDeDesenvolvimentoRoute;
+  "/mentor": typeof MentorRoute;
+  "/meu-assessment": typeof MeuAssessmentRoute;
+  "/minhas-estatisticas": typeof MinhasEstatisticasRoute;
+  "/plano-de-acao": typeof PlanoDeAcaoRoute;
+  "/sessoes-mentoria": typeof SessoesMentoriaRoute;
+  "/treinamentos": typeof TreinamentosRoute;
+  "/api/health": typeof ApiHealthRoute;
+  "/api/sessoes": typeof ApiSessoesRouteWithChildren;
+  "/api/monday/webhook": typeof ApiMondayWebhookRoute;
+  "/api/sessoes/comentario": typeof ApiSessoesComentarioRoute;
+  "/biblioteca/conteudo/$contentId": typeof BibliotecaConteudoContentIdRoute;
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/administracao': typeof AdministracaoRoute
-  '/arquivos-compartilhados': typeof ArquivosCompartilhadosRoute
-  '/assistente': typeof AssistenteRoute
-  '/avalie-nos': typeof AvalieNosRoute
-  '/biblioteca-equipe': typeof BibliotecaEquipeRoute
-  '/biblioteca-individuo': typeof BibliotecaIndividuoRoute
-  '/biblioteca-mercado': typeof BibliotecaMercadoRoute
-  '/biblioteca-negocio': typeof BibliotecaNegocioRoute
-  '/contatos-localizacao': typeof ContatosLocalizacaoRoute
-  '/conteudo': typeof ConteudoRoute
-  '/dashboard': typeof DashboardRoute
-  '/faq': typeof FaqRoute
-  '/hub': typeof HubRoute
-  '/informacoes-pessoais': typeof InformacoesPessoaisRoute
-  '/jornada-de-desenvolvimento': typeof JornadaDeDesenvolvimentoRoute
-  '/mentor': typeof MentorRoute
-  '/meu-assessment': typeof MeuAssessmentRoute
-  '/minhas-estatisticas': typeof MinhasEstatisticasRoute
-  '/plano-de-acao': typeof PlanoDeAcaoRoute
-  '/sessoes-mentoria': typeof SessoesMentoriaRoute
-  '/treinamentos': typeof TreinamentosRoute
-  '/api/health': typeof ApiHealthRoute
-  '/api/sessoes': typeof ApiSessoesRouteWithChildren
-  '/api/monday/webhook': typeof ApiMondayWebhookRoute
-  '/api/sessoes/comentario': typeof ApiSessoesComentarioRoute
-  '/biblioteca/conteudo/$contentId': typeof BibliotecaConteudoContentIdRoute
+  "/": typeof IndexRoute;
+  "/administracao": typeof AdministracaoRoute;
+  "/arquivos-compartilhados": typeof ArquivosCompartilhadosRoute;
+  "/assistente": typeof AssistenteRoute;
+  "/avalie-nos": typeof AvalieNosRoute;
+  "/biblioteca-equipe": typeof BibliotecaEquipeRoute;
+  "/biblioteca-individuo": typeof BibliotecaIndividuoRoute;
+  "/biblioteca-mercado": typeof BibliotecaMercadoRoute;
+  "/biblioteca-negocio": typeof BibliotecaNegocioRoute;
+  "/contatos-localizacao": typeof ContatosLocalizacaoRoute;
+  "/conteudo": typeof ConteudoRoute;
+  "/dashboard": typeof DashboardRoute;
+  "/faq": typeof FaqRoute;
+  "/hub": typeof HubRoute;
+  "/informacoes-pessoais": typeof InformacoesPessoaisRoute;
+  "/jornada-de-desenvolvimento": typeof JornadaDeDesenvolvimentoRoute;
+  "/mentor": typeof MentorRoute;
+  "/meu-assessment": typeof MeuAssessmentRoute;
+  "/minhas-estatisticas": typeof MinhasEstatisticasRoute;
+  "/plano-de-acao": typeof PlanoDeAcaoRoute;
+  "/sessoes-mentoria": typeof SessoesMentoriaRoute;
+  "/treinamentos": typeof TreinamentosRoute;
+  "/api/health": typeof ApiHealthRoute;
+  "/api/sessoes": typeof ApiSessoesRouteWithChildren;
+  "/api/monday/webhook": typeof ApiMondayWebhookRoute;
+  "/api/sessoes/comentario": typeof ApiSessoesComentarioRoute;
+  "/biblioteca/conteudo/$contentId": typeof BibliotecaConteudoContentIdRoute;
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/administracao': typeof AdministracaoRoute
-  '/arquivos-compartilhados': typeof ArquivosCompartilhadosRoute
-  '/assistente': typeof AssistenteRoute
-  '/avalie-nos': typeof AvalieNosRoute
-  '/biblioteca-equipe': typeof BibliotecaEquipeRoute
-  '/biblioteca-individuo': typeof BibliotecaIndividuoRoute
-  '/biblioteca-mercado': typeof BibliotecaMercadoRoute
-  '/biblioteca-negocio': typeof BibliotecaNegocioRoute
-  '/contatos-localizacao': typeof ContatosLocalizacaoRoute
-  '/conteudo': typeof ConteudoRoute
-  '/dashboard': typeof DashboardRoute
-  '/faq': typeof FaqRoute
-  '/hub': typeof HubRoute
-  '/informacoes-pessoais': typeof InformacoesPessoaisRoute
-  '/jornada-de-desenvolvimento': typeof JornadaDeDesenvolvimentoRoute
-  '/mentor': typeof MentorRoute
-  '/meu-assessment': typeof MeuAssessmentRoute
-  '/minhas-estatisticas': typeof MinhasEstatisticasRoute
-  '/plano-de-acao': typeof PlanoDeAcaoRoute
-  '/sessoes-mentoria': typeof SessoesMentoriaRoute
-  '/treinamentos': typeof TreinamentosRoute
-  '/api/health': typeof ApiHealthRoute
-  '/api/sessoes': typeof ApiSessoesRouteWithChildren
-  '/api/monday/webhook': typeof ApiMondayWebhookRoute
-  '/api/sessoes/comentario': typeof ApiSessoesComentarioRoute
-  '/biblioteca/conteudo/$contentId': typeof BibliotecaConteudoContentIdRoute
+  __root__: typeof rootRouteImport;
+  "/": typeof IndexRoute;
+  "/administracao": typeof AdministracaoRoute;
+  "/arquivos-compartilhados": typeof ArquivosCompartilhadosRoute;
+  "/assistente": typeof AssistenteRoute;
+  "/avalie-nos": typeof AvalieNosRoute;
+  "/biblioteca-equipe": typeof BibliotecaEquipeRoute;
+  "/biblioteca-individuo": typeof BibliotecaIndividuoRoute;
+  "/biblioteca-mercado": typeof BibliotecaMercadoRoute;
+  "/biblioteca-negocio": typeof BibliotecaNegocioRoute;
+  "/contatos-localizacao": typeof ContatosLocalizacaoRoute;
+  "/conteudo": typeof ConteudoRoute;
+  "/dashboard": typeof DashboardRoute;
+  "/faq": typeof FaqRoute;
+  "/hub": typeof HubRoute;
+  "/informacoes-pessoais": typeof InformacoesPessoaisRoute;
+  "/jornada-de-desenvolvimento": typeof JornadaDeDesenvolvimentoRoute;
+  "/mentor": typeof MentorRoute;
+  "/meu-assessment": typeof MeuAssessmentRoute;
+  "/minhas-estatisticas": typeof MinhasEstatisticasRoute;
+  "/plano-de-acao": typeof PlanoDeAcaoRoute;
+  "/sessoes-mentoria": typeof SessoesMentoriaRoute;
+  "/treinamentos": typeof TreinamentosRoute;
+  "/api/health": typeof ApiHealthRoute;
+  "/api/sessoes": typeof ApiSessoesRouteWithChildren;
+  "/api/monday/webhook": typeof ApiMondayWebhookRoute;
+  "/api/sessoes/comentario": typeof ApiSessoesComentarioRoute;
+  "/biblioteca/conteudo/$contentId": typeof BibliotecaConteudoContentIdRoute;
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
+  fileRoutesByFullPath: FileRoutesByFullPath;
   fullPaths:
-    | '/'
-    | '/administracao'
-    | '/arquivos-compartilhados'
-    | '/assistente'
-    | '/avalie-nos'
-    | '/biblioteca-equipe'
-    | '/biblioteca-individuo'
-    | '/biblioteca-mercado'
-    | '/biblioteca-negocio'
-    | '/contatos-localizacao'
-    | '/conteudo'
-    | '/dashboard'
-    | '/faq'
-    | '/hub'
-    | '/informacoes-pessoais'
-    | '/jornada-de-desenvolvimento'
-    | '/mentor'
-    | '/meu-assessment'
-    | '/minhas-estatisticas'
-    | '/plano-de-acao'
-    | '/sessoes-mentoria'
-    | '/treinamentos'
-    | '/api/health'
-    | '/api/sessoes'
-    | '/api/monday/webhook'
-    | '/api/sessoes/comentario'
-    | '/biblioteca/conteudo/$contentId'
-  fileRoutesByTo: FileRoutesByTo
+    | "/"
+    | "/administracao"
+    | "/arquivos-compartilhados"
+    | "/assistente"
+    | "/avalie-nos"
+    | "/biblioteca-equipe"
+    | "/biblioteca-individuo"
+    | "/biblioteca-mercado"
+    | "/biblioteca-negocio"
+    | "/contatos-localizacao"
+    | "/conteudo"
+    | "/dashboard"
+    | "/faq"
+    | "/hub"
+    | "/informacoes-pessoais"
+    | "/jornada-de-desenvolvimento"
+    | "/mentor"
+    | "/meu-assessment"
+    | "/minhas-estatisticas"
+    | "/plano-de-acao"
+    | "/sessoes-mentoria"
+    | "/treinamentos"
+    | "/api/health"
+    | "/api/sessoes"
+    | "/api/monday/webhook"
+    | "/api/sessoes/comentario"
+    | "/biblioteca/conteudo/$contentId";
+  fileRoutesByTo: FileRoutesByTo;
   to:
-    | '/'
-    | '/administracao'
-    | '/arquivos-compartilhados'
-    | '/assistente'
-    | '/avalie-nos'
-    | '/biblioteca-equipe'
-    | '/biblioteca-individuo'
-    | '/biblioteca-mercado'
-    | '/biblioteca-negocio'
-    | '/contatos-localizacao'
-    | '/conteudo'
-    | '/dashboard'
-    | '/faq'
-    | '/hub'
-    | '/informacoes-pessoais'
-    | '/jornada-de-desenvolvimento'
-    | '/mentor'
-    | '/meu-assessment'
-    | '/minhas-estatisticas'
-    | '/plano-de-acao'
-    | '/sessoes-mentoria'
-    | '/treinamentos'
-    | '/api/health'
-    | '/api/sessoes'
-    | '/api/monday/webhook'
-    | '/api/sessoes/comentario'
-    | '/biblioteca/conteudo/$contentId'
+    | "/"
+    | "/administracao"
+    | "/arquivos-compartilhados"
+    | "/assistente"
+    | "/avalie-nos"
+    | "/biblioteca-equipe"
+    | "/biblioteca-individuo"
+    | "/biblioteca-mercado"
+    | "/biblioteca-negocio"
+    | "/contatos-localizacao"
+    | "/conteudo"
+    | "/dashboard"
+    | "/faq"
+    | "/hub"
+    | "/informacoes-pessoais"
+    | "/jornada-de-desenvolvimento"
+    | "/mentor"
+    | "/meu-assessment"
+    | "/minhas-estatisticas"
+    | "/plano-de-acao"
+    | "/sessoes-mentoria"
+    | "/treinamentos"
+    | "/api/health"
+    | "/api/sessoes"
+    | "/api/monday/webhook"
+    | "/api/sessoes/comentario"
+    | "/biblioteca/conteudo/$contentId";
   id:
-    | '__root__'
-    | '/'
-    | '/administracao'
-    | '/arquivos-compartilhados'
-    | '/assistente'
-    | '/avalie-nos'
-    | '/biblioteca-equipe'
-    | '/biblioteca-individuo'
-    | '/biblioteca-mercado'
-    | '/biblioteca-negocio'
-    | '/contatos-localizacao'
-    | '/conteudo'
-    | '/dashboard'
-    | '/faq'
-    | '/hub'
-    | '/informacoes-pessoais'
-    | '/jornada-de-desenvolvimento'
-    | '/mentor'
-    | '/meu-assessment'
-    | '/minhas-estatisticas'
-    | '/plano-de-acao'
-    | '/sessoes-mentoria'
-    | '/treinamentos'
-    | '/api/health'
-    | '/api/sessoes'
-    | '/api/monday/webhook'
-    | '/api/sessoes/comentario'
-    | '/biblioteca/conteudo/$contentId'
-  fileRoutesById: FileRoutesById
+    | "__root__"
+    | "/"
+    | "/administracao"
+    | "/arquivos-compartilhados"
+    | "/assistente"
+    | "/avalie-nos"
+    | "/biblioteca-equipe"
+    | "/biblioteca-individuo"
+    | "/biblioteca-mercado"
+    | "/biblioteca-negocio"
+    | "/contatos-localizacao"
+    | "/conteudo"
+    | "/dashboard"
+    | "/faq"
+    | "/hub"
+    | "/informacoes-pessoais"
+    | "/jornada-de-desenvolvimento"
+    | "/mentor"
+    | "/meu-assessment"
+    | "/minhas-estatisticas"
+    | "/plano-de-acao"
+    | "/sessoes-mentoria"
+    | "/treinamentos"
+    | "/api/health"
+    | "/api/sessoes"
+    | "/api/monday/webhook"
+    | "/api/sessoes/comentario"
+    | "/biblioteca/conteudo/$contentId";
+  fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AdministracaoRoute: typeof AdministracaoRoute
-  ArquivosCompartilhadosRoute: typeof ArquivosCompartilhadosRoute
-  AssistenteRoute: typeof AssistenteRoute
-  AvalieNosRoute: typeof AvalieNosRoute
-  BibliotecaEquipeRoute: typeof BibliotecaEquipeRoute
-  BibliotecaIndividuoRoute: typeof BibliotecaIndividuoRoute
-  BibliotecaMercadoRoute: typeof BibliotecaMercadoRoute
-  BibliotecaNegocioRoute: typeof BibliotecaNegocioRoute
-  ContatosLocalizacaoRoute: typeof ContatosLocalizacaoRoute
-  ConteudoRoute: typeof ConteudoRoute
-  DashboardRoute: typeof DashboardRoute
-  FaqRoute: typeof FaqRoute
-  HubRoute: typeof HubRoute
-  InformacoesPessoaisRoute: typeof InformacoesPessoaisRoute
-  JornadaDeDesenvolvimentoRoute: typeof JornadaDeDesenvolvimentoRoute
-  MentorRoute: typeof MentorRoute
-  MeuAssessmentRoute: typeof MeuAssessmentRoute
-  MinhasEstatisticasRoute: typeof MinhasEstatisticasRoute
-  PlanoDeAcaoRoute: typeof PlanoDeAcaoRoute
-  SessoesMentoriaRoute: typeof SessoesMentoriaRoute
-  TreinamentosRoute: typeof TreinamentosRoute
-  ApiHealthRoute: typeof ApiHealthRoute
-  ApiSessoesRoute: typeof ApiSessoesRouteWithChildren
-  ApiMondayWebhookRoute: typeof ApiMondayWebhookRoute
-  BibliotecaConteudoContentIdRoute: typeof BibliotecaConteudoContentIdRoute
+  IndexRoute: typeof IndexRoute;
+  AdministracaoRoute: typeof AdministracaoRoute;
+  ArquivosCompartilhadosRoute: typeof ArquivosCompartilhadosRoute;
+  AssistenteRoute: typeof AssistenteRoute;
+  AvalieNosRoute: typeof AvalieNosRoute;
+  BibliotecaEquipeRoute: typeof BibliotecaEquipeRoute;
+  BibliotecaIndividuoRoute: typeof BibliotecaIndividuoRoute;
+  BibliotecaMercadoRoute: typeof BibliotecaMercadoRoute;
+  BibliotecaNegocioRoute: typeof BibliotecaNegocioRoute;
+  ContatosLocalizacaoRoute: typeof ContatosLocalizacaoRoute;
+  ConteudoRoute: typeof ConteudoRoute;
+  DashboardRoute: typeof DashboardRoute;
+  FaqRoute: typeof FaqRoute;
+  HubRoute: typeof HubRoute;
+  InformacoesPessoaisRoute: typeof InformacoesPessoaisRoute;
+  JornadaDeDesenvolvimentoRoute: typeof JornadaDeDesenvolvimentoRoute;
+  MentorRoute: typeof MentorRoute;
+  MeuAssessmentRoute: typeof MeuAssessmentRoute;
+  MinhasEstatisticasRoute: typeof MinhasEstatisticasRoute;
+  PlanoDeAcaoRoute: typeof PlanoDeAcaoRoute;
+  SessoesMentoriaRoute: typeof SessoesMentoriaRoute;
+  TreinamentosRoute: typeof TreinamentosRoute;
+  ApiHealthRoute: typeof ApiHealthRoute;
+  ApiSessoesRoute: typeof ApiSessoesRouteWithChildren;
+  ApiMondayWebhookRoute: typeof ApiMondayWebhookRoute;
+  BibliotecaConteudoContentIdRoute: typeof BibliotecaConteudoContentIdRoute;
 }
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/administracao': {
-      id: '/administracao'
-      path: '/administracao'
-      fullPath: '/administracao'
-      preLoaderRoute: typeof AdministracaoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/arquivos-compartilhados': {
-      id: '/arquivos-compartilhados'
-      path: '/arquivos-compartilhados'
-      fullPath: '/arquivos-compartilhados'
-      preLoaderRoute: typeof ArquivosCompartilhadosRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/assistente': {
-      id: '/assistente'
-      path: '/assistente'
-      fullPath: '/assistente'
-      preLoaderRoute: typeof AssistenteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/avalie-nos': {
-      id: '/avalie-nos'
-      path: '/avalie-nos'
-      fullPath: '/avalie-nos'
-      preLoaderRoute: typeof AvalieNosRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/biblioteca-equipe': {
-      id: '/biblioteca-equipe'
-      path: '/biblioteca-equipe'
-      fullPath: '/biblioteca-equipe'
-      preLoaderRoute: typeof BibliotecaEquipeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/biblioteca-individuo': {
-      id: '/biblioteca-individuo'
-      path: '/biblioteca-individuo'
-      fullPath: '/biblioteca-individuo'
-      preLoaderRoute: typeof BibliotecaIndividuoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/biblioteca-mercado': {
-      id: '/biblioteca-mercado'
-      path: '/biblioteca-mercado'
-      fullPath: '/biblioteca-mercado'
-      preLoaderRoute: typeof BibliotecaMercadoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/biblioteca-negocio': {
-      id: '/biblioteca-negocio'
-      path: '/biblioteca-negocio'
-      fullPath: '/biblioteca-negocio'
-      preLoaderRoute: typeof BibliotecaNegocioRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/contatos-localizacao': {
-      id: '/contatos-localizacao'
-      path: '/contatos-localizacao'
-      fullPath: '/contatos-localizacao'
-      preLoaderRoute: typeof ContatosLocalizacaoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/conteudo': {
-      id: '/conteudo'
-      path: '/conteudo'
-      fullPath: '/conteudo'
-      preLoaderRoute: typeof ConteudoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/faq': {
-      id: '/faq'
-      path: '/faq'
-      fullPath: '/faq'
-      preLoaderRoute: typeof FaqRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/hub': {
-      id: '/hub'
-      path: '/hub'
-      fullPath: '/hub'
-      preLoaderRoute: typeof HubRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/informacoes-pessoais': {
-      id: '/informacoes-pessoais'
-      path: '/informacoes-pessoais'
-      fullPath: '/informacoes-pessoais'
-      preLoaderRoute: typeof InformacoesPessoaisRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/jornada-de-desenvolvimento': {
-      id: '/jornada-de-desenvolvimento'
-      path: '/jornada-de-desenvolvimento'
-      fullPath: '/jornada-de-desenvolvimento'
-      preLoaderRoute: typeof JornadaDeDesenvolvimentoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mentor': {
-      id: '/mentor'
-      path: '/mentor'
-      fullPath: '/mentor'
-      preLoaderRoute: typeof MentorRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/meu-assessment': {
-      id: '/meu-assessment'
-      path: '/meu-assessment'
-      fullPath: '/meu-assessment'
-      preLoaderRoute: typeof MeuAssessmentRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/minhas-estatisticas': {
-      id: '/minhas-estatisticas'
-      path: '/minhas-estatisticas'
-      fullPath: '/minhas-estatisticas'
-      preLoaderRoute: typeof MinhasEstatisticasRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/plano-de-acao': {
-      id: '/plano-de-acao'
-      path: '/plano-de-acao'
-      fullPath: '/plano-de-acao'
-      preLoaderRoute: typeof PlanoDeAcaoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sessoes-mentoria': {
-      id: '/sessoes-mentoria'
-      path: '/sessoes-mentoria'
-      fullPath: '/sessoes-mentoria'
-      preLoaderRoute: typeof SessoesMentoriaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/treinamentos': {
-      id: '/treinamentos'
-      path: '/treinamentos'
-      fullPath: '/treinamentos'
-      preLoaderRoute: typeof TreinamentosRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/health': {
-      id: '/api/health'
-      path: '/api/health'
-      fullPath: '/api/health'
-      preLoaderRoute: typeof ApiHealthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/sessoes': {
-      id: '/api/sessoes'
-      path: '/api/sessoes'
-      fullPath: '/api/sessoes'
-      preLoaderRoute: typeof ApiSessoesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/monday/webhook': {
-      id: '/api/monday/webhook'
-      path: '/api/monday/webhook'
-      fullPath: '/api/monday/webhook'
-      preLoaderRoute: typeof ApiMondayWebhookRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/sessoes/comentario': {
-      id: '/api/sessoes/comentario'
-      path: '/comentario'
-      fullPath: '/api/sessoes/comentario'
-      preLoaderRoute: typeof ApiSessoesComentarioRouteImport
-      parentRoute: typeof ApiSessoesRoute
-    }
-    '/biblioteca/conteudo/$contentId': {
-      id: '/biblioteca/conteudo/$contentId'
-      path: '/biblioteca/conteudo/$contentId'
-      fullPath: '/biblioteca/conteudo/$contentId'
-      preLoaderRoute: typeof BibliotecaConteudoContentIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+    "/": {
+      id: "/";
+      path: "/";
+      fullPath: "/";
+      preLoaderRoute: typeof IndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/administracao": {
+      id: "/administracao";
+      path: "/administracao";
+      fullPath: "/administracao";
+      preLoaderRoute: typeof AdministracaoRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/arquivos-compartilhados": {
+      id: "/arquivos-compartilhados";
+      path: "/arquivos-compartilhados";
+      fullPath: "/arquivos-compartilhados";
+      preLoaderRoute: typeof ArquivosCompartilhadosRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/assistente": {
+      id: "/assistente";
+      path: "/assistente";
+      fullPath: "/assistente";
+      preLoaderRoute: typeof AssistenteRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/avalie-nos": {
+      id: "/avalie-nos";
+      path: "/avalie-nos";
+      fullPath: "/avalie-nos";
+      preLoaderRoute: typeof AvalieNosRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/biblioteca-equipe": {
+      id: "/biblioteca-equipe";
+      path: "/biblioteca-equipe";
+      fullPath: "/biblioteca-equipe";
+      preLoaderRoute: typeof BibliotecaEquipeRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/biblioteca-individuo": {
+      id: "/biblioteca-individuo";
+      path: "/biblioteca-individuo";
+      fullPath: "/biblioteca-individuo";
+      preLoaderRoute: typeof BibliotecaIndividuoRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/biblioteca-mercado": {
+      id: "/biblioteca-mercado";
+      path: "/biblioteca-mercado";
+      fullPath: "/biblioteca-mercado";
+      preLoaderRoute: typeof BibliotecaMercadoRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/biblioteca-negocio": {
+      id: "/biblioteca-negocio";
+      path: "/biblioteca-negocio";
+      fullPath: "/biblioteca-negocio";
+      preLoaderRoute: typeof BibliotecaNegocioRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/contatos-localizacao": {
+      id: "/contatos-localizacao";
+      path: "/contatos-localizacao";
+      fullPath: "/contatos-localizacao";
+      preLoaderRoute: typeof ContatosLocalizacaoRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/conteudo": {
+      id: "/conteudo";
+      path: "/conteudo";
+      fullPath: "/conteudo";
+      preLoaderRoute: typeof ConteudoRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/dashboard": {
+      id: "/dashboard";
+      path: "/dashboard";
+      fullPath: "/dashboard";
+      preLoaderRoute: typeof DashboardRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/faq": {
+      id: "/faq";
+      path: "/faq";
+      fullPath: "/faq";
+      preLoaderRoute: typeof FaqRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/hub": {
+      id: "/hub";
+      path: "/hub";
+      fullPath: "/hub";
+      preLoaderRoute: typeof HubRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/informacoes-pessoais": {
+      id: "/informacoes-pessoais";
+      path: "/informacoes-pessoais";
+      fullPath: "/informacoes-pessoais";
+      preLoaderRoute: typeof InformacoesPessoaisRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/jornada-de-desenvolvimento": {
+      id: "/jornada-de-desenvolvimento";
+      path: "/jornada-de-desenvolvimento";
+      fullPath: "/jornada-de-desenvolvimento";
+      preLoaderRoute: typeof JornadaDeDesenvolvimentoRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/mentor": {
+      id: "/mentor";
+      path: "/mentor";
+      fullPath: "/mentor";
+      preLoaderRoute: typeof MentorRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/meu-assessment": {
+      id: "/meu-assessment";
+      path: "/meu-assessment";
+      fullPath: "/meu-assessment";
+      preLoaderRoute: typeof MeuAssessmentRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/minhas-estatisticas": {
+      id: "/minhas-estatisticas";
+      path: "/minhas-estatisticas";
+      fullPath: "/minhas-estatisticas";
+      preLoaderRoute: typeof MinhasEstatisticasRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/plano-de-acao": {
+      id: "/plano-de-acao";
+      path: "/plano-de-acao";
+      fullPath: "/plano-de-acao";
+      preLoaderRoute: typeof PlanoDeAcaoRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/sessoes-mentoria": {
+      id: "/sessoes-mentoria";
+      path: "/sessoes-mentoria";
+      fullPath: "/sessoes-mentoria";
+      preLoaderRoute: typeof SessoesMentoriaRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/treinamentos": {
+      id: "/treinamentos";
+      path: "/treinamentos";
+      fullPath: "/treinamentos";
+      preLoaderRoute: typeof TreinamentosRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/health": {
+      id: "/api/health";
+      path: "/api/health";
+      fullPath: "/api/health";
+      preLoaderRoute: typeof ApiHealthRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/sessoes": {
+      id: "/api/sessoes";
+      path: "/api/sessoes";
+      fullPath: "/api/sessoes";
+      preLoaderRoute: typeof ApiSessoesRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/monday/webhook": {
+      id: "/api/monday/webhook";
+      path: "/api/monday/webhook";
+      fullPath: "/api/monday/webhook";
+      preLoaderRoute: typeof ApiMondayWebhookRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/sessoes/comentario": {
+      id: "/api/sessoes/comentario";
+      path: "/comentario";
+      fullPath: "/api/sessoes/comentario";
+      preLoaderRoute: typeof ApiSessoesComentarioRouteImport;
+      parentRoute: typeof ApiSessoesRoute;
+    };
+    "/biblioteca/conteudo/$contentId": {
+      id: "/biblioteca/conteudo/$contentId";
+      path: "/biblioteca/conteudo/$contentId";
+      fullPath: "/biblioteca/conteudo/$contentId";
+      preLoaderRoute: typeof BibliotecaConteudoContentIdRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
   }
 }
 
 interface ApiSessoesRouteChildren {
-  ApiSessoesComentarioRoute: typeof ApiSessoesComentarioRoute
+  ApiSessoesComentarioRoute: typeof ApiSessoesComentarioRoute;
 }
 
 const ApiSessoesRouteChildren: ApiSessoesRouteChildren = {
   ApiSessoesComentarioRoute: ApiSessoesComentarioRoute,
-}
+};
 
 const ApiSessoesRouteWithChildren = ApiSessoesRoute._addFileChildren(
   ApiSessoesRouteChildren,
-)
+);
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -615,17 +615,17 @@ const rootRouteChildren: RootRouteChildren = {
   ApiSessoesRoute: ApiSessoesRouteWithChildren,
   ApiMondayWebhookRoute: ApiMondayWebhookRoute,
   BibliotecaConteudoContentIdRoute: BibliotecaConteudoContentIdRoute,
-}
+};
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();
 
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
+import type { getRouter } from "./router.tsx";
+import type { startInstance } from "./start.ts";
+declare module "@tanstack/react-start" {
   interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+    ssr: true;
+    router: Awaited<ReturnType<typeof getRouter>>;
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>;
   }
 }
