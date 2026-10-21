@@ -31,9 +31,9 @@ jobs:
       - name: Instalar dependências
         run: npm ci
 
-        - name: Gerar snapshot do Monday
-    env:
-    MONDAY_API_TOKEN: ${{ secrets.MONDAY_API_TOKEN }}
+      - name: Gerar snapshot do Monday
+        env:
+          MONDAY_API_TOKEN: ${{ secrets.MONDAY_API_TOKEN }}
         run: node scripts/generate-monday-snapshot.mjs
 
       - name: Gerar build
