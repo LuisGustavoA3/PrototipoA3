@@ -9,6 +9,9 @@ import { useSidebarOpen } from "@/hooks/use-sidebar";
 import { cn } from "@/lib/utils";
 import { MessageSquare } from "lucide-react";
 
+import { loadMondaySnapshot } from "./monday-snapshot";
+import { calculateMentorshipProgress } from "@/lib/mentorship-session";
+
 import {
   Dialog,
   DialogContent,
@@ -43,6 +46,7 @@ type SessionsResponse = {
   total: number;
   sessoes: MondayMentorshipSession[];
 };
+const IS_GITHUB_PAGES = import.meta.env.PROD;
 
 function formatDate(date: string | null) {
   if (!date) return "—";
@@ -167,19 +171,48 @@ export function SessoesMentoriaPage() {
     setIsFetching(true);
 
     try {
-      const response = await fetch("/PrototipoA3/api/sessoes");
+      let data: SessionsResponse;
+      let updatedAt: Date;
 
-      if (!response.ok) {
-        throw new Error("Não foi possível carregar as sessões.");
+      if (IS_GITHUB_PAGES) {
+        const snapshot = await loadMondaySnapshot();
+        const mentorship = snapshot.mentorship;
+
+        data = {
+          mentorship: {
+            mondayItemId: mentorship.mondayItemId,
+            menteeName: mentorship.menteeName,
+            status: mentorship.status,
+            manager: mentorship.manager,
+            monitoring: mentorship.monitoring,
+            attendance: mentorship.attendance,
+            contractDeadline: mentorship.contractDeadline,
+            schedule: mentorship.schedule,
+            progress: calculateMentorshipProgress(mentorship.sessions),
+          },
+          total: mentorship.sessions.length,
+          sessoes: mentorship.sessions,
+        };
+
+        updatedAt = new Date(snapshot.generatedAt);
+      } else {
+        const response = await fetch(`${import.meta.env.BASE_URL}api/sessoes`);
+
+        if (!response.ok) {
+          throw new Error("Não foi possível carregar as sessões.");
+        }
+
+        data = (await response.json()) as SessionsResponse;
+        updatedAt = new Date();
       }
-
-      const data: SessionsResponse = await response.json();
 
       setSessions(data.sessoes);
       setMentorship(data.mentorship);
       setError(null);
-      setLastUpdated(new Date());
-    } catch {
+      setLastUpdated(updatedAt);
+    } catch (error) {
+      console.error("Erro ao carregar sessões:", error);
+
       setError("Não foi possível carregar as sessões. Tente novamente.");
     } finally {
       setLoading(false);
@@ -516,6 +549,7 @@ export function SessoesMentoriaPage() {
                             size="sm"
                             onClick={() => openCommentDialog(session)}
                             aria-label={`Comentar a sessão ${session.name}`}
+                            disabled={IS_GITHUB_PAGES}
                             title="Mande um comentário sobre a sessão, ele será visível para o gestor e monitoramento do acompanhamento."
                             className="transition-colors hover:bg-muted"
                           >
