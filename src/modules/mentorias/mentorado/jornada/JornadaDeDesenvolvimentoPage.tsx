@@ -4,6 +4,8 @@ import { AppSidebar } from "@/components/AppSidebar";
 import { TopBar } from "@/components/TopBar";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/PageHeader";
+import { useSelectedTrail } from "@/modules/mentorias/mentorado/trilhas/use-selected-trail";
+import { TrailEmptyState } from "@/modules/mentorias/mentorado/trilhas/TrailEmptyState";
 import {
   Dialog,
   DialogContent,
@@ -38,6 +40,7 @@ const maxJourneyItemTitleLength = 50;
 
 export function JornadaDeDesenvolvimentoPage() {
   const [sidebarOpen, toggleSidebar] = useSidebarOpen();
+  const { selectedTrail, hasContent } = useSelectedTrail();
   const items = useJourneyItems();
   const [selectedSection, setSelectedSection] =
     useState<EditableSection | null>(null);
@@ -76,18 +79,25 @@ export function JornadaDeDesenvolvimentoPage() {
             title="Jornada de Desenvolvimento"
             description="Registre os pontos que orientam seu desenvolvimento e acompanhe sua evolução"
           />
-          <JourneyBoard
-            title="Ponto de partida"
-            sections={startingPointSections}
-            items={items}
-            onNewItem={openNewItem}
-          />
 
-          <JourneyBoard
-            title="Pontos de verificação"
-            sections={checkpointSections}
-            items={items}
-          />
+          {!hasContent ? (
+            <TrailEmptyState trailName={selectedTrail} />
+          ) : (
+            <>
+              <JourneyBoard
+                title="Ponto de partida"
+                sections={startingPointSections}
+                items={items}
+                onNewItem={openNewItem}
+              />
+
+              <JourneyBoard
+                title="Pontos de verificação"
+                sections={checkpointSections}
+                items={items}
+              />
+            </>
+          )}
         </div>
       </main>
 

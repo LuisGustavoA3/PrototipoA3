@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
+import { useSelectedTrail } from "@/modules/mentorias/mentorado/trilhas/use-selected-trail";
+import { setSelectedTrail } from "@/modules/mentorias/mentorado/trilhas/trail-store";
 import {
   Menu,
   Bell,
@@ -44,28 +46,18 @@ const trilhas = [
 ];
 
 const years = ["2026", "2025", "2024"];
-const selectedTrailStorageKey = "a3-selected-trail";
 
 export function TopBar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
   const navigate = useNavigate({ from: "/" });
   const [trilhasOpen, setTrilhasOpen] = useState(false);
   const [year, setYear] = useState("2026");
-  const [selectedTrail, setSelectedTrail] = useState<string | null>(null);
+
+  const { selectedTrail } = useSelectedTrail();
+
   const panelRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
   const visible = trilhas.filter((t) => String(t.year) === year);
-
-  useEffect(() => {
-    const storedTrail = window.localStorage.getItem(selectedTrailStorageKey);
-    if (storedTrail) setSelectedTrail(storedTrail);
-  }, []);
-
-  useEffect(() => {
-    if (selectedTrail) {
-      window.localStorage.setItem(selectedTrailStorageKey, selectedTrail);
-    }
-  }, [selectedTrail]);
 
   useEffect(() => {
     if (!trilhasOpen) return;
