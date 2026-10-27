@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { setSidebarOpen } from "@/lib/sidebar-store";
 import { Link, useLocation } from "@tanstack/react-router";
 import {
   LayoutDashboard,
@@ -84,6 +85,33 @@ export function AppSidebar({ open }: { open: boolean }) {
   const [openGroups, toggleGroup] = useSidebarGroups();
   const location = useLocation();
 
+  const sidebarRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+
+    function handleClickOutside(event: PointerEvent) {
+      const target = event.target;
+
+      if (!(target instanceof Element)) return;
+
+      // Ignora cliques no botão que controla a Sidebar.
+      if (target.closest("[data-sidebar-toggle]")) return;
+
+      // Mantém a Sidebar aberta ao clicar dentro dela.
+      if (sidebarRef.current?.contains(target)) return;
+
+      // Fecha quando o clique acontece fora da Sidebar.
+      setSidebarOpen(false);
+    }
+
+    document.addEventListener("pointerdown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("pointerdown", handleClickOutside);
+    };
+  }, [open]);
+
   const isGroupActive = (item: Item) =>
     item.children?.some(
       (child) =>
@@ -92,6 +120,7 @@ export function AppSidebar({ open }: { open: boolean }) {
 
   return (
     <aside
+      ref={sidebarRef}
       className={cn(
         "fixed top-16 left-0 z-40 h-[calc(100vh-4rem)] overflow-hidden border-r border-sidebar-border bg-sidebar transition-[width] duration-300",
         open ? "w-[264px]" : "w-0",

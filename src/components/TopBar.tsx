@@ -97,6 +97,8 @@ export function TopBar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
     <>
       <header className="fixed top-0 left-0 right-0 z-[60] flex h-16 items-center gap-6 border-b border-border bg-card px-4">
         <button
+          type="button"
+          data-sidebar-toggle
           onClick={onToggleSidebar}
           aria-label="Abrir ou fechar menu"
           className="flex size-10 items-center justify-center rounded-md text-foreground transition-colors hover:bg-accent"
@@ -112,7 +114,10 @@ export function TopBar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
         </Link>
 
         {selectedTrail && (
-          <p className="max-w-[min(40vw,20rem)] truncate text-sm font-medium text-foreground" title={selectedTrail}>
+          <p
+            className="max-w-[min(40vw,20rem)] truncate text-sm font-medium text-foreground"
+            title={selectedTrail}
+          >
             {selectedTrail}
           </p>
         )}
