@@ -28,8 +28,8 @@ import {
 } from "@/modules/mentorias/mentorado/pdi";
 import { useLibraryContents } from "@/modules/mentorias/shared/biblioteca";
 import { useJourneyItems } from "@/modules/mentorias/mentorado/jornada";
+import { useMentorshipSessions } from "@/modules/mentorias/mentorado/sessoes/use-mentorship-sessions";
 
-const sessionProgress = { completed: 3, total: 10 };
 const dailyContentStorageKey = "a3:dashboard-daily-content";
 const statusColors: Record<ActionStatus, string> = {
   Concluído: "#65c996",
@@ -114,6 +114,13 @@ export function DashboardContent() {
   const actions = usePdiActions();
   const contents = useLibraryContents();
   const journeyItems = useJourneyItems();
+
+  const {
+    progress: sessionProgress,
+    loading: sessionsLoading,
+    error: sessionsError,
+  } = useMentorshipSessions();
+
   const [evidenceAction, setEvidenceAction] = useState<{
     id: string;
     name: string;
@@ -213,25 +220,37 @@ export function DashboardContent() {
             <ProgressBar value={developmentProgress} light />
           </div>
         </Link>
+
         <div className="rounded-md bg-primary p-5 text-primary-foreground">
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="label-caps text-xs">Progresso das sessões</p>
+
               <p className="mt-4 text-sm">
-                {sessionProgress.completed}/{sessionProgress.total} sessões
-                realizadas
+                {sessionsLoading
+                  ? "Carregando sessões..."
+                  : sessionsError
+                    ? "Não foi possível carregar as sessões."
+                    : `${sessionProgress.completed}/${sessionProgress.total} sessões realizadas`}
               </p>
             </div>
+
             <span className="text-3xl font-semibold">
-              {Math.round(
-                (sessionProgress.completed / sessionProgress.total) * 100,
-              )}
-              %
+              {sessionsLoading || sessionsError
+                ? "—"
+                : sessionProgress.percentage === null
+                  ? "—"
+                  : `${sessionProgress.percentage}%`}
             </span>
           </div>
+
           <div className="mt-4">
             <ProgressBar
-              value={(sessionProgress.completed / sessionProgress.total) * 100}
+              value={
+                sessionsLoading || sessionsError
+                  ? 0
+                  : (sessionProgress.percentage ?? 0)
+              }
               light
             />
           </div>
