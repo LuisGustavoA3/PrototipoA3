@@ -32,14 +32,54 @@ import { useJourneyItems } from "@/modules/mentorias/mentorado/jornada";
 import { useMentorshipSessions } from "@/modules/mentorias/mentorado/sessoes/use-mentorship-sessions";
 
 const dailyContentStorageKey = "a3:dashboard-daily-content";
-const statusColors: Record<ActionStatus, string> = {
-  Concluído: "#65c996",
-  "Em andamento": "#f58a2a",
-  "Não iniciado": "#cbd0d3",
-  Atrasado: "#c96b6b",
-  Parado: "#e8b44f",
-  Cancelado: "#c96b6b",
+const statusConfig: Record<
+  ActionStatus,
+  {
+    color: string;
+    dotClass: string;
+    description: string;
+  }
+> = {
+  Concluído: {
+    color: "#10b981",
+    dotClass: "bg-emerald-500",
+    description: "Ações finalizadas",
+  },
+  "Em andamento": {
+    color: "#3b82f6",
+    dotClass: "bg-blue-500",
+    description: "Ações em execução",
+  },
+  "Não iniciado": {
+    color: "#94a3b8",
+    dotClass: "bg-slate-400",
+    description: "Ações ainda não iniciadas",
+  },
+  Parado: {
+    color: "#f59e0b",
+    dotClass: "bg-amber-500",
+    description: "Ações temporariamente interrompidas",
+  },
+  Atrasado: {
+    color: "#f97316",
+    dotClass: "bg-orange-500",
+    description: "Ações fora do prazo",
+  },
+  Cancelado: {
+    color: "#ef4444",
+    dotClass: "bg-red-500",
+    description: "Ações canceladas",
+  },
 };
+
+const statusOrder: ActionStatus[] = [
+  "Concluído",
+  "Em andamento",
+  "Não iniciado",
+  "Parado",
+  "Atrasado",
+  "Cancelado",
+];
 
 const assessments = [
   { name: "Âncoras de Carreira", completed: true },
@@ -188,15 +228,28 @@ export function DashboardContent() {
     .slice(0, 4);
 
   const journeyPriorities = journeyItems["Prioridades de desenvolvimento"];
-  const statusData = (Object.keys(statusColors) as ActionStatus[])
-    .map((status) => ({
-      name: status,
-      value: actions.filter((action) => action.status === status).length,
-    }))
-    .filter((item) => item.value > 0);
+  const statusSummary = statusOrder.map((status) => {
+    const count = actions.filter((action) => action.status === status).length;
+
+    return {
+      status,
+      count,
+      percentage:
+        actions.length > 0 ? Math.round((count / actions.length) * 100) : 0,
+      ...statusConfig[status],
+    };
+  });
+
+  const chartData = statusSummary
+    .filter((item) => item.count > 0)
+    .map((item) => ({
+      name: item.status,
+      value: item.count,
+      color: item.color,
+    }));
 
   const completeAction = () => {
-    if (!hasContent || !evidenceAction || !evidence.trim()) return;
+    if (!hasContent || !evidenceAction) return;
     updatePdiAction(evidenceAction.id, {
       status: "Concluído",
       evidence: evidence.trim(),
@@ -273,60 +326,94 @@ export function DashboardContent() {
         </div>
       </div>
       <div className="grid gap-5 lg:grid-cols-1">
-        <Card className="min-h-[300px]">
-          <CardHeader title="Status da jornada" />
+        <Card className="min-h-[320px]">
+          <CardHeader title="Progresso das ações" />
 
           {!hasContent ? (
             <EmptyState text="Nenhum dado disponível nesta trilha." />
-          ) : statusData.length ? (
-            <div className="flex flex-col items-center justify-center gap-6 md:flex-row">
-              <div className="h-48 w-48">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={statusData}
-                      dataKey="value"
-                      nameKey="name"
-                      innerRadius={54}
-                      outerRadius={84}
-                      paddingAngle={2}
-                    >
-                      {statusData.map((item) => (
-                        <Cell
-                          key={item.name}
-                          fill={statusColors[item.name as ActionStatus]}
-                        />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-              <div className="w-full max-w-sm space-y-3">
-                {statusData.map((item) => (
-                  <div
-                    key={item.name}
-                    className="flex items-center justify-between gap-3 text-sm"
-                  >
-                    <span className="flex items-center gap-2 text-muted-foreground">
-                      <span
-                        className="size-2.5 rounded-full"
-                        style={{
-                          backgroundColor:
-                            statusColors[item.name as ActionStatus],
-                        }}
+          ) : actions.length === 0 ? (
+            <EmptyState text="Nenhuma ação cadastrada." />
+          ) : (
+            <div className="grid items-center gap-6 lg:grid-cols-[minmax(240px,0.8fr)_minmax(0,2fr)]">
+              {/* Gráfico */}
+              <div className="flex items-center justify-center">
+                <div className="relative h-[260px] w-full max-w-[280px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={chartData}
+                        dataKey="value"
+                        nameKey="name"
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={68}
+                        outerRadius={100}
+                        paddingAngle={2}
+                        stroke="none"
+                      >
+                        {chartData.map((item) => (
+                          <Cell key={item.name} fill={item.color} />
+                        ))}
+                      </Pie>
+
+                      <Tooltip
+                        formatter={(value, name) => [
+                          `${value} ações`,
+                          String(name),
+                        ]}
                       />
-                      {item.name}
+                    </PieChart>
+                  </ResponsiveContainer>
+
+                  {/* Total central */}
+                  <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
+                    <span className="text-3xl font-semibold text-foreground">
+                      {actions.length}
                     </span>
-                    <strong className="text-foreground">
-                      {Math.round((item.value / actions.length) * 100)}%
-                    </strong>
+                    <span className="text-center text-xs text-muted-foreground">
+                      ações
+                      <br />
+                      no total
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Índice com todos os status */}
+              <div className="grid gap-3 sm:grid-cols-2">
+                {statusSummary.map((item) => (
+                  <div
+                    key={item.status}
+                    className="flex min-h-[88px] items-center gap-3 rounded-md border border-border bg-background px-4 py-3"
+                  >
+                    <span
+                      className={`size-3.5 shrink-0 rounded-full ${item.dotClass}`}
+                    />
+
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-semibold text-foreground">
+                        {item.status}
+                      </p>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        {item.description}
+                      </p>
+                    </div>
+
+                    <div className="shrink-0 text-right">
+                      <p className="text-base font-semibold text-foreground">
+                        {item.count}
+                      </p>
+                      <p
+                        className="mt-1 text-xs font-semibold"
+                        style={{ color: item.color }}
+                      >
+                        {item.percentage}%
+                      </p>
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
-          ) : (
-            <EmptyState text="Nenhuma ação cadastrada." />
           )}
         </Card>
       </div>
@@ -559,7 +646,8 @@ export function DashboardContent() {
             <DialogTitle>Adicionar evidência</DialogTitle>
           </DialogHeader>
           <p className="text-sm text-muted-foreground">
-            Informe a evidência para concluir “{evidenceAction?.name}”.
+            Você pode adicionar uma evidência para concluir “
+            {evidenceAction?.name}”. Este campo é opcional.
           </p>
           <textarea
             value={evidence}
@@ -571,7 +659,7 @@ export function DashboardContent() {
             <Button variant="outline" onClick={() => setEvidenceAction(null)}>
               Cancelar
             </Button>
-            <Button onClick={completeAction} disabled={!evidence.trim()}>
+            <Button onClick={completeAction}>
               <Check className="size-4" />
               Concluir ação
             </Button>

@@ -63,7 +63,7 @@ const statusStyles: Record<ActionStatus, string> = {
   "Não iniciado": "bg-muted text-muted-foreground",
   Parado: "bg-amber-100 text-amber-700",
   Cancelado: "bg-red-100 text-red-700",
-  Atrasado: "bg-red-100 text-red-700",
+  Atrasado: "bg-orange-100 text-orange-700",
 };
 
 type FormValues = Omit<PdiAction, "id" | "createdAt" | "author">;
@@ -137,8 +137,7 @@ export function PlanoDeAcaoPage() {
       !form.name.trim() ||
       !form.competency ||
       !form.startDate ||
-      !form.endDate ||
-      (form.status === "Concluído" && !form.evidence.trim())
+      !form.endDate
     ) {
       return;
     }
@@ -354,8 +353,7 @@ function ActionForm({
     !form.competency ||
     !form.startDate ||
     !form.endDate ||
-    dateError ||
-    (form.status === "Concluído" && !form.evidence.trim());
+    dateError;
   const dateErrorMessage =
     form.startDate.length > 0 &&
     form.endDate.length > 0 &&
@@ -409,7 +407,17 @@ function ActionForm({
             type="date"
             max="9999-12-31"
             value={form.startDate}
-            onChange={(event) => update({ startDate: event.target.value })}
+            onChange={(event) => {
+              const newStartDate = event.target.value;
+
+              update({
+                startDate: newStartDate,
+                endDate:
+                  !newStartDate || (form.endDate && form.endDate < newStartDate)
+                    ? ""
+                    : form.endDate,
+              });
+            }}
           />
         </Field>
         <Field label="Fim *">
@@ -435,7 +443,7 @@ function ActionForm({
           />
         </Field>
         {form.status === "Concluído" && (
-          <Field label="Evidência *" className="sm:col-span-2">
+          <Field label="Evidência (opcional)" className="sm:col-span-2">
             <textarea
               value={form.evidence}
               onChange={(event) => update({ evidence: event.target.value })}
