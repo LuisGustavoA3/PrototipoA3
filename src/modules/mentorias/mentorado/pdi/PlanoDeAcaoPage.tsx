@@ -290,14 +290,14 @@ export function PlanoDeAcaoPage() {
     });
     setModal("edit");
   };
-
   const saveAction = () => {
     if (
       !hasContent ||
       !form.name.trim() ||
       !form.competency ||
-      !form.startDate ||
-      !form.endDate
+      !isValidPdiDate(form.startDate) ||
+      !isValidPdiDate(form.endDate) ||
+      !isValidPdiDateRange(form.startDate, form.endDate)
     ) {
       return;
     }
@@ -427,6 +427,7 @@ export function PlanoDeAcaoPage() {
                   <EmptyState
                     onAdd={() => {
                       setSearch("");
+                      setAxisFilter("Todos");
                       setStatusFilter("Todos");
                     }}
                     message="Nenhuma ação encontrada."
