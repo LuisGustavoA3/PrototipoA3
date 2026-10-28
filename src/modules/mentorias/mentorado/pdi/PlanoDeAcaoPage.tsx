@@ -4,6 +4,8 @@ import { AppSidebar } from "@/components/AppSidebar";
 import { TopBar } from "@/components/TopBar";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/PageHeader";
+import { useSelectedTrail } from "@/modules/mentorias/mentorado/trilhas/use-selected-trail";
+import { TrailEmptyState } from "@/modules/mentorias/mentorado/trilhas/TrailEmptyState";
 
 import {
   Dialog,
@@ -79,6 +81,7 @@ const emptyForm: FormValues = {
 export function PlanoDeAcaoPage() {
   const [sidebarOpen, toggleSidebar] = useSidebarOpen();
   const actions = usePdiActions();
+  const { selectedTrail, hasContent } = useSelectedTrail();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<"Todos" | ActionStatus>(
     "Todos",
@@ -130,6 +133,7 @@ export function PlanoDeAcaoPage() {
 
   const saveAction = () => {
     if (
+      !hasContent ||
       !form.name.trim() ||
       !form.competency ||
       !form.startDate ||
@@ -176,75 +180,83 @@ export function PlanoDeAcaoPage() {
             description="Crie, organize e acompanhe suas ações de desenvolvimento em um só lugar."
           />
 
-          <section className="flex flex-col gap-4 rounded-md border border-border bg-card p-6 shadow-[var(--shadow-card)] sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h2 className="label-caps text-sm text-foreground">
-                Adicionar ação
-              </h2>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Registre uma ação para acompanhar seu desenvolvimento.
-              </p>
-            </div>
-            <Button onClick={openCreate}>
-              <Plus className="size-4" />
-              Adicionar ação
-            </Button>
-          </section>
+          {!hasContent ? (
+            <TrailEmptyState trailName={selectedTrail} />
+          ) : (
+            <>
+              <section className="flex flex-col gap-4 rounded-md border border-border bg-card p-6 shadow-[var(--shadow-card)] sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <h2 className="label-caps text-sm text-foreground">
+                    Adicionar ação
+                  </h2>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    Registre uma ação para acompanhar seu desenvolvimento.
+                  </p>
+                </div>
+                <Button onClick={openCreate}>
+                  <Plus className="size-4" />
+                  Adicionar ação
+                </Button>
+              </section>
 
-          <section className="space-y-4">
-            <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-              <label className="relative block w-full lg:max-w-xl">
-                <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  value={search}
-                  onChange={(event) => setSearch(event.target.value)}
-                  placeholder="Pesquisar por ação, autor ou competência..."
-                  aria-label="Pesquisar ações"
-                  className="pl-9"
-                />
-              </label>
-              <select
-                value={statusFilter}
-                onChange={(event) =>
-                  setStatusFilter(event.target.value as "Todos" | ActionStatus)
-                }
-                aria-label="Filtrar por status"
-                className="h-9 rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none focus:ring-1 focus:ring-ring"
-              >
-                <option value="Todos">Todos</option>
-                {statuses.map((status) => (
-                  <option key={status} value={status}>
-                    {status}
-                  </option>
-                ))}
-              </select>
-            </div>
+              <section className="space-y-4">
+                <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                  <label className="relative block w-full lg:max-w-xl">
+                    <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                    <Input
+                      value={search}
+                      onChange={(event) => setSearch(event.target.value)}
+                      placeholder="Pesquisar por ação, autor ou competência..."
+                      aria-label="Pesquisar ações"
+                      className="pl-9"
+                    />
+                  </label>
+                  <select
+                    value={statusFilter}
+                    onChange={(event) =>
+                      setStatusFilter(
+                        event.target.value as "Todos" | ActionStatus,
+                      )
+                    }
+                    aria-label="Filtrar por status"
+                    className="h-9 rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none focus:ring-1 focus:ring-ring"
+                  >
+                    <option value="Todos">Todos</option>
+                    {statuses.map((status) => (
+                      <option key={status} value={status}>
+                        {status}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-            {actions.length === 0 ? (
-              <EmptyState
-                onAdd={openCreate}
-                message="Você ainda não possui ações no seu PDI."
-              />
-            ) : filteredActions.length === 0 ? (
-              <EmptyState
-                onAdd={() => {
-                  setSearch("");
-                  setStatusFilter("Todos");
-                }}
-                message="Nenhuma ação encontrada."
-              />
-            ) : (
-              <div className="grid gap-4 md:grid-cols-2">
-                {filteredActions.map((action) => (
-                  <ActionCard
-                    key={action.id}
-                    action={action}
-                    onClick={() => openDetails(action)}
+                {actions.length === 0 ? (
+                  <EmptyState
+                    onAdd={openCreate}
+                    message="Você ainda não possui ações no seu PDI."
                   />
-                ))}
-              </div>
-            )}
-          </section>
+                ) : filteredActions.length === 0 ? (
+                  <EmptyState
+                    onAdd={() => {
+                      setSearch("");
+                      setStatusFilter("Todos");
+                    }}
+                    message="Nenhuma ação encontrada."
+                  />
+                ) : (
+                  <div className="grid gap-4 md:grid-cols-2">
+                    {filteredActions.map((action) => (
+                      <ActionCard
+                        key={action.id}
+                        action={action}
+                        onClick={() => openDetails(action)}
+                      />
+                    ))}
+                  </div>
+                )}
+              </section>
+            </>
+          )}
         </div>
       </main>
 

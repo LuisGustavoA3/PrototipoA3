@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
+import { useSelectedTrail } from "@/modules/mentorias/mentorado/trilhas/use-selected-trail";
+import { setSelectedTrail } from "@/modules/mentorias/mentorado/trilhas/trail-store";
 import {
   Menu,
   Bell,
@@ -44,28 +46,18 @@ const trilhas = [
 ];
 
 const years = ["2026", "2025", "2024"];
-const selectedTrailStorageKey = "a3-selected-trail";
 
 export function TopBar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
   const navigate = useNavigate({ from: "/" });
   const [trilhasOpen, setTrilhasOpen] = useState(false);
   const [year, setYear] = useState("2026");
-  const [selectedTrail, setSelectedTrail] = useState<string | null>(null);
+
+  const { selectedTrail } = useSelectedTrail();
+
   const panelRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
   const visible = trilhas.filter((t) => String(t.year) === year);
-
-  useEffect(() => {
-    const storedTrail = window.localStorage.getItem(selectedTrailStorageKey);
-    if (storedTrail) setSelectedTrail(storedTrail);
-  }, []);
-
-  useEffect(() => {
-    if (selectedTrail) {
-      window.localStorage.setItem(selectedTrailStorageKey, selectedTrail);
-    }
-  }, [selectedTrail]);
 
   useEffect(() => {
     if (!trilhasOpen) return;
@@ -97,6 +89,8 @@ export function TopBar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
     <>
       <header className="fixed top-0 left-0 right-0 z-[60] flex h-16 items-center gap-6 border-b border-border bg-card px-4">
         <button
+          type="button"
+          data-sidebar-toggle
           onClick={onToggleSidebar}
           aria-label="Abrir ou fechar menu"
           className="flex size-10 items-center justify-center rounded-md text-foreground transition-colors hover:bg-accent"
@@ -112,7 +106,10 @@ export function TopBar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
         </Link>
 
         {selectedTrail && (
-          <p className="max-w-[min(40vw,20rem)] truncate text-sm font-medium text-foreground" title={selectedTrail}>
+          <p
+            className="max-w-[min(40vw,20rem)] truncate text-sm font-medium text-foreground"
+            title={selectedTrail}
+          >
             {selectedTrail}
           </p>
         )}

@@ -123,8 +123,25 @@ export function calculateMentorshipProgress(
   }
 
   const completedSessions = validSessions.filter(
-    (session) => session.status === "Feito",
+    (session) => session.status === "Concluído",
   ).length;
 
   return Math.round((completedSessions / validSessions.length) * 100);
+}
+export function getMentorshipSessionProgress(
+  sessions: MondayMentorshipSession[],
+) {
+  const validSessions = sessions.filter(
+    (session) => session.status !== "Cancelado",
+  );
+
+  const completed = validSessions.filter(
+    (session) => session.status === "Concluído",
+  ).length;
+
+  return {
+    completed,
+    total: validSessions.length,
+    percentage: calculateMentorshipProgress(sessions),
+  };
 }

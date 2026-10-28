@@ -7,6 +7,8 @@ import {
   FileQuestion,
   LoaderCircle,
 } from "lucide-react";
+import { useSelectedTrail } from "@/modules/mentorias/mentorado/trilhas/use-selected-trail";
+import { TrailEmptyState } from "@/modules/mentorias/mentorado/trilhas/TrailEmptyState";
 import { AppSidebar } from "@/components/AppSidebar";
 import { TopBar } from "@/components/TopBar";
 import { useSidebarOpen } from "@/hooks/use-sidebar";
@@ -104,6 +106,7 @@ export function MeuAssessmentPage() {
   const [activeFilter, setActiveFilter] = useState<"all" | AssessmentStatus>(
     "all",
   );
+  const { selectedTrail, hasContent } = useSelectedTrail();
 
   const orderedAssessments = [...assessments].sort(
     (first, second) =>
@@ -133,54 +136,64 @@ export function MeuAssessmentPage() {
             title="Meu Assessment"
             description="Acompanhe os testes realizados e descubra quais avaliações podem apoiar sua jornada."
           />
-          <section className="grid gap-4 sm:grid-cols-3">
-            <SummaryCard
-              label="Testes disponíveis"
-              value={assessments.length}
-              icon={BarChart3}
-              active={activeFilter === "all"}
-              onClick={() => setActiveFilter("all")}
-            />
-            <SummaryCard
-              label="Resultados prontos"
-              value={
-                assessments.filter(
-                  (assessment) => assessment.status === "completed",
-                ).length
-              }
-              icon={CheckCircle2}
-              active={activeFilter === "completed"}
-              onClick={() => setActiveFilter("completed")}
-            />
-            <SummaryCard
-              label="Aguardando realização"
-              value={
-                assessments.filter(
-                  (assessment) => assessment.status === "not-started",
-                ).length
-              }
-              icon={Clock3}
-              active={activeFilter === "not-started"}
-              onClick={() => setActiveFilter("not-started")}
-            />
-          </section>
 
-          <section>
-            <div className="mb-4 flex items-center justify-between gap-4">
-              <h2 className="label-caps text-sm text-foreground">
-                Testes de assessment
-              </h2>
-              <span className="text-xs text-muted-foreground">
-                {assessments.length} avaliações
-              </span>
-            </div>
+          {!hasContent ? (
+            <TrailEmptyState trailName={selectedTrail} />
+          ) : (
+            <>
+              <section className="grid gap-4 sm:grid-cols-3">
+                <SummaryCard
+                  label="Testes disponíveis"
+                  value={assessments.length}
+                  icon={BarChart3}
+                  active={activeFilter === "all"}
+                  onClick={() => setActiveFilter("all")}
+                />
+                <SummaryCard
+                  label="Resultados prontos"
+                  value={
+                    assessments.filter(
+                      (assessment) => assessment.status === "completed",
+                    ).length
+                  }
+                  icon={CheckCircle2}
+                  active={activeFilter === "completed"}
+                  onClick={() => setActiveFilter("completed")}
+                />
+                <SummaryCard
+                  label="Aguardando realização"
+                  value={
+                    assessments.filter(
+                      (assessment) => assessment.status === "not-started",
+                    ).length
+                  }
+                  icon={Clock3}
+                  active={activeFilter === "not-started"}
+                  onClick={() => setActiveFilter("not-started")}
+                />
+              </section>
 
-            <div className="grid gap-4 md:grid-cols-2">
-              {filteredAssessments.map((assessment) => (
-                <AssessmentCard key={assessment.name} assessment={assessment} />
-              ))}
-            </div>
-          </section>
+              <section>
+                <div className="mb-4 flex items-center justify-between gap-4">
+                  <h2 className="label-caps text-sm text-foreground">
+                    Testes de assessment
+                  </h2>
+                  <span className="text-xs text-muted-foreground">
+                    {assessments.length} avaliações
+                  </span>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-2">
+                  {filteredAssessments.map((assessment) => (
+                    <AssessmentCard
+                      key={assessment.name}
+                      assessment={assessment}
+                    />
+                  ))}
+                </div>
+              </section>
+            </>
+          )}
         </div>
       </main>
     </div>

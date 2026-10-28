@@ -35,6 +35,9 @@ import {
   useSharedFiles,
   type SharedFile,
 } from "./shared-files-store";
+import { useSelectedTrail } from "@/modules/mentorias/mentorado/trilhas/use-selected-trail";
+import { TrailEmptyState } from "@/modules/mentorias/mentorado/trilhas/TrailEmptyState";
+
 type FileFilter = "all" | "received" | "sent";
 
 const currentUser = "Luis Gustavo";
@@ -116,6 +119,7 @@ const filters: { label: string; value: FileFilter }[] = [
 export function ArquivosCompartilhadosPage() {
   const [sidebarOpen, toggleSidebar] = useSidebarOpen();
   const files = useSharedFiles();
+  const { selectedTrail, hasContent } = useSelectedTrail();
   const [fileToDelete, setFileToDelete] = useState<string | null>(null);
   const [filter, setFilter] = useState<FileFilter>("all");
   const [search, setSearch] = useState("");
@@ -129,7 +133,7 @@ export function ArquivosCompartilhadosPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const confirmDelete = () => {
-    if (!fileToDelete) return;
+    if (!hasContent || !fileToDelete) return;
 
     removeSharedFile(fileToDelete);
     setFileToDelete(null);
@@ -161,9 +165,8 @@ export function ArquivosCompartilhadosPage() {
     setSelectedFile(file);
     if (!title) setTitle(file.name.replace(/\.[^/.]+$/, ""));
   };
-
   const sendFile = () => {
-    if (!selectedFile || !title.trim()) return;
+    if (!hasContent || !selectedFile || !title.trim()) return;
 
     const now = new Date();
     const extension = selectedFile.name.split(".").pop()?.toLowerCase();
@@ -186,6 +189,8 @@ export function ArquivosCompartilhadosPage() {
   };
 
   const downloadFile = (file: SharedFile) => {
+    if (!hasContent) return;
+
     const blob = new Blob([`Arquivo demonstrativo: ${file.name}`], {
       type: "text/plain",
     });
@@ -214,209 +219,217 @@ export function ArquivosCompartilhadosPage() {
             description="Desenvolva seu autoconhecimento, sua organização e sua capacidade de aprender continuamente."
           />
 
-          <section className="rounded-md border border-border bg-card p-6 shadow-[var(--shadow-card)]">
-            <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <h2 className="label-caps text-sm text-foreground">
-                  Enviar um documento
-                </h2>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Compartilhe um material com seu mentor para manter o
-                  acompanhamento atualizado.
-                </p>
-              </div>
-              <Button onClick={() => setUploadOpen(true)}>
-                <UploadCloud className="size-4" />
-                Enviar arquivo
-              </Button>
-            </div>
-          </section>
+          {!hasContent ? (
+            <TrailEmptyState trailName={selectedTrail} />
+          ) : (
+            <>
+              <section className="rounded-md border border-border bg-card p-6 shadow-[var(--shadow-card)]">
+                <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <h2 className="label-caps text-sm text-foreground">
+                      Enviar um documento
+                    </h2>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      Compartilhe um material com seu mentor para manter o
+                      acompanhamento atualizado.
+                    </p>
+                  </div>
+                  <Button onClick={() => setUploadOpen(true)}>
+                    <UploadCloud className="size-4" />
+                    Enviar arquivo
+                  </Button>
+                </div>
+              </section>
 
-          <section className="space-y-4">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-              <div>
-                <h2 className="label-caps text-sm text-foreground">
-                  Arquivos compartilhados
-                </h2>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  {visibleFiles.length} arquivo
-                  {visibleFiles.length === 1 ? "" : "s"} encontrado
-                  {visibleFiles.length === 1 ? "" : "s"}
-                </p>
-              </div>
-              <label className="relative block w-full lg:max-w-sm">
-                <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  value={search}
-                  onChange={(event) => setSearch(event.target.value)}
-                  placeholder="Pesquisar por nome, autor ou data"
-                  aria-label="Pesquisar arquivos"
-                  className="pl-9"
-                />
-              </label>
-            </div>
+              <section className="space-y-4">
+                <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                  <div>
+                    <h2 className="label-caps text-sm text-foreground">
+                      Arquivos compartilhados
+                    </h2>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      {visibleFiles.length} arquivo
+                      {visibleFiles.length === 1 ? "" : "s"} encontrado
+                      {visibleFiles.length === 1 ? "" : "s"}
+                    </p>
+                  </div>
+                  <label className="relative block w-full lg:max-w-sm">
+                    <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                    <Input
+                      value={search}
+                      onChange={(event) => setSearch(event.target.value)}
+                      placeholder="Pesquisar por nome, autor ou data"
+                      aria-label="Pesquisar arquivos"
+                      className="pl-9"
+                    />
+                  </label>
+                </div>
 
-            <div className="flex flex-wrap gap-2">
-              {filters.map((item) => (
-                <button
-                  key={item.value}
-                  type="button"
-                  onClick={() => setFilter(item.value)}
-                  className={cn(
-                    "label-caps rounded-md px-4 py-2 text-xs transition-colors cursor-pointer",
-                    filter === item.value
-                      ? "bg-primary text-primary-foreground cursor-pointer"
-                      : "border border-border bg-card text-foreground hover:bg-accent",
+                <div className="flex flex-wrap gap-2">
+                  {filters.map((item) => (
+                    <button
+                      key={item.value}
+                      type="button"
+                      onClick={() => setFilter(item.value)}
+                      className={cn(
+                        "label-caps rounded-md px-4 py-2 text-xs transition-colors cursor-pointer",
+                        filter === item.value
+                          ? "bg-primary text-primary-foreground cursor-pointer"
+                          : "border border-border bg-card text-foreground hover:bg-accent",
+                      )}
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+
+                {visibleFiles.length === 0 ? (
+                  <div className="rounded-md border border-dashed border-border bg-card px-6 py-12 text-center text-sm text-muted-foreground">
+                    Nenhum arquivo encontrado.
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    {visibleFiles.map((file) => (
+                      <FileCard
+                        key={file.id}
+                        file={file}
+                        onClick={() => setSelectedFileDetails(file)}
+                        onDownload={downloadFile}
+                        onDelete={(id) => {
+                          setFileToDelete(id);
+                        }}
+                      />
+                    ))}
+                  </div>
+                )}
+              </section>
+              <Dialog
+                open={!!selectedFileDetails}
+                onOpenChange={(open) => {
+                  if (!open) setSelectedFileDetails(null);
+                }}
+              >
+                <DialogContent className="max-w-xl">
+                  <DialogHeader>
+                    <DialogTitle>Detalhes do arquivo</DialogTitle>
+                  </DialogHeader>
+
+                  {selectedFileDetails && (
+                    <div className="space-y-4 py-2">
+                      <div>
+                        <p className="text-xs text-muted-foreground">
+                          Nome do arquivo
+                        </p>
+                        <p className="mt-1 break-words text-sm font-medium text-foreground">
+                          {selectedFileDetails.name}
+                        </p>
+                      </div>
+
+                      <div>
+                        <p className="text-xs text-muted-foreground">
+                          Descrição
+                        </p>
+                        <p className="mt-1 whitespace-pre-wrap break-words text-sm text-foreground">
+                          {selectedFileDetails.description}
+                        </p>
+                      </div>
+
+                      <div>
+                        <p className="text-xs text-muted-foreground">Autor</p>
+                        <p className="mt-1 text-sm text-foreground">
+                          {selectedFileDetails.author}
+                        </p>
+                      </div>
+
+                      <div>
+                        <p className="text-xs text-muted-foreground">
+                          Data de compartilhamento
+                        </p>
+                        <p className="mt-1 text-sm text-foreground">
+                          {selectedFileDetails.dateLabel}
+                        </p>
+                      </div>
+                    </div>
                   )}
-                >
-                  {item.label}
-                </button>
-              ))}
-            </div>
+                  <DialogFooter>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        if (selectedFileDetails) {
+                          downloadFile(selectedFileDetails);
+                        }
+                      }}
+                    >
+                      <Download className="mr-2 h-4 w-4" />
+                      Baixar arquivo
+                    </Button>
 
-            {visibleFiles.length === 0 ? (
-              <div className="rounded-md border border-dashed border-border bg-card px-6 py-12 text-center text-sm text-muted-foreground">
-                Nenhum arquivo encontrado.
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                {visibleFiles.map((file) => (
-                  <FileCard
-                    key={file.id}
-                    file={file}
-                    onClick={() => setSelectedFileDetails(file)}
-                    onDownload={downloadFile}
-                    onDelete={(id) => {
-                      setFileToDelete(id);
-                    }}
-                  />
-                ))}
-              </div>
-            )}
-          </section>
-          <Dialog
-            open={!!selectedFileDetails}
-            onOpenChange={(open) => {
-              if (!open) setSelectedFileDetails(null);
-            }}
-          >
-            <DialogContent className="max-w-xl">
-              <DialogHeader>
-                <DialogTitle>Detalhes do arquivo</DialogTitle>
-              </DialogHeader>
+                    {selectedFileDetails?.author === currentUser && (
+                      <Button
+                        variant="destructive"
+                        onClick={() => {
+                          setFileToDelete(selectedFileDetails.id);
+                          setSelectedFileDetails(null);
+                        }}
+                      >
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        Remover arquivo
+                      </Button>
+                    )}
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+              {fileToDelete && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+                  <div
+                    role="alertdialog"
+                    aria-modal="true"
+                    aria-labelledby="delete-dialog-title"
+                    aria-describedby="delete-dialog-description"
+                    className="w-full max-w-md rounded-xl border border-border bg-card p-6 shadow-xl"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-700">
+                        <Trash2 className="h-6 w-6" />
+                      </div>
 
-              {selectedFileDetails && (
-                <div className="space-y-4 py-2">
-                  <div>
-                    <p className="text-xs text-muted-foreground">
-                      Nome do arquivo
-                    </p>
-                    <p className="mt-1 break-words text-sm font-medium text-foreground">
-                      {selectedFileDetails.name}
-                    </p>
-                  </div>
+                      <h2
+                        id="delete-dialog-title"
+                        className="text-lg font-semibold text-foreground"
+                      >
+                        Excluir arquivo?
+                      </h2>
+                    </div>
 
-                  <div>
-                    <p className="text-xs text-muted-foreground">Descrição</p>
-                    <p className="mt-1 whitespace-pre-wrap break-words text-sm text-foreground">
-                      {selectedFileDetails.description}
+                    <p
+                      id="delete-dialog-description"
+                      className="mt-4 text-sm text-muted-foreground"
+                    >
+                      Tem certeza de que deseja excluir este item? Essa ação não
+                      poderá ser desfeita.
                     </p>
-                  </div>
 
-                  <div>
-                    <p className="text-xs text-muted-foreground">Autor</p>
-                    <p className="mt-1 text-sm text-foreground">
-                      {selectedFileDetails.author}
-                    </p>
-                  </div>
+                    <div className="mt-6 flex justify-end gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setFileToDelete(null)}
+                        className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+                      >
+                        Não
+                      </button>
 
-                  <div>
-                    <p className="text-xs text-muted-foreground">
-                      Data de compartilhamento
-                    </p>
-                    <p className="mt-1 text-sm text-foreground">
-                      {selectedFileDetails.dateLabel}
-                    </p>
+                      <button
+                        type="button"
+                        onClick={confirmDelete}
+                        className="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-red-700"
+                      >
+                        Sim, excluir
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}
-              <DialogFooter>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    if (selectedFileDetails) {
-                      downloadFile(selectedFileDetails);
-                    }
-                  }}
-                >
-                  <Download className="mr-2 h-4 w-4" />
-                  Baixar arquivo
-                </Button>
-
-                {selectedFileDetails?.author === currentUser && (
-                  <Button
-                    variant="destructive"
-                    onClick={() => {
-                      setFileToDelete(selectedFileDetails.id);
-                      setSelectedFileDetails(null);
-                    }}
-                  >
-                    <Trash2 className="mr-2 h-4 w-4" />
-                    Remover arquivo
-                  </Button>
-                )}
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-          {fileToDelete && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-              <div
-                role="alertdialog"
-                aria-modal="true"
-                aria-labelledby="delete-dialog-title"
-                aria-describedby="delete-dialog-description"
-                className="w-full max-w-md rounded-xl border border-border bg-card p-6 shadow-xl"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-700">
-                    <Trash2 className="h-6 w-6" />
-                  </div>
-
-                  <h2
-                    id="delete-dialog-title"
-                    className="text-lg font-semibold text-foreground"
-                  >
-                    Excluir arquivo?
-                  </h2>
-                </div>
-
-                <p
-                  id="delete-dialog-description"
-                  className="mt-4 text-sm text-muted-foreground"
-                >
-                  Tem certeza de que deseja excluir este item? Essa ação não
-                  poderá ser desfeita.
-                </p>
-
-                <div className="mt-6 flex justify-end gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setFileToDelete(null)}
-                    className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
-                  >
-                    Não
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={confirmDelete}
-                    className="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-red-700"
-                  >
-                    Sim, excluir
-                  </button>
-                </div>
-              </div>
-            </div>
+            </>
           )}
         </div>
       </main>

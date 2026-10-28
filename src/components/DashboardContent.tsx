@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
+import { useSelectedTrail } from "@/modules/mentorias/mentorado/trilhas/use-selected-trail";
 import {
   ArrowRight,
   CalendarCheck,
@@ -8,7 +9,7 @@ import {
   UserCircle2,
   X,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,8 +29,8 @@ import {
 } from "@/modules/mentorias/mentorado/pdi";
 import { useLibraryContents } from "@/modules/mentorias/shared/biblioteca";
 import { useJourneyItems } from "@/modules/mentorias/mentorado/jornada";
+import { useMentorshipSessions } from "@/modules/mentorias/mentorado/sessoes/use-mentorship-sessions";
 
-const sessionProgress = { completed: 3, total: 10 };
 const dailyContentStorageKey = "a3:dashboard-daily-content";
 const statusColors: Record<ActionStatus, string> = {
   Concluído: "#65c996",
@@ -114,12 +115,27 @@ export function DashboardContent() {
   const actions = usePdiActions();
   const contents = useLibraryContents();
   const journeyItems = useJourneyItems();
+  const { hasContent } = useSelectedTrail();
+
+  const {
+    progress: sessionProgress,
+    loading: sessionsLoading,
+    error: sessionsError,
+  } = useMentorshipSessions();
+
   const [evidenceAction, setEvidenceAction] = useState<{
     id: string;
     name: string;
   } | null>(null);
   const hiddenActionIds = useHiddenDashboardActionIds();
   const [evidence, setEvidence] = useState("");
+
+  useEffect(() => {
+    if (!hasContent) {
+      setEvidenceAction(null);
+      setEvidence("");
+    }
+  }, [hasContent]);
 
   const activePublicContents = contents.filter(
     (content) => content.public && content.active,
@@ -180,7 +196,7 @@ export function DashboardContent() {
     .filter((item) => item.value > 0);
 
   const completeAction = () => {
-    if (!evidenceAction || !evidence.trim()) return;
+    if (!hasContent || !evidenceAction || !evidence.trim()) return;
     updatePdiAction(evidenceAction.id, {
       status: "Concluído",
       evidence: evidence.trim(),
@@ -199,45 +215,121 @@ export function DashboardContent() {
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="label-caps text-xs">Progresso de desenvolvimento</p>
+
               <p className="mt-4 text-sm">
-                {actions.length
-                  ? `${completedActions}/${actions.length} ações concluídas`
-                  : "Nenhuma ação cadastrada"}
+                {!hasContent
+                  ? "Nenhuma ação disponível nesta trilha"
+                  : actions.length
+                    ? `${completedActions}/${actions.length} ações concluídas`
+                    : "Nenhuma ação cadastrada"}
               </p>
             </div>
+
             <span className="text-3xl font-semibold">
-              {actions.length ? `${developmentProgress}%` : "-"}
+              {!hasContent || actions.length === 0
+                ? "—"
+                : `${developmentProgress}%`}
             </span>
           </div>
+
           <div className="mt-4">
-            <ProgressBar value={developmentProgress} light />
+            <ProgressBar value={hasContent ? developmentProgress : 0} light />
           </div>
         </Link>
+
         <div className="rounded-md bg-primary p-5 text-primary-foreground">
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="label-caps text-xs">Progresso das sessões</p>
+
               <p className="mt-4 text-sm">
-                {sessionProgress.completed}/{sessionProgress.total} sessões
-                realizadas
+                {sessionsLoading
+                  ? "Carregando sessões..."
+                  : sessionsError
+                    ? "Não foi possível carregar as sessões."
+                    : `${sessionProgress.completed}/${sessionProgress.total} sessões realizadas`}
               </p>
             </div>
+
             <span className="text-3xl font-semibold">
-              {Math.round(
-                (sessionProgress.completed / sessionProgress.total) * 100,
-              )}
-              %
+              {sessionsLoading || sessionsError
+                ? "—"
+                : sessionProgress.percentage === null
+                  ? "—"
+                  : `${sessionProgress.percentage}%`}
             </span>
           </div>
+
           <div className="mt-4">
             <ProgressBar
-              value={(sessionProgress.completed / sessionProgress.total) * 100}
+              value={
+                sessionsLoading || sessionsError
+                  ? 0
+                  : (sessionProgress.percentage ?? 0)
+              }
               light
             />
           </div>
         </div>
       </div>
+      <div className="grid gap-5 lg:grid-cols-1">
+        <Card className="min-h-[300px]">
+          <CardHeader title="Status da jornada" />
 
+          {!hasContent ? (
+            <EmptyState text="Nenhum dado disponível nesta trilha." />
+          ) : statusData.length ? (
+            <div className="flex flex-col items-center justify-center gap-6 md:flex-row">
+              <div className="h-48 w-48">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={statusData}
+                      dataKey="value"
+                      nameKey="name"
+                      innerRadius={54}
+                      outerRadius={84}
+                      paddingAngle={2}
+                    >
+                      {statusData.map((item) => (
+                        <Cell
+                          key={item.name}
+                          fill={statusColors[item.name as ActionStatus]}
+                        />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="w-full max-w-sm space-y-3">
+                {statusData.map((item) => (
+                  <div
+                    key={item.name}
+                    className="flex items-center justify-between gap-3 text-sm"
+                  >
+                    <span className="flex items-center gap-2 text-muted-foreground">
+                      <span
+                        className="size-2.5 rounded-full"
+                        style={{
+                          backgroundColor:
+                            statusColors[item.name as ActionStatus],
+                        }}
+                      />
+                      {item.name}
+                    </span>
+                    <strong className="text-foreground">
+                      {Math.round((item.value / actions.length) * 100)}%
+                    </strong>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <EmptyState text="Nenhuma ação cadastrada." />
+          )}
+        </Card>
+      </div>
       <div className="grid gap-5 lg:grid-cols-2">
         <Card>
           <CardHeader
@@ -251,7 +343,9 @@ export function DashboardContent() {
               </Link>
             }
           />
-          {visibleActions.length === 0 ? (
+          {!hasContent ? (
+            <EmptyState text="Nenhuma ação disponível nesta trilha." />
+          ) : visibleActions.length === 0 ? (
             <EmptyState
               text={
                 actions.length
@@ -317,85 +411,6 @@ export function DashboardContent() {
             </div>
           )}
         </Card>
-
-        <Card className="min-h-[280px]">
-          <CardHeader
-            title="Conteúdo do dia!"
-            action={
-              dailyContent && (
-                <Link
-                  to="/biblioteca/conteudo/$contentId"
-                  params={{ contentId: dailyContent.id }}
-                  className="label-caps rounded bg-primary px-2.5 py-1 text-[10px] text-primary-foreground"
-                >
-                  Ver conteúdo
-                </Link>
-              )
-            }
-          />
-          {dailyContent ? (
-            <div className="flex gap-4">
-              <FileText className="size-10 shrink-0 text-primary" />
-              <div className="min-w-0">
-                <p className="label-caps text-[10px] text-muted-foreground">
-                  {dailyContent.type} · {dailyContent.axis}
-                </p>
-                <h3 className="mt-1 text-base font-semibold text-foreground">
-                  {dailyContent.name}
-                </h3>
-                <p className="mt-2 line-clamp-4 text-sm leading-5 text-muted-foreground">
-                  {dailyContent.description}
-                </p>
-                <p className="mt-3 text-xs text-primary">
-                  {dailyContent.competency}
-                </p>
-              </div>
-            </div>
-          ) : (
-            <EmptyState text="Você concluiu todos os conteúdos disponíveis!" />
-          )}
-        </Card>
-
-        <Card>
-          <CardHeader
-            title="Prioridades da jornada"
-            action={
-              <Link
-                to="/jornada-de-desenvolvimento"
-                className="label-caps rounded bg-primary px-2.5 py-1 text-[10px] text-primary-foreground"
-              >
-                Ver jornada
-              </Link>
-            }
-          />
-          {journeyPriorities.length === 0 ? (
-            <div className="flex items-center justify-center rounded-md bg-muted px-4 py-6 text-sm text-muted-foreground">
-              Nenhuma prioridade cadastrada.
-            </div>
-          ) : (
-            <ul className="space-y-3">
-              {journeyPriorities.slice(0, 8).map((priority) => (
-                <li key={priority.id}>
-                  <Link
-                    to="/jornada-de-desenvolvimento"
-                    className="flex min-w-0 items-start gap-2 text-base text-foreground hover:text-primary"
-                  >
-                    <span className="mt-1 shrink-0 text-primary">•</span>
-                    <span className="min-w-0 truncate whitespace-nowrap pt-1">
-                      {priority.title}
-                    </span>
-                  </Link>
-                </li>
-              ))}
-              {journeyPriorities.length > 8 && (
-                <li className="pt-1 text-xs text-muted-foreground">
-                  + {journeyPriorities.length - 8} prioridades de jornada
-                </li>
-              )}
-            </ul>
-          )}
-        </Card>
-
         <Card className="min-h-[280px]">
           <CardHeader
             title="Meus dados"
@@ -451,68 +466,92 @@ export function DashboardContent() {
             Ver biblioteca <ArrowRight className="size-3" />
           </Link>
         </Card>
-      </div>
-
-      <div className="grid gap-5 lg:grid-cols-2"></div>
-
-      <div className="grid gap-5 lg:grid-cols-1">
-        <Card className="min-h-[300px]">
-          <CardHeader title="Status da jornada" />
-          {statusData.length ? (
-            <div className="flex flex-col items-center justify-center gap-6 md:flex-row">
-              <div className="h-48 w-48">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={statusData}
-                      dataKey="value"
-                      nameKey="name"
-                      innerRadius={54}
-                      outerRadius={84}
-                      paddingAngle={2}
-                    >
-                      {statusData.map((item) => (
-                        <Cell
-                          key={item.name}
-                          fill={statusColors[item.name as ActionStatus]}
-                        />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-              <div className="w-full max-w-sm space-y-3">
-                {statusData.map((item) => (
-                  <div
-                    key={item.name}
-                    className="flex items-center justify-between gap-3 text-sm"
+        <Card>
+          <CardHeader
+            title="Prioridades da jornada"
+            action={
+              <Link
+                to="/jornada-de-desenvolvimento"
+                className="label-caps rounded bg-primary px-2.5 py-1 text-[10px] text-primary-foreground"
+              >
+                Ver jornada
+              </Link>
+            }
+          />
+          {!hasContent ? (
+            <div className="flex items-center justify-center rounded-md bg-muted px-4 py-6 text-sm text-muted-foreground">
+              Nenhuma prioridade disponível nesta trilha.
+            </div>
+          ) : journeyPriorities.length === 0 ? (
+            <div className="flex items-center justify-center rounded-md bg-muted px-4 py-6 text-sm text-muted-foreground">
+              Nenhuma prioridade cadastrada.
+            </div>
+          ) : (
+            <ul className="space-y-3">
+              {journeyPriorities.slice(0, 8).map((priority) => (
+                <li key={priority.id}>
+                  <Link
+                    to="/jornada-de-desenvolvimento"
+                    className="flex min-w-0 items-start gap-2 text-base text-foreground hover:text-primary"
                   >
-                    <span className="flex items-center gap-2 text-muted-foreground">
-                      <span
-                        className="size-2.5 rounded-full"
-                        style={{
-                          backgroundColor:
-                            statusColors[item.name as ActionStatus],
-                        }}
-                      />
-                      {item.name}
+                    <span className="mt-1 shrink-0 text-primary">•</span>
+                    <span className="min-w-0 truncate whitespace-nowrap pt-1">
+                      {priority.title}
                     </span>
-                    <strong className="text-foreground">
-                      {Math.round((item.value / actions.length) * 100)}%
-                    </strong>
-                  </div>
-                ))}
+                  </Link>
+                </li>
+              ))}
+              {journeyPriorities.length > 8 && (
+                <li className="pt-1 text-xs text-muted-foreground">
+                  + {journeyPriorities.length - 8} prioridades de jornada
+                </li>
+              )}
+            </ul>
+          )}
+        </Card>
+        <Card className="min-h-[280px]">
+          <CardHeader
+            title="Conteúdo do dia!"
+            action={
+              dailyContent && (
+                <Link
+                  to="/biblioteca/conteudo/$contentId"
+                  params={{ contentId: dailyContent.id }}
+                  className="label-caps rounded bg-primary px-2.5 py-1 text-[10px] text-primary-foreground"
+                >
+                  Ver conteúdo
+                </Link>
+              )
+            }
+          />
+          {dailyContent ? (
+            <div className="flex gap-4">
+              <FileText className="size-10 shrink-0 text-primary" />
+              <div className="min-w-0">
+                <p className="label-caps text-[10px] text-muted-foreground">
+                  {dailyContent.type} · {dailyContent.axis}
+                </p>
+                <h3 className="mt-1 text-base font-semibold text-foreground">
+                  {dailyContent.name}
+                </h3>
+                <p className="mt-2 line-clamp-4 text-sm leading-5 text-muted-foreground">
+                  {dailyContent.description}
+                </p>
+                <p className="mt-3 text-xs text-primary">
+                  {dailyContent.competency}
+                </p>
               </div>
             </div>
           ) : (
-            <EmptyState text="Nenhuma ação cadastrada." />
+            <EmptyState text="Você concluiu todos os conteúdos disponíveis!" />
           )}
         </Card>
       </div>
 
+      <div className="grid gap-5 lg:grid-cols-2"></div>
+
       <Dialog
-        open={evidenceAction !== null}
+        open={hasContent && evidenceAction !== null}
         onOpenChange={(open) => !open && setEvidenceAction(null)}
       >
         <DialogContent>
