@@ -92,8 +92,8 @@ export function TopBar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
           type="button"
           data-sidebar-toggle
           onClick={onToggleSidebar}
-          aria-label="Abrir ou fechar menu"
-          className="flex size-10 items-center justify-center rounded-md text-foreground transition-colors hover:bg-accent"
+          aria-label="Alternar menu lateral"
+          className="flex size-9 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-primary"
         >
           <Menu className="size-5" />
         </button>
@@ -164,7 +164,7 @@ export function TopBar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
             <span className="flex size-8 items-center justify-center rounded-full bg-muted">
               <User className="size-4" />
             </span>
-            <span className="label-caps text-xs">Perfil</span>
+            <span className="hidden sm:inline label-caps text-xs">Perfil</span>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuItem

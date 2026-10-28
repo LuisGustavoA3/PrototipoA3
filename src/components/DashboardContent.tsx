@@ -263,7 +263,7 @@ export function DashboardContent() {
       <div className="grid gap-5 lg:grid-cols-2">
         <Link
           to="/plano-de-acao"
-          className="rounded-md bg-primary p-5 text-primary-foreground transition-opacity hover:opacity-95"
+          className="block cursor-pointer rounded-md bg-primary p-5 text-primary-foreground transition-all duration-200 hover:-translate-y-0.5 hover:opacity-95"
         >
           <div className="flex items-start justify-between gap-4">
             <div>
@@ -290,7 +290,10 @@ export function DashboardContent() {
           </div>
         </Link>
 
-        <div className="rounded-md bg-primary p-5 text-primary-foreground">
+        <Link
+          to="/sessoes-mentoria"
+          className="block cursor-pointer rounded-md bg-primary p-5 text-primary-foreground transition-all duration-200 hover:-translate-y-0.5 hover:opacity-95"
+        >
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="label-caps text-xs">Progresso das sessões</p>
@@ -323,7 +326,7 @@ export function DashboardContent() {
               light
             />
           </div>
-        </div>
+        </Link>
       </div>
       <div className="grid gap-5 lg:grid-cols-1">
         <Card className="min-h-[320px]">
