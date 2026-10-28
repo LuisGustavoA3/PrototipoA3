@@ -1,4 +1,10 @@
-import { CalendarDays, ChevronRight, Plus, Search } from "lucide-react";
+import {
+  CalendarDays,
+  ChevronRight,
+  Plus,
+  Search,
+  Download,
+} from "lucide-react";
 import { useMemo, useState } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { TopBar } from "@/components/TopBar";
@@ -33,7 +39,6 @@ const competencies = [
   "Comunicação",
   "Foco em Resultados",
   "Gestão do Tempo",
-  "Governança e Sucessão",
   "Inovação e Criatividade",
   "Liderança e Gestão",
   "Negociação",
@@ -46,7 +51,33 @@ const competencies = [
   "Visão de Negócio",
   "Visão Estratégica",
   "Visão Integrada",
-];
+] as const;
+type Competency = (typeof competencies)[number];
+
+type CompetencyAxis = "Negócio" | "Equipe" | "Mercado" | "Indivíduo";
+
+const competencyAxis: Record<Competency, CompetencyAxis> = {
+  Autoconhecimento: "Indivíduo",
+  "Gestão do Tempo": "Indivíduo",
+  "Planejamento e Organização": "Indivíduo",
+  Proatividade: "Indivíduo",
+  Resiliência: "Indivíduo",
+
+  Comunicação: "Equipe",
+  "Liderança e Gestão": "Equipe",
+  "Relacionamento Interpessoal": "Equipe",
+  Negociação: "Equipe",
+
+  "Capacidade Analítica": "Negócio",
+  "Foco em Resultados": "Negócio",
+  "Resolução de Problemas": "Negócio",
+  "Tomada de Decisão": "Negócio",
+  "Visão Integrada": "Negócio",
+
+  "Visão de Negócio": "Mercado",
+  "Visão Estratégica": "Mercado",
+  "Inovação e Criatividade": "Mercado",
+};
 
 const statuses: ActionStatus[] = [
   "Concluído",
@@ -83,6 +114,9 @@ export function PlanoDeAcaoPage() {
   const actions = usePdiActions();
   const { selectedTrail, hasContent } = useSelectedTrail();
   const [search, setSearch] = useState("");
+  const [axisFilter, setAxisFilter] = useState<"Todos" | CompetencyAxis>(
+    "Todos",
+  );
   const [statusFilter, setStatusFilter] = useState<"Todos" | ActionStatus>(
     "Todos",
   );
@@ -94,7 +128,13 @@ export function PlanoDeAcaoPage() {
 
   const filteredActions = useMemo(() => {
     const query = search.toLowerCase().trim();
+
     return [...actions]
+      .filter(
+        (action) =>
+          axisFilter === "Todos" ||
+          competencyAxis[action.competency as Competency] === axisFilter,
+      )
       .filter(
         (action) => statusFilter === "Todos" || action.status === statusFilter,
       )
@@ -104,7 +144,127 @@ export function PlanoDeAcaoPage() {
         ),
       )
       .sort((first, second) => second.createdAt.localeCompare(first.createdAt));
-  }, [actions, search, statusFilter]);
+  }, [actions, search, axisFilter, statusFilter]);
+
+  const exportPdiActionsToExcel = async () => {
+    if (!hasContent || filteredActions.length === 0) return;
+
+    const ExcelJS = (await import("exceljs")).default;
+
+    const workbook = new ExcelJS.Workbook();
+    workbook.creator = "A3 Digital";
+
+    const worksheet = workbook.addWorksheet("Plano de Ação", {
+      views: [{ state: "frozen", ySplit: 1 }],
+    });
+
+    const headers = [
+      "Nº",
+      "Autoria",
+      "Ação",
+      "Eixo",
+      "Competência",
+      "Evidência da ação",
+      "Início",
+      "Fim",
+      "Status",
+      "Observações",
+    ];
+
+    const rows = filteredActions.map((action, index) => [
+      index + 1,
+      action.author,
+      action.name,
+      competencyAxis[action.competency as Competency] ?? "",
+      action.competency,
+      action.evidence,
+      formatDate(action.startDate),
+      formatDate(action.endDate),
+      action.status,
+      action.details,
+    ]);
+
+    // Tabela nativa com filtros do Excel
+    worksheet.addTable({
+      name: "TabelaAcoesPDI",
+      ref: "A1",
+      headerRow: true,
+      totalsRow: false,
+      style: {
+        theme: "TableStyleMedium9",
+        showRowStripes: true,
+      },
+      columns: headers.map((name) => ({
+        name,
+        filterButton: true,
+      })),
+      rows,
+    });
+
+    // Ajusta a largura com base no conteúdo, respeitando limites.
+    const maxWidths = [8, 28, 55, 16, 30, 55, 16, 16, 22, 55];
+
+    headers.forEach((header, index) => {
+      const contentLengths = rows.map((row) =>
+        String(row[index] ?? "")
+          .split(/\r?\n/)
+          .reduce((max, line) => Math.max(max, line.length), 0),
+      );
+
+      const largestLength = Math.max(header.length, ...contentLengths);
+
+      const width = Math.min(
+        Math.max(largestLength + 3, 12),
+        maxWidths[index] ?? 55,
+      );
+
+      worksheet.getColumn(index + 1).width = width;
+    });
+
+    // Alinhamento e quebra de texto
+    worksheet.eachRow((row, rowNumber) => {
+      row.eachCell((cell) => {
+        cell.alignment = {
+          vertical: "middle",
+          wrapText: true,
+        };
+      });
+
+      if (rowNumber === 1) {
+        row.height = 30;
+      } else {
+        const textLength = Math.max(
+          ...[3, 6, 10].map(
+            (column) => String(row.getCell(column).value ?? "").length,
+          ),
+        );
+
+        row.height = Math.min(
+          Math.max(25, Math.ceil(textLength / 48) * 18),
+          90,
+        );
+      }
+    });
+
+    // Criar arquivo XLSX
+    const buffer = await workbook.xlsx.writeBuffer();
+
+    const blob = new Blob([buffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = `pdi-acoes-${new Date().toISOString().slice(0, 10)}.xlsx`;
+
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
 
   const openCreate = () => {
     setForm(emptyForm);
@@ -210,25 +370,54 @@ export function PlanoDeAcaoPage() {
                       className="pl-9"
                     />
                   </label>
-                  <select
-                    value={statusFilter}
-                    onChange={(event) =>
-                      setStatusFilter(
-                        event.target.value as "Todos" | ActionStatus,
-                      )
-                    }
-                    aria-label="Filtrar por status"
-                    className="h-9 rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none focus:ring-1 focus:ring-ring"
-                  >
-                    <option value="Todos">Todos</option>
-                    {statuses.map((status) => (
-                      <option key={status} value={status}>
-                        {status}
-                      </option>
-                    ))}
-                  </select>
-                </div>
 
+                  <div className="flex flex-wrap items-center gap-2">
+                    <select
+                      value={axisFilter}
+                      onChange={(event) =>
+                        setAxisFilter(
+                          event.target.value as "Todos" | CompetencyAxis,
+                        )
+                      }
+                      aria-label="Filtrar por eixo"
+                      className="h-9 rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none focus:ring-1 focus:ring-ring"
+                    >
+                      <option value="Todos">Todos os eixos</option>
+                      <option value="Negócio">Negócio</option>
+                      <option value="Equipe">Equipe</option>
+                      <option value="Mercado">Mercado</option>
+                      <option value="Indivíduo">Indivíduo</option>
+                    </select>
+
+                    <select
+                      value={statusFilter}
+                      onChange={(event) =>
+                        setStatusFilter(
+                          event.target.value as "Todos" | ActionStatus,
+                        )
+                      }
+                      aria-label="Filtrar por status"
+                      className="h-9 rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none focus:ring-1 focus:ring-ring"
+                    >
+                      <option value="Todos">Todos</option>
+                      {statuses.map((status) => (
+                        <option key={status} value={status}>
+                          {status}
+                        </option>
+                      ))}
+                    </select>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={exportPdiActionsToExcel}
+                      disabled={!hasContent || filteredActions.length === 0}
+                      className="shrink-0"
+                    >
+                      <Download className="size-4" />
+                      Exportar Excel
+                    </Button>
+                  </div>
+                </div>
                 {actions.length === 0 ? (
                   <EmptyState
                     onAdd={openCreate}
@@ -318,7 +507,18 @@ function ActionCard({
       <h2 className="mt-4 text-lg font-semibold text-foreground">
         {action.name}
       </h2>
-      <p className="mt-1 text-sm text-primary">{action.competency}</p>
+
+      <div className="mt-2 flex flex-wrap items-center gap-2">
+        {action.competency in competencyAxis && (
+          <span className="label-caps rounded border border-border bg-muted px-2 py-1 text-[10px] text-muted-foreground">
+            {competencyAxis[action.competency as Competency]}
+          </span>
+        )}
+
+        <span className="label-caps text-xs uppercase text-muted-foreground">
+          {action.competency}
+        </span>
+      </div>
       <div className="mt-5 flex items-center gap-2 text-sm text-muted-foreground">
         <CalendarDays className="size-4 text-primary" />
         Prazo: {formatDate(action.startDate)} → {formatDate(action.endDate)}
@@ -477,23 +677,32 @@ function DetailsContent({
         <DialogTitle>{action.name}</DialogTitle>
       </DialogHeader>
       <div className="space-y-4 py-2 text-sm">
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <span
             className={cn(
-              "label-caps rounded px-2.5 py-1 text-[10px]",
+              "label-caps inline-flex items-center rounded px-2.5 py-1 text-[10px]",
               statusStyles[action.status],
             )}
           >
             {action.status}
           </span>
-          <span className="rounded bg-primary-soft px-2.5 py-1 text-xs text-primary">
+
+          {action.competency in competencyAxis && (
+            <span className="label-caps inline-flex items-center rounded border border-border bg-muted px-2 py-1 text-[10px] text-muted-foreground">
+              {competencyAxis[action.competency as Competency]}
+            </span>
+          )}
+
+          <span className="label-caps inline-flex items-center text-xs uppercase text-muted-foreground">
             {action.competency}
           </span>
         </div>
-        <Detail label="Início" value={formatDate(action.startDate)} />
-        <Detail label="Fim" value={formatDate(action.endDate)} />
-        <Detail label="Criado em" value={formatCreatedAt(action.createdAt)} />
-        <Detail label="Autor" value={action.author} />
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <Detail label="Início" value={formatDate(action.startDate)} />
+          <Detail label="Fim" value={formatDate(action.endDate)} />
+          <Detail label="Criado em" value={formatCreatedAt(action.createdAt)} />
+          <Detail label="Autor" value={action.author} />
+        </div>
         <Detail
           label="Detalhes"
           value={action.details || "Nenhum detalhe informado."}
