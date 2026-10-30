@@ -17,7 +17,7 @@ export const Route = createFileRoute("/mentor")({
 
 function AdministracaoMentorias() {
   return (
-    <AdminLayout title="Dashboard">
+    <AdminLayout>
       <AdminDashboardPage />
     </AdminLayout>
   );

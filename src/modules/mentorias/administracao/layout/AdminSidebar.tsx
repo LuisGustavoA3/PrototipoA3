@@ -60,7 +60,7 @@ export function AdminSidebar({
   return (
     <aside
       ref={sidebarRef}
-      aria-label="Menu de navegação do Mentor"
+      aria-label="Menu de navegação da Administração de Mentorias"
       aria-hidden={!open}
       inert={!open}
       className={cn(

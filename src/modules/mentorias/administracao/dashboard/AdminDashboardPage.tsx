@@ -1,6 +1,7 @@
 import { ArrowRight, CalendarCheck2, Route, UsersRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { PageHeader } from "@/components/PageHeader";
 import {
   adminDashboardDemoMetrics,
   adminDashboardDemoPeople,
@@ -88,36 +89,22 @@ export function AdminDashboardPage() {
   return (
     <div className="min-h-screen bg-background px-4 py-8 sm:px-6 lg:px-10">
       <div className="mx-auto max-w-7xl">
-        <header className="mb-8 border-b border-border/80 pb-6">
-          <p className="label-caps text-xs text-primary">Área do mentor</p>
-          <div className="mt-2 flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <h1 className="font-display text-3xl text-foreground sm:text-4xl">
-                Dashboard do Mentor
-              </h1>
-              <p className="mt-2 text-base text-muted-foreground">
-                Olá, Mentor. Veja um panorama das suas atividades.
-              </p>
-            </div>
-            <span className="rounded-sm border border-border bg-card px-3 py-1.5 text-xs font-medium text-muted-foreground">
-              Dados demonstrativos
-            </span>
-          </div>
-        </header>
+        <div className="mb-8 ">
+          <PageHeader
+            section="Administração de Mentorias"
+            title="Dashboard"
+            description="Acompanhe os indicadores e as principais atividades administrativas de Mentorias."
+          />
+        </div>
 
-        <section aria-label="Indicadores demonstrativos">
-          <div className="mb-3 flex items-baseline justify-between gap-4">
-            <h2 className="text-lg font-semibold text-foreground">
-              Visão geral
-            </h2>
-            <p className="text-xs text-muted-foreground">Valores de exemplo</p>
-          </div>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-            {adminDashboardDemoMetrics.map((metric) => (
-              <MetricCard key={metric.icon} metric={metric} />
-            ))}
-          </div>
-        </section>
+        <div className="mb-3 flex items-baseline justify-between gap-4">
+          <h2 className="text-lg font-semibold text-foreground">Visão geral</h2>
+        </div>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          {adminDashboardDemoMetrics.map((metric) => (
+            <MetricCard key={metric.icon} metric={metric} />
+          ))}
+        </div>
 
         <section className="mt-9" aria-labelledby="mentorados-heading">
           <div className="mb-3 flex flex-wrap items-baseline justify-between gap-3">

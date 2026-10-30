@@ -5,11 +5,10 @@ import { AdminTopBar } from "./AdminTopBar";
 import { cn } from "@/lib/utils";
 
 type AdminLayoutProps = {
-  title: string;
   children: ReactNode;
 };
 
-export function AdminLayout({ title, children }: AdminLayoutProps) {
+export function AdminLayout({ children }: AdminLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const navigate = useNavigate();
@@ -28,20 +27,11 @@ export function AdminLayout({ title, children }: AdminLayoutProps) {
 
   const handleNavigate = useCallback(
     (path: string) => {
-      if (path === "/mentor") {
-        navigate({ to: "/mentor" });
-      }
+      navigate({ to: path });
+      closeSidebar();
     },
-    [navigate],
+    [navigate, closeSidebar],
   );
-
-  const handleBack = useCallback(() => {
-    if (window.history.length > 1) {
-      window.history.back();
-    } else {
-      navigate({ to: "/hub" });
-    }
-  }, [navigate]);
 
   const handleReturnToHub = useCallback(() => {
     navigate({ to: "/hub" });
@@ -54,9 +44,7 @@ export function AdminLayout({ title, children }: AdminLayoutProps) {
   return (
     <div className="h-screen w-full overflow-hidden bg-background">
       <AdminTopBar
-        title={title}
         onToggleSidebar={toggleSidebar}
-        onBack={handleBack}
         onProfile={handleProfile}
         onReturnToHub={handleReturnToHub}
       />
@@ -68,10 +56,20 @@ export function AdminLayout({ title, children }: AdminLayoutProps) {
         onClose={closeSidebar}
       />
 
+      {/* Sobreposição para dispositivos móveis */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-x-0 bottom-0 top-16 z-30 bg-black/40 md:hidden"
+          aria-hidden="true"
+          onClick={closeSidebar}
+        />
+      )}
+
       <main
         className={cn(
-          "h-full overflow-y-auto pt-16 transition-[padding-left] duration-300",
-          sidebarOpen ? "pl-[264px]" : "pl-0",
+          "h-full min-w-0 overflow-y-auto pt-16",
+          "transition-[padding-left] duration-300",
+          sidebarOpen ? "md:pl-[264px]" : "md:pl-0",
         )}
       >
         {children}

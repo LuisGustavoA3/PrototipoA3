@@ -1,41 +1,56 @@
+import type { ReactNode } from "react";
 import { ChevronLeft } from "lucide-react";
-import { useNavigate, useRouterState } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { goBack } from "@/lib/navigation-history";
 
 interface PageHeaderProps {
   section?: string;
   title: string;
   description?: string;
+  actions?: ReactNode;
 }
 
-export function PageHeader({ section, title, description }: PageHeaderProps) {
+export function PageHeader({
+  section,
+  title,
+  description,
+  actions,
+}: PageHeaderProps) {
   const navigate = useNavigate();
 
-  const pathname = useRouterState({
-    select: (state) => state.location.pathname,
-  });
-
-  const isHub = pathname === "/hub";
+  const handleBack = () => {
+    goBack(navigate);
+  };
 
   return (
-    <div className="mb-6">
-      {!isHub && (
-        <button
-          type="button"
-          onClick={() => goBack(navigate)}
-          className="mb-4 inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
-        >
-          <ChevronLeft className="h-4 w-4" />
-          <span>Voltar</span>
-        </button>
-      )}
+    <header className="mb-8 border-b border-border/80 pb-6">
+      <button
+        type="button"
+        onClick={handleBack}
+        aria-label="Voltar"
+        className="mb-4 inline-flex items-center gap-2 rounded-md px-2 py-1 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-primary"
+      >
+        <ChevronLeft className="size-4" />
+        <span>Voltar</span>
+      </button>
 
       {section && <p className="label-caps text-xs text-primary">{section}</p>}
-      <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
 
-      {description && (
-        <p className="mt-2 text-sm text-muted-foreground">{description}</p>
-      )}
-    </div>
+      <div className="mt- flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="font-display text-3xl text-foreground sm:text-4xl">
+            {title}
+          </h1>
+
+          {description && (
+            <p className="mt-2 text-base text-muted-foreground">
+              {description}
+            </p>
+          )}
+        </div>
+
+        {actions}
+      </div>
+    </header>
   );
 }
