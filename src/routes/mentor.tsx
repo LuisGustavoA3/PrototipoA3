@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { AdminDashboardPage } from "@/modules/mentorias/administracao/dashboard";
-import { AdminLayout } from "@/modules/mentorias/administracao/layout/AdminLayout";
+import { AdminDashboardPage } from "@/modules/administracao/dashboard";
+import { AdminLayout } from "@/modules/administracao/layout/AdminLayout";
 
 export const Route = createFileRoute("/mentor")({
   head: () => ({
