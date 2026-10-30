@@ -1,11 +1,11 @@
-export type MentorDashboardMetric = {
+export type AdminDashboardMetric = {
   label: string;
   value: number;
   detail: string;
   icon: "mentees" | "trails" | "sessions";
 };
 
-export type MentorDashboardPerson = {
+export type AdminDashboardPerson = {
   id: string;
   name: string;
   trail: string;

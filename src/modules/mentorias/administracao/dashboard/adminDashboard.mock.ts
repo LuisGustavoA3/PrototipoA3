@@ -1,6 +1,6 @@
-import type { MentorDashboardMetric, MentorDashboardPerson } from "./types";
+import type { AdminDashboardMetric, AdminDashboardPerson } from "./types";
 
-export const mentorDashboardDemoMetrics: MentorDashboardMetric[] = [
+export const adminDashboardDemoMetrics: AdminDashboardMetric[] = [
   {
     label: "Mentorados",
     value: 12,
@@ -21,7 +21,7 @@ export const mentorDashboardDemoMetrics: MentorDashboardMetric[] = [
   },
 ];
 
-export const mentorDashboardDemoPeople: MentorDashboardPerson[] = [
+export const adminDashboardDemoPeople: AdminDashboardPerson[] = [
   {
     id: "demo-1",
     name: "Ana Paula Martins",

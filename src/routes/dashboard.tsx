@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { AppSidebar } from "@/components/AppSidebar";
 import { useSidebarOpen } from "@/hooks/use-sidebar";
 import { TopBar } from "@/components/TopBar";
-import { DashboardContent } from "@/components/DashboardContent";
+import { DashboardContent } from "@/modules/mentorias/mentorado/dashboard";
 import { PageHeader } from "@/components/PageHeader";
 import { cn } from "@/lib/utils";
 

@@ -2,24 +2,24 @@ import { ArrowRight, CalendarCheck2, Route, UsersRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
-  mentorDashboardDemoMetrics,
-  mentorDashboardDemoPeople,
-} from "./mentorDashboard.mock";
-import type { MentorDashboardMetric, MentorDashboardPerson } from "./types";
+  adminDashboardDemoMetrics,
+  adminDashboardDemoPeople,
+} from "./adminDashboard.mock";
 
+import type { AdminDashboardMetric, AdminDashboardPerson } from "./types";
 const metricIcons = {
   mentees: UsersRound,
   trails: Route,
   sessions: CalendarCheck2,
 };
 
-const statusStyles: Record<MentorDashboardPerson["status"], string> = {
+const statusStyles: Record<AdminDashboardPerson["status"], string> = {
   "Em andamento": "border-teal-200 bg-teal-50 text-teal-800",
   Atenção: "border-amber-200 bg-amber-50 text-amber-800",
   Concluído: "border-emerald-200 bg-emerald-50 text-emerald-800",
 };
 
-function MetricCard({ metric }: { metric: MentorDashboardMetric }) {
+function MetricCard({ metric }: { metric: AdminDashboardMetric }) {
   const Icon = metricIcons[metric.icon];
 
   return (
@@ -42,7 +42,7 @@ function MetricCard({ metric }: { metric: MentorDashboardMetric }) {
   );
 }
 
-function PersonRow({ person }: { person: MentorDashboardPerson }) {
+function PersonRow({ person }: { person: AdminDashboardPerson }) {
   return (
     <li className="grid grid-cols-1 gap-4 border-t border-border/80 px-4 py-4 sm:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_auto_auto] sm:items-center sm:gap-5 sm:px-5">
       <div className="min-w-0">
@@ -84,12 +84,12 @@ function PersonRow({ person }: { person: MentorDashboardPerson }) {
   );
 }
 
-export function MentorDashboardPage() {
+export function AdminDashboardPage() {
   return (
-    <main className="min-h-screen bg-background px-4 py-8 sm:px-6 lg:px-10">
+    <div className="min-h-screen bg-background px-4 py-8 sm:px-6 lg:px-10">
       <div className="mx-auto max-w-7xl">
         <header className="mb-8 border-b border-border/80 pb-6">
-          <p className="label-caps text-xs text-primary">Área do Mentor</p>
+          <p className="label-caps text-xs text-primary">Área do mentor</p>
           <div className="mt-2 flex flex-wrap items-end justify-between gap-4">
             <div>
               <h1 className="font-display text-3xl text-foreground sm:text-4xl">
@@ -113,7 +113,7 @@ export function MentorDashboardPage() {
             <p className="text-xs text-muted-foreground">Valores de exemplo</p>
           </div>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-            {mentorDashboardDemoMetrics.map((metric) => (
+            {adminDashboardDemoMetrics.map((metric) => (
               <MetricCard key={metric.icon} metric={metric} />
             ))}
           </div>
@@ -133,7 +133,7 @@ export function MentorDashboardPage() {
               </p>
             </div>
             <span className="text-xs text-muted-foreground">
-              {mentorDashboardDemoPeople.length} registros demonstrativos
+              {adminDashboardDemoPeople.length} registros demonstrativos
             </span>
           </div>
 
@@ -145,13 +145,13 @@ export function MentorDashboardPage() {
               <span className="text-right">Ação</span>
             </div>
             <ul aria-label="Mentorados demonstrativos">
-              {mentorDashboardDemoPeople.map((person) => (
+              {adminDashboardDemoPeople.map((person) => (
                 <PersonRow key={person.id} person={person} />
               ))}
             </ul>
           </Card>
         </section>
       </div>
-    </main>
+    </div>
   );
 }

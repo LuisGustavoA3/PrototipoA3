@@ -1,15 +1,24 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { MentorDashboardPage } from "@/modules/mentorias/mentor/dashboard";
+import { AdminDashboardPage } from "@/modules/mentorias/administracao/dashboard";
+import { AdminLayout } from "@/modules/mentorias/administracao/layout/AdminLayout";
 
 export const Route = createFileRoute("/mentor")({
   head: () => ({
     meta: [
-      { title: "Dashboard do Mentor | A3 Digital" },
+      { title: "Administração de Mentorias | A3 Digital" },
       {
         name: "description",
-        content: "Acompanhe mentorados, trilhas e sessões de mentoria.",
+        content: "Gerencie os recursos administrativos de Mentorias.",
       },
     ],
   }),
-  component: MentorDashboardPage,
+  component: AdministracaoMentorias,
 });
+
+function AdministracaoMentorias() {
+  return (
+    <AdminLayout title="Dashboard">
+      <AdminDashboardPage />
+    </AdminLayout>
+  );
+}
