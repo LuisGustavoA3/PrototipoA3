@@ -121,16 +121,19 @@ export function SessoesMentoriaPage() {
     setCommentError(null);
 
     try {
-      const response = await fetch("/PrototipoA3/api/sessoes/comentario", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `${import.meta.env.BASE_URL}api/sessoes/comentario`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            mondaySubitemId: commentSessionId,
+            comment: commentDraft,
+          }),
         },
-        body: JSON.stringify({
-          mondaySubitemId: commentSessionId,
-          comment: commentDraft,
-        }),
-      });
+      );
 
       const result: {
         success?: boolean;

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useSelectedTrail } from "@/modules/mentorias/mentorado/trilhas/use-selected-trail";
 import { setSelectedTrail } from "@/modules/mentorias/mentorado/trilhas/trail-store";
@@ -48,7 +48,7 @@ const trilhas = [
 const years = ["2026", "2025", "2024"];
 
 export function TopBar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
-  const navigate = useNavigate({ from: "/" });
+  const navigate = useNavigate();
   const [trilhasOpen, setTrilhasOpen] = useState(false);
   const [year, setYear] = useState("2026");
 
@@ -167,13 +167,11 @@ export function TopBar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
             <span className="hidden sm:inline label-caps text-xs">Perfil</span>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuItem
-              onSelect={() => navigate({ to: "/minhas-estatisticas" })}
-            >
+            <DropdownMenuItem onSelect={() => navigate("/minhas-estatisticas")}>
               <BarChart3 className="size-4 text-primary" /> Minhas estatísticas
             </DropdownMenuItem>
             <DropdownMenuItem
-              onSelect={() => navigate({ to: "/informacoes-pessoais" })}
+              onSelect={() => navigate("/informacoes-pessoais")}
             >
               <IdCard className="size-4 text-primary" /> Informações pessoais
             </DropdownMenuItem>

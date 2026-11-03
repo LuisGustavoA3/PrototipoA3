@@ -1,21 +1,14 @@
-# Routes
+# Rotas
 
-TanStack Start uses **file-based routing**. Every `.tsx` file in this directory
-defines a route. Do **not** create `src/pages/`, `src/routes/_app/index.tsx`, or
-`app/layout.tsx` — those are Next.js / Remix conventions. The only root layout
-is `src/routes/__root.tsx`.
+As páginas são componentes React exportados por padrão. O registro explícito de URLs,
+componentes e títulos fica em `src/router.tsx`, com React Router DOM 6.
 
-## Conventions
+- `src/main.tsx`: entrada SPA, QueryClientProvider e RouterProvider.
+- `__root.tsx`: layout raiz, histórico, título, restauração de rolagem e erros.
+- `biblioteca/conteudo/$contentId.tsx`: registrada como `/biblioteca/conteudo/:contentId`, com `useParams`.
+- `/`: redireciona para `/hub` substituindo a entrada no histórico.
+- URLs desconhecidas: página 404.
 
-| File                     | URL                                                     |
-| ------------------------ | ------------------------------------------------------- |
-| `index.tsx`              | `/`                                                     |
-| `about.tsx`              | `/about`                                                |
-| `users/index.tsx`        | `/users`                                                |
-| `users/$id.tsx`          | `/users/:id` (dynamic — bare `$`, no curly braces)      |
-| `posts/{-$category}.tsx` | `/posts/:category?` (optional segment)                  |
-| `files/$.tsx`            | `/files/*` (splat — read via `_splat` param, never `*`) |
-| `_layout.tsx`            | layout route (renders children via `<Outlet />`)        |
-| `__root.tsx`             | app shell — wraps every page; preserve `<Outlet />`     |
-
-`routeTree.gen.ts` is auto-generated. Don't edit it by hand.
+Os nomes existentes foram mantidos para reduzir movimentações. Não há geração de
+rotas por arquivos, SSR, TanStack Start ou `routeTree.gen.ts`.
+Os endpoints antigos estão em `server/api/`; não são rotas de frontend.

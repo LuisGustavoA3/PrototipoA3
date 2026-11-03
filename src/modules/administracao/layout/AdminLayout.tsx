@@ -1,5 +1,5 @@
 import { useCallback, useState, type ReactNode } from "react";
-import { useNavigate, useRouterState } from "@tanstack/react-router";
+import { useNavigate, useLocation } from "react-router-dom";
 import { AdminSidebar } from "./AdminSidebar";
 import { AdminTopBar } from "./AdminTopBar";
 import { cn } from "@/lib/utils";
@@ -13,9 +13,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
 
   const navigate = useNavigate();
 
-  const currentPath = useRouterState({
-    select: (state) => state.location.pathname,
-  });
+  const currentPath = useLocation().pathname;
 
   const toggleSidebar = useCallback(() => {
     setSidebarOpen((current) => !current);
@@ -27,18 +25,18 @@ export function AdminLayout({ children }: AdminLayoutProps) {
 
   const handleNavigate = useCallback(
     (path: string) => {
-      navigate({ to: path });
+      navigate(path);
       closeSidebar();
     },
     [navigate, closeSidebar],
   );
 
   const handleReturnToHub = useCallback(() => {
-    navigate({ to: "/hub" });
+    navigate("/hub");
   }, [navigate]);
 
   const handleProfile = useCallback(() => {
-    navigate({ to: "/informacoes-pessoais" });
+    navigate("/informacoes-pessoais");
   }, [navigate]);
 
   return (

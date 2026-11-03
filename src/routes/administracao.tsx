@@ -1,27 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 
-export const Route = createFileRoute("/administracao")({
-  head: () => ({
-    meta: [
-      { title: "Administração | A3 Digital" },
-      {
-        name: "description",
-        content:
-          "Módulo de Administração da A3 Digital: usuários, permissões e configurações.",
-      },
-      { property: "og:title", content: "Administração | A3 Digital" },
-      {
-        property: "og:description",
-        content:
-          "Administre usuários, permissões e configurações da plataforma A3 Digital.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
-  component: Administracao,
-});
+export default Administracao;
 
 function Administracao() {
   return (

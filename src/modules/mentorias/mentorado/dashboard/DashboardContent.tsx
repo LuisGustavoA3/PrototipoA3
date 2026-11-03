@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelectedTrail } from "@/modules/mentorias/mentorado/trilhas/use-selected-trail";
 import {
   ArrowRight,
@@ -151,7 +151,7 @@ function ProgressBar({
 }
 
 export function DashboardContent() {
-  const navigate = useNavigate({ from: "/" });
+  const navigate = useNavigate();
   const actions = usePdiActions();
   const contents = useLibraryContents();
   const journeyItems = useJourneyItems();
@@ -605,8 +605,7 @@ export function DashboardContent() {
             action={
               dailyContent && (
                 <Link
-                  to="/biblioteca/conteudo/$contentId"
-                  params={{ contentId: dailyContent.id }}
+                  to={`/biblioteca/conteudo/${encodeURIComponent(dailyContent.id)}`}
                   className="label-caps rounded bg-primary px-2.5 py-1 text-[10px] text-primary-foreground"
                 >
                   Ver conteúdo

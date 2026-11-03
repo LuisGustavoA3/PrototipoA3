@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useSidebarOpen } from "@/hooks/use-sidebar";
-import { Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import {
   getCompetencyProgress,
   useLibraryContents,

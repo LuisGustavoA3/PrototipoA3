@@ -1,4 +1,4 @@
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "react-router-dom";
 import { BookOpen, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
@@ -26,7 +26,7 @@ export function BibliotecaNegocioPage() {
   const contents = useLibraryContents();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
-  const navigate = useNavigate({ from: "/biblioteca-negocio" });
+  const navigate = useNavigate();
 
   const activePublicContents = contents.filter(
     (content) => content.public && content.active,
@@ -78,10 +78,7 @@ export function BibliotecaNegocioPage() {
 
   const openContent = (content: LibraryContent) => {
     if (!content.finished) setLibraryContentFinished(content.id, true);
-    navigate({
-      to: "/biblioteca/conteudo/$contentId",
-      params: { contentId: content.id },
-    });
+    navigate(`/biblioteca/conteudo/${encodeURIComponent(content.id)}`);
   };
 
   const toggleFinished = (content: LibraryContent) => {

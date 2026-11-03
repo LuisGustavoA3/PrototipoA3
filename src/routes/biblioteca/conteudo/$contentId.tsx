@@ -1,12 +1,11 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { useParams } from "react-router-dom";
+
 import { ConteudoReaderPage } from "@/modules/mentorias/mentorado/biblioteca/conteudo";
 
-export const Route = createFileRoute("/biblioteca/conteudo/$contentId")({
-  component: BibliotecaConteudoRoute,
-});
+export default BibliotecaConteudoRoute;
 
 function BibliotecaConteudoRoute() {
-  const { contentId } = Route.useParams();
+  const { contentId } = useParams();
 
-  return <ConteudoReaderPage contentId={contentId} />;
+  return <ConteudoReaderPage contentId={contentId ?? ""} />;
 }

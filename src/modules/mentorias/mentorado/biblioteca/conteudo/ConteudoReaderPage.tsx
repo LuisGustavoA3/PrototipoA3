@@ -1,4 +1,4 @@
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "react-router-dom";
 import {
   ChevronsLeft,
   ChevronLeft,
@@ -30,7 +30,7 @@ export function ConteudoReaderPage({ contentId }: { contentId: string }) {
   const [sidebarOpen, toggleSidebar] = useSidebarOpen();
   const contents = useLibraryContents();
   const content = getLibraryContent(contentId);
-  const navigate = useNavigate({ from: "/biblioteca/conteudo/$contentId" });
+  const navigate = useNavigate();
 
   const axisContents = useMemo(
     () =>
@@ -66,7 +66,7 @@ export function ConteudoReaderPage({ contentId }: { contentId: string }) {
       : undefined;
 
   const goTo = (item: LibraryContent | undefined) => {
-    if (item) navigate({ params: { contentId: item.id } });
+    if (item) navigate(`/biblioteca/conteudo/${encodeURIComponent(item.id)}`);
   };
 
   return (

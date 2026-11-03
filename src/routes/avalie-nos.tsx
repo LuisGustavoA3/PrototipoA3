@@ -1,15 +1,12 @@
 import { useEffect, useRef } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+
 import { AppSidebar } from "@/components/AppSidebar";
 import { PageHeader } from "@/components/PageHeader";
 import { TopBar } from "@/components/TopBar";
 import { useSidebarOpen } from "@/hooks/use-sidebar";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/avalie-nos")({
-  head: () => ({ meta: [{ title: "Avalie-nos | A3 Digital" }] }),
-  component: AvalieNosPage,
-});
+export default AvalieNosPage;
 
 function AvalieNosPage() {
   const [sidebarOpen, toggleSidebar] = useSidebarOpen();

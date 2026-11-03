@@ -1,4 +1,4 @@
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "react-router-dom";
 import {
   BookOpen,
   CheckCircle2,
@@ -31,7 +31,7 @@ export function ConteudoPage() {
 
   const { selectedTrail, hasContent } = useSelectedTrail();
 
-  const navigate = useNavigate({ from: "/conteudo" });
+  const navigate = useNavigate();
   const contents = useLibraryContents();
   const activePublicContents = contents.filter(
     (content) => content.public && content.active,
@@ -148,10 +148,9 @@ export function ConteudoPage() {
                       <article
                         key={content.id}
                         onClick={() =>
-                          navigate({
-                            to: "/biblioteca/conteudo/$contentId",
-                            params: { contentId: content.id },
-                          })
+                          navigate(
+                            `/biblioteca/conteudo/${encodeURIComponent(content.id)}`,
+                          )
                         }
                         className="cursor-pointer rounded-md border border-border bg-card p-5 shadow-[var(--shadow-card)] transition-all hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-md"
                       >

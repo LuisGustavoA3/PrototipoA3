@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { setSidebarOpen } from "@/lib/sidebar-store";
-import { Link, useLocation } from "@tanstack/react-router";
+import { Link, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
   ListChecks,
@@ -23,15 +23,16 @@ import {
   MapPin,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { LucideIcon } from "lucide-react";
 import { useSidebarGroups } from "@/hooks/use-sidebar";
 
 type Item = {
   label: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: LucideIcon;
   to?: "/dashboard" | "/avalie-nos" | "/sessoes-mentoria";
   children?: {
     label: string;
-    icon: React.ComponentType<{ className?: string }>;
+    icon: LucideIcon;
     to?: "/faq" | "/assistente" | "/contatos-localizacao" | "/avalie-nos";
   }[];
 };

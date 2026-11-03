@@ -1,4 +1,3 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { AppSidebar } from "@/components/AppSidebar";
 import { useSidebarOpen } from "@/hooks/use-sidebar";
 import { TopBar } from "@/components/TopBar";
@@ -6,27 +5,7 @@ import { DashboardContent } from "@/modules/mentorias/mentorado/dashboard";
 import { PageHeader } from "@/components/PageHeader";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/dashboard")({
-  head: () => ({
-    meta: [
-      { title: "Dashboard | A3 Digital - Mentoria e Assessment" },
-      {
-        name: "description",
-        content:
-          "Acompanhe suas trilhas, sessões de mentoria, assessment e plano de ação na plataforma A3 Digital.",
-      },
-      { property: "og:title", content: "Dashboard | A3 Digital" },
-      {
-        property: "og:description",
-        content:
-          "Plataforma de mentoria e assessment: trilhas, sessões, PDI e biblioteca.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
-  component: Index,
-});
+export default Index;
 
 function Index() {
   const [sidebarOpen, toggleSidebar] = useSidebarOpen();

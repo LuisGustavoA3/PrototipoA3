@@ -1,27 +1,8 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { resetSidebarGroups } from "@/lib/sidebar-store";
 import { Users, Presentation, UserSearch } from "lucide-react";
 
-export const Route = createFileRoute("/hub")({
-  head: () => ({
-    meta: [
-      { title: "Hub de Módulos | A3 Digital" },
-      {
-        name: "description",
-        content:
-          "Escolha um módulo da A3 Digital: Desenvolvimento Profissional, Treinamentos ou Administração.",
-      },
-      { property: "og:title", content: "Hub de Módulos | A3 Digital" },
-      {
-        property: "og:description",
-        content: "Acesse os módulos da plataforma A3 Digital em um só lugar.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
-  component: Hub,
-});
+export default Hub;
 
 const modules = [
   {

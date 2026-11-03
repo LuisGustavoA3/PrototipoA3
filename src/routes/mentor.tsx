@@ -1,19 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { AdminDashboardPage } from "@/modules/administracao/dashboard";
 import { AdminLayout } from "@/modules/administracao/layout/AdminLayout";
 
-export const Route = createFileRoute("/mentor")({
-  head: () => ({
-    meta: [
-      { title: "Administração de Mentorias | A3 Digital" },
-      {
-        name: "description",
-        content: "Gerencie os recursos administrativos de Mentorias.",
-      },
-    ],
-  }),
-  component: AdministracaoMentorias,
-});
+export default AdministracaoMentorias;
 
 function AdministracaoMentorias() {
   return (

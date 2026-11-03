@@ -1,5 +1,5 @@
 import type { Mentorship } from "@/lib/mentorship-session";
-import { mapMondaySubitem } from "@/lib/monday-api";
+import { mapMondaySubitem } from "@/lib/monday-mapping";
 
 const DEMO_MENTORSHIP_ID = "13286629656";
 

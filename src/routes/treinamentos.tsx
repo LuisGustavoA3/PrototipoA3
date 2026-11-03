@@ -1,27 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 
-export const Route = createFileRoute("/treinamentos")({
-  head: () => ({
-    meta: [
-      { title: "Treinamentos | A3 Digital" },
-      {
-        name: "description",
-        content:
-          "Módulo de Treinamentos da A3 Digital: turmas, cursos e capacitações.",
-      },
-      { property: "og:title", content: "Treinamentos | A3 Digital" },
-      {
-        property: "og:description",
-        content:
-          "Gerencie e acompanhe treinamentos e capacitações na A3 Digital.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
-  component: Treinamentos,
-});
+export default Treinamentos;
 
 function Treinamentos() {
   return (

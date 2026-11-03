@@ -7,7 +7,8 @@
     "css": "src/styles.css",
     "baseColor": "slate",
     "cssVariables": true,
-    "prefix": ""
+    "prefix": "",
+    "config": "tailwind.config.ts"
   },
   "iconLibrary": "lucide",
   "rtl": false,

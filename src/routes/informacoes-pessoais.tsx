@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { TopBar } from "@/components/TopBar";
@@ -6,27 +6,7 @@ import { PersonalInfoForm } from "@/modules/mentorias/mentorado/informacoes-pess
 import { useSidebarOpen } from "@/hooks/use-sidebar";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/informacoes-pessoais")({
-  head: () => ({
-    meta: [
-      { title: "Informações Pessoais | A3 Digital" },
-      {
-        name: "description",
-        content:
-          "Visualize e edite seus dados de perfil, endereço e senha na plataforma A3 Digital.",
-      },
-      { property: "og:title", content: "Informações Pessoais | A3 Digital" },
-      {
-        property: "og:description",
-        content:
-          "Atualize perfil, foto, endereço e senha em uma única tela da A3 Digital.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
-  component: InformacoesPessoais,
-});
+export default InformacoesPessoais;
 
 function InformacoesPessoais() {
   const [sidebarOpen, toggleSidebar] = useSidebarOpen();

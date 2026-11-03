@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useBlocker } from "@tanstack/react-router";
+import { useBlocker } from "react-router-dom";
 import { AlertTriangle, Check, Loader2, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -104,11 +104,16 @@ export function PersonalInfoForm() {
     newPassword !== "" ||
     confirmPassword !== "";
 
-  const blocker = useBlocker({
-    shouldBlockFn: () => dirty,
-    enableBeforeUnload: () => dirty,
-    withResolver: true,
-  });
+  const blocker = useBlocker(dirty);
+  useEffect(() => {
+    if (!dirty) return;
+    const warn = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [dirty]);
 
   useEffect(() => {
     if (!flashing) return;
@@ -609,7 +614,7 @@ export function PersonalInfoForm() {
       </AlertDialog>
 
       {/* Alterações não salvas */}
-      <AlertDialog open={blocker.status === "blocked"}>
+      <AlertDialog open={blocker.state === "blocked"}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
