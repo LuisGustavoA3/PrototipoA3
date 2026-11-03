@@ -40,6 +40,12 @@ function open(path: string, basename?: string) {
 }
 
 describe("rotas migradas", () => {
+  it("mantém o perfil no contexto administrativo ao abrir diretamente", () => {
+    open("/informacoes-pessoais?modulo=administracao");
+    expect(screen.getByText("Administração A3 Digital")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Voltar" })).toHaveAttribute("href", "/mentor");
+    expect(screen.getByRole("heading", { name: "Informações Pessoais" })).toBeInTheDocument();
+  });
   for (const route of appRoutes[0]!.children) {
     if (!route.path || route.path === "*" || route.path.includes(":")) continue;
     it(`renderiza ${route.path}`, async () => {

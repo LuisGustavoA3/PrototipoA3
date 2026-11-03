@@ -1,1 +1,1 @@
-export { default } from "@/modules/mentorias/pages/InformacoesPessoaisPage";
+export { default } from "@/shared/pages/InformacoesPessoaisPage";

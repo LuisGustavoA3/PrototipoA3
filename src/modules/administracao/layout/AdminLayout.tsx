@@ -36,7 +36,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
   }, [navigate]);
 
   const handleProfile = useCallback(() => {
-    navigate("/informacoes-pessoais");
+    navigate("/informacoes-pessoais?modulo=administracao");
   }, [navigate]);
 
   return (
@@ -44,6 +44,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
       <AdminTopBar
         onToggleSidebar={toggleSidebar}
         onProfile={handleProfile}
+        onLogout={handleReturnToHub}
         onReturnToHub={handleReturnToHub}
       />
 

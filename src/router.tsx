@@ -13,7 +13,7 @@ import Page11 from "./routes/conteudo";
 import Page12 from "@/modules/mentorias/pages/DashboardPage";
 import Page13 from "./routes/faq";
 import Page14 from "./routes/hub";
-import Page15 from "@/modules/mentorias/pages/InformacoesPessoaisPage";
+import Page15 from "@/shared/pages/InformacoesPessoaisPage";
 import Page16 from "./routes/jornada-de-desenvolvimento";
 import Page17 from "@/modules/administracao/pages/AdministracaoMentoriasPage";
 import Page18 from "./routes/meu-assessment";

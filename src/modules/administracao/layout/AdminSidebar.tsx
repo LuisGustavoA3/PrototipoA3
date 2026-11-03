@@ -137,7 +137,14 @@ export function AdminSidebar({
                       !item.to && "cursor-not-allowed opacity-60",
                     )}
                   >
-                    <item.icon className="size-5" />
+                    <item.icon
+                      className={cn(
+                        "size-5",
+                        isActive
+                          ? "text-primary-foreground"
+                          : "text-primary/70",
+                      )}
+                    />
                     <span>{item.label}</span>
                   </button>
                 )}
