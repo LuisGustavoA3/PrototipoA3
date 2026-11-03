@@ -1,1 +1,1 @@
-export { MinhasEstatisticasPage } from "./MinhasEstatisticasPage";
+export { MinhasEstatisticasPage } from "@/modules/mentorias/pages/MinhasEstatisticasPage";

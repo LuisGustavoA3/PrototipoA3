@@ -1,1 +1,1 @@
-export { BibliotecaNegocioPage } from "./BibliotecaNegocioPage";
+export { BibliotecaNegocioPage } from "@/modules/mentorias/pages/BibliotecaNegocioPage";

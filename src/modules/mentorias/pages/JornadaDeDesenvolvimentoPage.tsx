@@ -21,7 +21,7 @@ import {
   type JourneyItem,
   type Section,
   useJourneyItems,
-} from "./journey-store";
+} from "@/modules/mentorias/jornada/journey-store";
 import { cn } from "@/lib/utils";
 
 const startingPointSections: EditableSection[] = [

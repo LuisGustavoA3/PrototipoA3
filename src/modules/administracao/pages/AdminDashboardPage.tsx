@@ -5,9 +5,12 @@ import { PageHeader } from "@/components/PageHeader";
 import {
   adminDashboardDemoMetrics,
   adminDashboardDemoPeople,
-} from "./adminDashboard.mock";
+} from "@/modules/administracao/dashboard/adminDashboard.mock";
 
-import type { AdminDashboardMetric, AdminDashboardPerson } from "./types";
+import type {
+  AdminDashboardMetric,
+  AdminDashboardPerson,
+} from "@/modules/administracao/dashboard/types";
 const metricIcons = {
   mentees: UsersRound,
   trails: Route,

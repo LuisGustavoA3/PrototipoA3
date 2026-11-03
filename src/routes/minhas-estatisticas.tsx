@@ -1,3 +1,3 @@
-import { MinhasEstatisticasPage } from "@/modules/mentorias/estatisticas";
+import { MinhasEstatisticasPage } from "@/modules/mentorias/pages/MinhasEstatisticasPage";
 
 export default MinhasEstatisticasPage;

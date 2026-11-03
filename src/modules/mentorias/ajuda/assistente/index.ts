@@ -1,1 +1,1 @@
-export { AssistantPage } from "./AssistantPage";
+export { AssistantPage } from "@/modules/mentorias/pages/AssistantPage";

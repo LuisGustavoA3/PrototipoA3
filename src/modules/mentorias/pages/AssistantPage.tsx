@@ -15,12 +15,12 @@ import { TopBar } from "@/components/TopBar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useSidebarOpen } from "@/hooks/use-sidebar";
-import { getFAQQuestion } from "../faq-data";
+import { getFAQQuestion } from "@/modules/mentorias/ajuda/faq-data";
 import {
   selectKnowledgeQuestion,
   submitAssistantQuestion,
   useAssistantConversation,
-} from "./assistant-store";
+} from "@/modules/mentorias/ajuda/assistente/assistant-store";
 import { cn } from "@/lib/utils";
 
 export function AssistantPage() {

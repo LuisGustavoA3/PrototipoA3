@@ -34,7 +34,7 @@ import {
   removeSharedFile,
   useSharedFiles,
   type SharedFile,
-} from "./shared-files-store";
+} from "@/modules/mentorias/arquivos-compartilhados/shared-files-store";
 import { useSelectedTrail } from "@/modules/mentorias/trilhas/use-selected-trail";
 import { TrailEmptyState } from "@/modules/mentorias/trilhas/TrailEmptyState";
 

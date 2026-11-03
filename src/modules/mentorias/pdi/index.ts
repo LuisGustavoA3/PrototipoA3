@@ -1,4 +1,4 @@
-export { PlanoDeAcaoPage } from "./PlanoDeAcaoPage";
+export { PlanoDeAcaoPage } from "@/modules/mentorias/pages/PlanoDeAcaoPage";
 export type { ActionStatus } from "./pdi-store";
 export {
   hidePdiActionFromDashboard,

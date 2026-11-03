@@ -1,3 +1,3 @@
-import { MeuAssessmentPage } from "@/modules/mentorias/assessment";
+import { MeuAssessmentPage } from "@/modules/mentorias/pages/MeuAssessmentPage";
 
 export default MeuAssessmentPage;

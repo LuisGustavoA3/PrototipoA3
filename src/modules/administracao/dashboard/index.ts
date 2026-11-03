@@ -1,1 +1,1 @@
-export { AdminDashboardPage } from "./AdminDashboardPage";
+export { AdminDashboardPage } from "@/modules/administracao/pages/AdminDashboardPage";

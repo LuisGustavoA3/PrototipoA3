@@ -30,7 +30,7 @@ import {
   usePdiActions,
   isValidPdiDate,
   isValidPdiDateRange,
-} from "./pdi-store";
+} from "@/modules/mentorias/pdi/pdi-store";
 import { cn } from "@/lib/utils";
 
 const competencies = [

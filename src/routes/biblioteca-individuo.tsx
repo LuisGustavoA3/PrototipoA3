@@ -1,3 +1,3 @@
-import { BibliotecaIndividuoPage } from "@/modules/mentorias/biblioteca/individuo";
+import { BibliotecaIndividuoPage } from "@/modules/mentorias/pages/BibliotecaIndividuoPage";
 
 export default BibliotecaIndividuoPage;

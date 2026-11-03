@@ -83,6 +83,19 @@ Os imports foram atualizados sem alterar URLs, regras ou layouts. A adoção de
 As referências a `mentorado/` no plano arquitetural anterior representam a proposta
 histórica; para a estrutura atual, prevalecem esta decisão e o código.
 
+## Organização de páginas em 03/11/2026
+
+As telas de Mentorias ficam em `src/modules/mentorias/pages/`; as de Administração,
+em `src/modules/administracao/pages/`. As páginas completas antes implementadas nas
+rotas de dashboard, informações pessoais, avaliação e Administração também passaram
+para essas pastas. Os registros e adaptadores em `src/routes/` preservam as URLs e
+os parâmetros existentes. Hub e Treinamentos continuam como páginas gerais.
+
+Stores, hooks, dados e componentes auxiliares permanecem nas pastas de suas
+funcionalidades. Os exports públicos existentes foram mantidos e apontam para as
+novas localizações. A criação de `pages/` não implica mover esses auxiliares nem
+introduzir `menu.ts`, `routes.tsx` ou novas camadas nesta etapa.
+
 ## Validação executada
 
 - 33 testes aprovados; TypeScript e `git diff --check` aprovados.

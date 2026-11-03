@@ -9,7 +9,7 @@ import { useSidebarOpen } from "@/hooks/use-sidebar";
 import { cn } from "@/lib/utils";
 import { MessageSquare } from "lucide-react";
 
-import { loadMondaySnapshot } from "./monday-snapshot";
+import { loadMondaySnapshot } from "@/modules/mentorias/sessoes/monday-snapshot";
 import { calculateMentorshipProgress } from "@/lib/mentorship-session";
 
 import {

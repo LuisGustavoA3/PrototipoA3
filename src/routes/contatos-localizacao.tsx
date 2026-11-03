@@ -1,3 +1,3 @@
-import { ContatosLocalizacaoPage } from "@/modules/mentorias/ajuda/contatos-localizacao";
+import { ContatosLocalizacaoPage } from "@/modules/mentorias/pages/ContatosLocalizacaoPage";
 
 export default ContatosLocalizacaoPage;

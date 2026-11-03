@@ -1,1 +1,1 @@
-export { ConteudoReaderPage } from "./ConteudoReaderPage";
+export { ConteudoReaderPage } from "@/modules/mentorias/pages/ConteudoReaderPage";

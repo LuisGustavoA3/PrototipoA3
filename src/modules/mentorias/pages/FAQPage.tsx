@@ -12,7 +12,11 @@ import {
 } from "@/components/ui/accordion";
 import { Input } from "@/components/ui/input";
 import { useSidebarOpen } from "@/hooks/use-sidebar";
-import { faqCategories, faqQuestions, normalizeHelpText } from "../faq-data";
+import {
+  faqCategories,
+  faqQuestions,
+  normalizeHelpText,
+} from "@/modules/mentorias/ajuda/faq-data";
 import { cn } from "@/lib/utils";
 
 export function FAQPage() {

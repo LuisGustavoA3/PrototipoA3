@@ -1,6 +1,8 @@
 # Rotas
 
-As páginas são componentes React exportados por padrão. O registro explícito de URLs,
+As telas de domínio ficam em `src/modules/mentorias/pages/` e
+`src/modules/administracao/pages/`. Esta pasta mantém os adaptadores de rota e as
+páginas gerais. O registro explícito de URLs,
 componentes e títulos fica em `src/router.tsx`, com React Router DOM 6.
 
 - `src/main.tsx`: entrada SPA, QueryClientProvider e RouterProvider.

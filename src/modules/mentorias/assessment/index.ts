@@ -1,1 +1,1 @@
-export { MeuAssessmentPage } from "./MeuAssessmentPage";
+export { MeuAssessmentPage } from "@/modules/mentorias/pages/MeuAssessmentPage";

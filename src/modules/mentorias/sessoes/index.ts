@@ -1,1 +1,1 @@
-export { SessoesMentoriaPage } from "./SessoesMentoriaPage";
+export { SessoesMentoriaPage } from "@/modules/mentorias/pages/SessoesMentoriaPage";

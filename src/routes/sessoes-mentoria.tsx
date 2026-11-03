@@ -1,3 +1,3 @@
-import { SessoesMentoriaPage } from "@/modules/mentorias/sessoes";
+import { SessoesMentoriaPage } from "@/modules/mentorias/pages/SessoesMentoriaPage";
 
 export default SessoesMentoriaPage;

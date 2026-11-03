@@ -1,1 +1,1 @@
-export { FAQPage } from "./FAQPage";
+export { FAQPage } from "@/modules/mentorias/pages/FAQPage";

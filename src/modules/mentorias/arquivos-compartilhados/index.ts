@@ -1,1 +1,1 @@
-export { ArquivosCompartilhadosPage } from "./ArquivosCompartilhadosPage";
+export { ArquivosCompartilhadosPage } from "@/modules/mentorias/pages/ArquivosCompartilhadosPage";

@@ -1,3 +1,3 @@
-import { ArquivosCompartilhadosPage } from "@/modules/mentorias/arquivos-compartilhados";
+import { ArquivosCompartilhadosPage } from "@/modules/mentorias/pages/ArquivosCompartilhadosPage";
 
 export default ArquivosCompartilhadosPage;

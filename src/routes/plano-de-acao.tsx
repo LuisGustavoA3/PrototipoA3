@@ -1,3 +1,3 @@
-import { PlanoDeAcaoPage } from "@/modules/mentorias/pdi";
+import { PlanoDeAcaoPage } from "@/modules/mentorias/pages/PlanoDeAcaoPage";
 
 export default PlanoDeAcaoPage;

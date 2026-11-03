@@ -1,3 +1,3 @@
-import { BibliotecaEquipePage } from "@/modules/mentorias/biblioteca/equipe";
+import { BibliotecaEquipePage } from "@/modules/mentorias/pages/BibliotecaEquipePage";
 
 export default BibliotecaEquipePage;
