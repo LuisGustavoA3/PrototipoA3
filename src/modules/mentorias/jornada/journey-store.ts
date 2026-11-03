@@ -6,7 +6,10 @@ export type EditableSection =
   | "Suporte ao desenvolvimento"
   | "Obstáculos ao desenvolvimento";
 
-export type Section = EditableSection | "Resultados e progressos" | "Continuidade de desenvolvimento";
+export type Section =
+  | EditableSection
+  | "Resultados e progressos"
+  | "Continuidade de desenvolvimento";
 
 export type JourneyItem = {
   id: number;
@@ -40,7 +43,11 @@ export function getJourneyItems() {
 }
 
 export function useJourneyItems() {
-  return useSyncExternalStore(subscribeJourney, getJourneyItems, getJourneyItems);
+  return useSyncExternalStore(
+    subscribeJourney,
+    getJourneyItems,
+    getJourneyItems,
+  );
 }
 
 export function addJourneyItem(section: Section, title: string) {
@@ -59,6 +66,26 @@ export function addJourneyItem(section: Section, title: string) {
   items = {
     ...items,
     [section]: [...items[section], newItem],
+  };
+  notify();
+}
+
+export function updateJourneyItem(section: Section, id: number, title: string) {
+  if (!title.trim()) return;
+  items = {
+    ...items,
+    [section]: items[section].map((item) =>
+      item.id === id
+        ? {
+            ...item,
+            title: title.trim(),
+            updatedAt: new Intl.DateTimeFormat("pt-BR", {
+              dateStyle: "short",
+              timeStyle: "short",
+            }).format(new Date()),
+          }
+        : item,
+    ),
   };
   notify();
 }

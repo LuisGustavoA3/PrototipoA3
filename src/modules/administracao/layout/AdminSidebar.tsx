@@ -17,7 +17,9 @@ export function AdminSidebar({
   onClose,
 }: AdminSidebarProps) {
   const sidebarRef = useRef<HTMLElement>(null);
-  const [expandedGroups, setExpandedGroups] = useState<string[]>([]);
+  const [expandedGroups, setExpandedGroups] = useState<string[]>([
+    "Desenvolvimento",
+  ]);
 
   useEffect(() => {
     if (!open) return;
@@ -154,6 +156,13 @@ export function AdminSidebar({
                     {item.children?.map((child) => (
                       <button
                         key={child.label}
+                        aria-current={
+                          child.to &&
+                          (currentPath === child.to ||
+                            currentPath.startsWith(child.to + "/"))
+                            ? "page"
+                            : undefined
+                        }
                         type="button"
                         disabled={!child.to}
                         onClick={() => {
@@ -167,7 +176,10 @@ export function AdminSidebar({
                           "text-left text-[11px] text-sidebar-foreground",
                           "transition-colors",
                           child.to
-                            ? "hover:bg-sidebar-accent/60"
+                            ? currentPath === child.to ||
+                              currentPath.startsWith(child.to + "/")
+                              ? "bg-sidebar-accent font-semibold"
+                              : "hover:bg-sidebar-accent/60"
                             : "cursor-not-allowed opacity-60",
                         )}
                       >

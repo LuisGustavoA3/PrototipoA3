@@ -1,3 +1,9 @@
+import { TrailStatusBadge } from "@/shared/components/TrailStatusBadge";
+import { trailCoverUrl } from "@/shared/lib/trail-presentation";
+import {
+  MENTORADO_TRAILS,
+  useOwnTrails,
+} from "@/modules/mentorias/trilhas/trail-store";
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -9,11 +15,11 @@ import {
   BarChart3,
   ChevronLeft,
   ChevronRight,
+  Check,
   IdCard,
   LogOut,
   User,
   X,
-  ImageIcon,
 } from "lucide-react";
 import {
   Popover,
@@ -34,21 +40,11 @@ const notifications = [
   { title: "Seu assessment foi liberado", time: "ontem" },
 ];
 
-const trilhas = [
-  { name: "Liderança Inspiradora", progress: "40%", year: 2026 },
-  { name: "Gestão de Alta Performance", progress: "75%", year: 2026 },
-  { name: "Comunicação Estratégica", progress: "55%", year: 2026 },
-  { name: "Cultura de Inovação", progress: "30%", year: 2026 },
-  { name: "Visão Estratégica", progress: "65%", year: 2026 },
-  { name: "Comunicação Estratégica", progress: "15%", year: 2025 },
-  { name: "Cultura de Inovação", progress: "60%", year: 2025 },
-  { name: "Inovação e Criatividade", progress: "30%", year: 2024 },
-];
-
 const years = ["2026", "2025", "2024"];
 
 export function TopBar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
   const navigate = useNavigate();
+  const trilhas = useOwnTrails();
   const [trilhasOpen, setTrilhasOpen] = useState(false);
   const [year, setYear] = useState("2026");
 
@@ -251,9 +247,9 @@ function CourseCarousel({
   selectedName,
   onSelect,
 }: {
-  courses: { name: string; progress: string; year: number }[];
+  courses: (typeof MENTORADO_TRAILS)[number][];
   selectedName: string | null;
-  onSelect: (course: { name: string; progress: string; year: number }) => void;
+  onSelect: (course: (typeof MENTORADO_TRAILS)[number]) => void;
 }) {
   const selectedIndex = selectedName
     ? courses.findIndex((course) => course.name === selectedName)
@@ -277,7 +273,7 @@ function CourseCarousel({
   };
 
   return (
-    <div className="relative mt-6 h-72 overflow-hidden">
+    <div className="relative mt-6 h-[28rem] overflow-hidden">
       <button
         type="button"
         onClick={() => moveCarousel(-1)}
@@ -303,6 +299,7 @@ function CourseCarousel({
           if (dist < -len / 2) dist += len;
 
           const isActive = dist === 0;
+          const isSelected = course.name === selectedName;
           const isVisible = Math.abs(dist) <= 1;
           const clamped = Math.max(-1, Math.min(1, dist));
 
@@ -327,20 +324,31 @@ function CourseCarousel({
             >
               <button
                 type="button"
+                aria-label={`Selecionar trilha ${course.name}`}
+                aria-pressed={isSelected}
                 onClick={() => selectIndex(i)}
-                className="w-full cursor-pointer rounded-xl border border-border bg-card p-4 text-left shadow-[var(--shadow-card)] transition-shadow hover:shadow-md"
+                className={cn(
+                  "w-full cursor-pointer rounded-xl border bg-card p-4 text-left shadow-[var(--shadow-card)] transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                  isSelected
+                    ? "border-primary ring-2 ring-primary/30"
+                    : "border-border",
+                )}
               >
-                <div className="flex aspect-[3/4] items-center justify-center rounded-md bg-muted">
-                  <div className="flex flex-col items-center gap-2 text-muted-foreground">
-                    <ImageIcon className="size-10" />
-                    <span className="label-caps text-[10px]">
-                      Imagem do curso
-                    </span>
-                  </div>
-                </div>
-                <p className="label-caps mt-3 text-[10px] text-primary">
-                  Curso
+                <img
+                  src={course.image}
+                  alt={`Capa da trilha ${course.name}`}
+                  className="aspect-[3/4] w-full rounded-md object-cover"
+                />
+                {isSelected && (
+                  <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-1 text-xs font-semibold text-primary">
+                    <Check aria-hidden="true" className="size-3.5" />
+                    Selecionada
+                  </span>
+                )}
+                <p className="mt-3 text-xs text-muted-foreground">
+                  ID {course.id}
                 </p>
+                <TrailStatusBadge active={course.active} />
                 <p className="mt-1 line-clamp-2 text-sm font-medium text-foreground">
                   {course.name}
                 </p>

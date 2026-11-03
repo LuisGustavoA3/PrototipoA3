@@ -1,3 +1,4 @@
+import { MentoriasBreadcrumb } from "@/modules/mentorias/components/MentoriasBreadcrumb";
 import {
   CalendarDays,
   ChevronRight,
@@ -332,6 +333,7 @@ export function PlanoDeAcaoPage() {
           sidebarOpen ? "pl-[264px]" : "pl-0",
         )}
       >
+        <MentoriasBreadcrumb />
         <div className="space-y-6 p-6">
           <PageHeader
             section="Meu Desenvolvimento"

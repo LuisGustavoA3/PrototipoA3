@@ -1,3 +1,5 @@
+import { MentoriasBreadcrumb } from "@/modules/mentorias/components/MentoriasBreadcrumb";
+import { usePublishedFAQ } from "@/shared/lib/institution-settings";
 import { Link } from "react-router-dom";
 import { ArrowRight, Bot, MapPin, Search, SearchX, X } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -14,13 +16,13 @@ import { Input } from "@/components/ui/input";
 import { useSidebarOpen } from "@/hooks/use-sidebar";
 import {
   faqCategories,
-  faqQuestions,
   normalizeHelpText,
 } from "@/modules/mentorias/ajuda/faq-data";
 import { cn } from "@/lib/utils";
 
 export function FAQPage() {
   const [sidebarOpen, toggleSidebar] = useSidebarOpen();
+  const faqQuestions = usePublishedFAQ();
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const normalizedSearch = normalizeHelpText(search.trim());
@@ -32,12 +34,12 @@ export function FAQPage() {
         const matchesSearch =
           !normalizedSearch ||
           normalizeHelpText(
-            `${question.question} ${question.categoryName} ${question.categoryDescription}`,
+            `${question.question} ${question.answer} ${question.categoryName} ${question.categoryDescription}`,
           ).includes(normalizedSearch);
 
         return matchesCategory && matchesSearch;
       }),
-    [normalizedSearch, selectedCategory],
+    [normalizedSearch, selectedCategory, faqQuestions],
   );
   const hasActiveFilters = Boolean(search || selectedCategory);
 
@@ -52,10 +54,11 @@ export function FAQPage() {
       <AppSidebar open={sidebarOpen} />
       <main
         className={cn(
-          "h-full overflow-y-auto pt-10 transition-[padding-left] duration-300",
+          "h-full overflow-y-auto pt-16 transition-[padding-left] duration-300",
           sidebarOpen ? "pl-[264px]" : "pl-0",
         )}
       >
+        <MentoriasBreadcrumb />
         <div className="mx-auto max-w-6xl space-y-12 px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
           <PageHeader
             section="Ajuda"
@@ -177,21 +180,23 @@ export function FAQPage() {
                 type="multiple"
                 className="divide-y divide-border border-y border-border"
               >
-                {filteredQuestions.map(({ id, question, categoryName }) => (
-                  <AccordionItem key={id} value={id} className="border-0">
-                    <AccordionTrigger className="gap-4 py-5 text-left text-base font-medium text-foreground hover:no-underline sm:text-lg">
-                      <span className="min-w-0 flex-1">
-                        <span className="block">{question}</span>
-                        <span className="mt-1 block text-xs font-normal text-muted-foreground">
-                          {categoryName}
+                {filteredQuestions.map(
+                  ({ id, question, categoryName, answer }) => (
+                    <AccordionItem key={id} value={id} className="border-0">
+                      <AccordionTrigger className="gap-4 py-5 text-left text-base font-medium text-foreground hover:no-underline sm:text-lg">
+                        <span className="min-w-0 flex-1">
+                          <span className="block">{question}</span>
+                          <span className="mt-1 block text-xs font-normal text-muted-foreground">
+                            {categoryName}
+                          </span>
                         </span>
-                      </span>
-                    </AccordionTrigger>
-                    <AccordionContent className="max-w-3xl pb-5 pr-8 text-sm leading-6 text-muted-foreground">
-                      Resposta pendente de definição e validação.
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
+                      </AccordionTrigger>
+                      <AccordionContent className="whitespace-pre-line max-w-3xl pb-5 pr-8 text-sm leading-6 text-muted-foreground">
+                        {answer || "Resposta ainda não disponível."}
+                      </AccordionContent>
+                    </AccordionItem>
+                  ),
+                )}
               </Accordion>
             ) : (
               <div className="flex min-h-52 flex-col items-center justify-center border-y border-border px-6 py-10 text-center">

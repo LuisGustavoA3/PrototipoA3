@@ -1,3 +1,15 @@
+import UsuarioPage from "@/modules/administracao/pages/UsuarioPage";
+import EmpresaPage from "@/modules/administracao/pages/EmpresaPage";
+import MentoradosPage from "@/modules/administracao/pages/MentoradosPage";
+import AcompanhamentoPage from "@/modules/administracao/pages/AcompanhamentoPage";
+import {
+  TrilhasPage,
+  EmpresasPage,
+  UsuariosPage,
+  FerramentasAvaliacaoPage,
+  BancoAcoesPage,
+  ConfiguracoesPage,
+} from "@/modules/administracao/pages/GestaoInicialPages";
 import Page0 from "./routes/index";
 import Page1 from "@/modules/administracao/pages/AdministracaoPage";
 import Page2 from "./routes/arquivos-compartilhados";
@@ -29,6 +41,62 @@ export const appRoutes = [
     element: <RootLayout />,
     errorElement: <ErrorPage />,
     children: [
+      {
+        path: "/mentor/usuarios/:userId",
+        element: <UsuarioPage />,
+        handle: { title: "Usuário | A3 Digital" },
+      },
+      {
+        path: "/mentor/empresas/:companyId",
+        element: <EmpresaPage />,
+        handle: { title: "Empresa | A3 Digital" },
+      },
+      {
+        path: "/mentor/mentorados/:personId/trilhas/:trailId",
+        element: <AcompanhamentoPage />,
+        handle: { title: "Trilha | A3 Digital" },
+      },
+      {
+        path: "/mentor/mentorados",
+        element: <MentoradosPage />,
+        handle: { title: "Mentorados | A3 Digital" },
+      },
+      {
+        path: "/mentor/mentorados/:personId",
+        element: <AcompanhamentoPage />,
+        handle: { title: "Acompanhamento | A3 Digital" },
+      },
+      {
+        path: "/mentor/trilhas",
+        element: <TrilhasPage />,
+        handle: { title: "Trilhas | A3 Digital" },
+      },
+      {
+        path: "/mentor/empresas",
+        element: <EmpresasPage />,
+        handle: { title: "Empresas | A3 Digital" },
+      },
+      {
+        path: "/mentor/usuarios",
+        element: <UsuariosPage />,
+        handle: { title: "Usuários | A3 Digital" },
+      },
+      {
+        path: "/mentor/ferramentas-de-avaliacao",
+        element: <FerramentasAvaliacaoPage />,
+        handle: { title: "Ferramentas de Avaliação | A3 Digital" },
+      },
+      {
+        path: "/mentor/banco-de-acoes",
+        element: <BancoAcoesPage />,
+        handle: { title: "Banco de Ações | A3 Digital" },
+      },
+      {
+        path: "/mentor/configuracoes",
+        element: <ConfiguracoesPage />,
+        handle: { title: "Configurações | A3 Digital" },
+      },
+
       { path: "/", element: <Page0 />, handle: { title: "A3 Digital" } },
       {
         path: "/administracao",

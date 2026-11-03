@@ -1,3 +1,4 @@
+import { MentoriasBreadcrumb } from "@/modules/mentorias/components/MentoriasBreadcrumb";
 import { AppSidebar } from "@/components/AppSidebar";
 import { useSidebarOpen } from "@/hooks/use-sidebar";
 import { TopBar } from "@/components/TopBar";
@@ -20,6 +21,7 @@ function Index() {
           sidebarOpen ? "pl-[264px]" : "pl-0",
         )}
       >
+        <MentoriasBreadcrumb />
         <div className="px-6 pt-6">
           <PageHeader
             title="Dashboard"

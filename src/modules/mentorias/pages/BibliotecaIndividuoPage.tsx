@@ -1,3 +1,4 @@
+import { MentoriasBreadcrumb } from "@/modules/mentorias/components/MentoriasBreadcrumb";
 import { useNavigate } from "react-router-dom";
 import { BookOpen, Search } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -95,6 +96,7 @@ export function BibliotecaIndividuoPage() {
           sidebarOpen ? "pl-[264px]" : "pl-0",
         )}
       >
+        <MentoriasBreadcrumb />
         <div className="space-y-6 p-6 ">
           <PageHeader
             section="Biblioteca"

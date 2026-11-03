@@ -1,3 +1,4 @@
+import { MentoriasBreadcrumb } from "@/modules/mentorias/components/MentoriasBreadcrumb";
 import { Link } from "react-router-dom";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
@@ -53,11 +54,12 @@ export function AssistantPage() {
       <AppSidebar open={sidebarOpen} />
       <main
         className={cn(
-          "h-screen overflow-hidden pt-16 transition-[padding-left] duration-300",
+          "flex h-screen flex-col overflow-hidden pt-16 transition-[padding-left] duration-300",
           sidebarOpen ? "pl-[264px]" : "pl-0",
         )}
       >
-        <div className="mx-auto flex h-full max-w-4xl flex-col px-4 sm:px-6">
+        <MentoriasBreadcrumb />
+        <div className="mx-auto flex min-h-0 w-full flex-1 max-w-4xl flex-col px-4 sm:px-6">
           <header className="flex shrink-0 items-start justify-between gap-4 border-b border-border py-4">
             <div className="[&>div]:mb-0">
               <PageHeader

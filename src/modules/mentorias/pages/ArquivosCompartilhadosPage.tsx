@@ -1,3 +1,4 @@
+import { MentoriasBreadcrumb } from "@/modules/mentorias/components/MentoriasBreadcrumb";
 import {
   CalendarDays,
   Download,
@@ -175,6 +176,7 @@ export function ArquivosCompartilhadosPage() {
 
     const newFile: SharedFile = {
       id: `ARQ-${String(Date.now())}`,
+      contentUrl: URL.createObjectURL(selectedFile),
       name: selectedFile.name,
       description: description.trim() || "Arquivo compartilhado.",
       author: currentUser,
@@ -191,6 +193,13 @@ export function ArquivosCompartilhadosPage() {
   const downloadFile = (file: SharedFile) => {
     if (!hasContent) return;
 
+    if (file.contentUrl) {
+      const link = document.createElement("a");
+      link.href = file.contentUrl;
+      link.download = file.name;
+      link.click();
+      return;
+    }
     const blob = new Blob([`Arquivo demonstrativo: ${file.name}`], {
       type: "text/plain",
     });
@@ -212,6 +221,7 @@ export function ArquivosCompartilhadosPage() {
           sidebarOpen ? "pl-[264px]" : "pl-0",
         )}
       >
+        <MentoriasBreadcrumb />
         <div className="space-y-6 p-6">
           <PageHeader
             section="Meu desenvolvimento"

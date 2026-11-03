@@ -1,3 +1,4 @@
+import { MentoriasBreadcrumb } from "@/modules/mentorias/components/MentoriasBreadcrumb";
 import { useNavigate } from "react-router-dom";
 import {
   BookOpen,
@@ -61,6 +62,7 @@ export function ConteudoPage() {
           sidebarOpen ? "pl-[264px]" : "pl-0",
         )}
       >
+        <MentoriasBreadcrumb />
         <div className="space-y-6 p-6">
           <PageHeader
             section="Meu Desenvolvimento"

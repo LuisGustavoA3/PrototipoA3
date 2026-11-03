@@ -3,6 +3,7 @@ import { handlers as sessions } from "./api/sessoes";
 import { handlers as comment } from "./api/sessoes/comentario";
 import { handlers as webhook } from "./api/monday/webhook";
 import { handlers as health } from "./api/health";
+import { handlers as companySessions } from "./api/company-sessions";
 
 type Handler = (context: { request: Request }) => Promise<Response>;
 const endpoints: Record<string, Partial<Record<string, Handler>>> = {
@@ -10,6 +11,7 @@ const endpoints: Record<string, Partial<Record<string, Handler>>> = {
   "/api/sessoes/comentario": comment,
   "/api/monday/webhook": webhook,
   "/api/health": health,
+  "/api/empresas/sessoes": companySessions,
 };
 
 export const apiMiddleware: Connect.NextHandleFunction = async (

@@ -1,6 +1,7 @@
 import { useSyncExternalStore } from "react";
 
 export type SharedFile = {
+  contentUrl?: string;
   id: string;
   name: string;
   description: string;
@@ -180,6 +181,26 @@ export function addSharedFile(file: SharedFile): void {
 }
 
 export function removeSharedFile(id: string): void {
+  const removed = sharedFiles.find((file) => file.id === id);
+  if (removed?.contentUrl?.startsWith("blob:"))
+    URL.revokeObjectURL(removed.contentUrl);
   sharedFiles = sharedFiles.filter((file) => file.id !== id);
+  notifyListeners();
+}
+
+export function updateSharedFile(
+  id: string,
+  changes: Pick<SharedFile, "name" | "description"> & {
+    contentUrl?: string;
+    format?: SharedFile["format"];
+  },
+) {
+  if (!changes.name.trim()) return;
+  const previous = sharedFiles.find((file) => file.id === id);
+  if (changes.contentUrl && previous?.contentUrl?.startsWith("blob:"))
+    URL.revokeObjectURL(previous.contentUrl);
+  sharedFiles = sharedFiles.map((file) =>
+    file.id === id ? { ...file, ...changes, name: changes.name.trim() } : file,
+  );
   notifyListeners();
 }

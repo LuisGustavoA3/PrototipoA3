@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { AdminSidebar } from "./AdminSidebar";
 import { AdminTopBar } from "./AdminTopBar";
 import { cn } from "@/lib/utils";
+import { AdminBreadcrumb } from "../components/AdminBreadcrumb";
 
 type AdminLayoutProps = {
   children: ReactNode;
@@ -36,7 +37,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
   }, [navigate]);
 
   const handleProfile = useCallback(() => {
-    navigate("/informacoes-pessoais?modulo=administracao");
+    navigate("/informacoes-pessoais");
   }, [navigate]);
 
   return (
@@ -71,6 +72,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
           sidebarOpen ? "md:pl-[264px]" : "md:pl-0",
         )}
       >
+        <AdminBreadcrumb />
         {children}
       </main>
     </div>

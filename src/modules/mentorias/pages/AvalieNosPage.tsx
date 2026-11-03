@@ -1,3 +1,4 @@
+import { MentoriasBreadcrumb } from "@/modules/mentorias/components/MentoriasBreadcrumb";
 import { useEffect, useRef } from "react";
 
 import { AppSidebar } from "@/components/AppSidebar";
@@ -35,6 +36,7 @@ function AvalieNosPage() {
           sidebarOpen ? "pl-[264px]" : "pl-0",
         )}
       >
+        <MentoriasBreadcrumb />
         <div className="mx-auto w-full max-w-7xl space-y-8 p-4 sm:p-6">
           <PageHeader
             section="Sua opinião"

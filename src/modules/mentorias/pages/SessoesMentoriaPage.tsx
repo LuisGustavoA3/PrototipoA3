@@ -1,3 +1,4 @@
+import { MentoriasBreadcrumb } from "@/modules/mentorias/components/MentoriasBreadcrumb";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { RefreshCw } from "lucide-react";
 
@@ -247,6 +248,7 @@ export function SessoesMentoriaPage() {
           sidebarOpen ? "pl-[264px]" : "pl-0",
         )}
       >
+        <MentoriasBreadcrumb />
         <div className="space-y-5 p-6">
           <header className="flex flex-wrap items-start justify-between gap-4">
             <PageHeader

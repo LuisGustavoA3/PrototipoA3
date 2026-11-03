@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { ArrowRight, CalendarCheck2, Route, UsersRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -52,7 +53,7 @@ function PersonRow({ person }: { person: AdminDashboardPerson }) {
       <div className="min-w-0">
         <p className="font-medium text-foreground">{person.name}</p>
         <p className="mt-1 text-xs text-muted-foreground sm:hidden">
-          Mentorado demonstrativo
+          Mentorado
         </p>
       </div>
 
@@ -73,15 +74,11 @@ function PersonRow({ person }: { person: AdminDashboardPerson }) {
       </div>
 
       <div className="sm:justify-self-end">
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          disabled
-          aria-label={`Acesso ao perfil demonstrativo de ${person.name} indisponível`}
-        >
-          Acessar
-          <ArrowRight aria-hidden="true" />
+        <Button type="button" variant="outline" size="sm" asChild>
+          <Link to={`/mentor/mentorados/${person.id}`}>
+            Abrir acompanhamento
+            <ArrowRight aria-hidden="true" />
+          </Link>
         </Button>
       </div>
     </li>
@@ -119,11 +116,11 @@ export function AdminDashboardPage() {
                 Mentorados
               </h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                Lista de exemplo para apresentação da experiência.
+                Acesse as trilhas e acompanhe o desenvolvimento.
               </p>
             </div>
             <span className="text-xs text-muted-foreground">
-              {adminDashboardDemoPeople.length} registros demonstrativos
+              {adminDashboardDemoPeople.length} mentorados na lista
             </span>
           </div>
 
@@ -131,10 +128,10 @@ export function AdminDashboardPage() {
             <div className="hidden grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_auto_auto] gap-5 bg-secondary/70 px-5 py-3 text-[11px] font-semibold uppercase text-muted-foreground sm:grid">
               <span>Mentorado</span>
               <span>Trilha</span>
-              <span>Status demonstrativo</span>
+              <span>Situação</span>
               <span className="text-right">Ação</span>
             </div>
-            <ul aria-label="Mentorados demonstrativos">
+            <ul aria-label="Mentorados">
               {adminDashboardDemoPeople.map((person) => (
                 <PersonRow key={person.id} person={person} />
               ))}

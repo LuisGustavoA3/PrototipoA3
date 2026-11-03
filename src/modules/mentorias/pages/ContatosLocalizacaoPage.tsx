@@ -1,3 +1,5 @@
+import { MentoriasBreadcrumb } from "@/modules/mentorias/components/MentoriasBreadcrumb";
+import { useInstitutionSettings } from "@/shared/lib/institution-settings";
 import {
   Clock3,
   Mail,
@@ -12,40 +14,35 @@ import { useSidebarOpen } from "@/hooks/use-sidebar";
 import { cn } from "@/lib/utils";
 import { PageHeader } from "@/components/PageHeader";
 
-const googleMapsUrl =
-  "https://www.google.com/maps/place/A3+Consultoria/@-16.7047275,-49.2427718,17z/data=!3m1!4b1!4m6!3m5!1s0x935ef3c03b85ca77:0x278f946c1c105fa2!8m2!3d-16.7047327!4d-49.2401969!16s%2Fg%2F1tfp_xy2?entry=ttu&g_ep=EgoyMDI2MDkyMy4wIKXMDSoASAFQAw%3D%3D";
-const mapEmbedUrl =
-  "https://www.google.com/maps?q=-16.7047327,-49.2401969&z=17&output=embed";
-
-const contacts = [
-  {
-    title: "WhatsApp",
-    value: "(62) 9 9973-7666",
-    description: "Converse com nossa equipe.",
-    action: "Iniciar conversa",
-    href: "https://wa.me/5562999737666",
-    icon: MessageCircle,
-  },
-  {
-    title: "Telefone",
-    value: "(62) 3942-1882",
-    description: "Entre em contato por ligação.",
-    action: "Ligar agora",
-    href: "tel:+556239421882",
-    icon: Phone,
-  },
-  {
-    title: "E-mail",
-    value: "falecoma3@a3consultoria.com.br",
-    description: "Envie sua dúvida por e-mail.",
-    action: "Enviar e-mail",
-    href: "mailto:falecoma3@a3consultoria.com.br",
-    icon: Mail,
-  },
-];
-
 export function ContatosLocalizacaoPage() {
   const [sidebarOpen, toggleSidebar] = useSidebarOpen();
+  const { contacts: info } = useInstitutionSettings();
+  const contacts = [
+    {
+      title: "WhatsApp",
+      value: info.whatsapp,
+      description: "Converse com nossa equipe.",
+      action: "Iniciar conversa",
+      href: `https://wa.me/${info.whatsapp.replace(/\D/g, "")}`,
+      icon: MessageCircle,
+    },
+    {
+      title: "Telefone",
+      value: info.phone,
+      description: "Entre em contato por ligação.",
+      action: "Ligar agora",
+      href: `tel:+${info.phone.replace(/\D/g, "")}`,
+      icon: Phone,
+    },
+    {
+      title: "E-mail",
+      value: info.email,
+      description: "Envie sua dúvida por e-mail.",
+      action: "Enviar e-mail",
+      href: `mailto:${info.email}`,
+      icon: Mail,
+    },
+  ];
 
   return (
     <div className="h-screen w-full overflow-hidden bg-background">
@@ -57,12 +54,12 @@ export function ContatosLocalizacaoPage() {
           sidebarOpen ? "pl-[264px]" : "pl-0",
         )}
       >
+        <MentoriasBreadcrumb />
         <div className="mx-auto w-full max-w-7xl space-y-8 p-4 sm:p-6">
           <PageHeader
             section="Ajuda"
             title="Contatos e Localização"
-            description="Fale com a equipe da A3 Consultoria ou encontre nossa unidade em
-              Goiânia."
+            description="Fale com a equipe da A3 ou encontre nossa unidade."
           />
           <section aria-labelledby="contatos-heading" className="space-y-4">
             <h2 id="contatos-heading" className="text-xl text-foreground">
@@ -111,10 +108,10 @@ export function ContatosLocalizacaoPage() {
                   </h3>
                 </div>
                 <p className="mt-4 text-sm font-semibold text-foreground">
-                  Segunda a sexta-feira
+                  {info.days}
                 </p>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Das 8h às 18h
+                  {info.hours}
                 </p>
               </article>
             </div>
@@ -131,19 +128,19 @@ export function ContatosLocalizacaoPage() {
                     <MapPin aria-hidden="true" className="size-5" />
                   </span>
                   <div>
-                    <h3 className="text-lg text-foreground">A3 Consultoria</h3>
+                    <h3 className="text-lg text-foreground">{info.name}</h3>
                     <p className="text-sm text-muted-foreground">
-                      Brookfield Towers
+                      {info.building}
                     </p>
                   </div>
                 </div>
                 <address className="mt-5 space-y-1 text-sm not-italic leading-relaxed text-muted-foreground">
-                  <p>Av. Dep. Jamel Cecílio, 2929 — Sala 714</p>
-                  <p>Jardim Goiás, Goiânia — GO</p>
-                  <p>CEP 74810-100, Brasil</p>
+                  <p>{info.street}</p>
+                  <p>{info.city}</p>
+                  <p>{info.postal}</p>
                 </address>
                 <a
-                  href={googleMapsUrl}
+                  href={info.maps}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="mt-6 inline-flex min-h-10 items-center justify-center gap-2 self-start rounded-md border border-border bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
@@ -158,8 +155,8 @@ export function ContatosLocalizacaoPage() {
 
               <div className="min-h-72 overflow-hidden rounded-md border border-border bg-muted shadow-[var(--shadow-card)] sm:min-h-96">
                 <iframe
-                  title="Mapa da A3 Consultoria no Brookfield Towers, Goiânia"
-                  src={mapEmbedUrl}
+                  title={`Mapa de ${info.name}`}
+                  src={info.embed}
                   className="h-full min-h-72 w-full sm:min-h-96"
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"

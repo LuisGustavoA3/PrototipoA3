@@ -1,3 +1,5 @@
+import { SharedMentorNotes } from "../components/SharedMentorNotes";
+import { MentoriasBreadcrumb } from "@/modules/mentorias/components/MentoriasBreadcrumb";
 import { Plus, Route as RouteIcon, X } from "lucide-react";
 import { useState } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
@@ -73,6 +75,7 @@ export function JornadaDeDesenvolvimentoPage() {
           sidebarOpen ? "pl-[264px]" : "pl-0",
         )}
       >
+        <MentoriasBreadcrumb />
         <div className="space-y-6 p-6">
           <PageHeader
             section="Meu Desenvolvimento"
@@ -84,6 +87,7 @@ export function JornadaDeDesenvolvimentoPage() {
             <TrailEmptyState trailName={selectedTrail} />
           ) : (
             <>
+              <SharedMentorNotes />
               <JourneyBoard
                 title="Ponto de partida"
                 sections={startingPointSections}

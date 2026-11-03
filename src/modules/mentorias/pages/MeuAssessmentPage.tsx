@@ -1,3 +1,10 @@
+import { useCompanyTools } from "../assessment/company-tool-contracts";
+import {
+  useAssessments,
+  type AssessmentStatus,
+  type Assessment,
+} from "../assessment/assessment-store";
+import { MentoriasBreadcrumb } from "@/modules/mentorias/components/MentoriasBreadcrumb";
 import { useState } from "react";
 import {
   ArrowRight,
@@ -14,65 +21,6 @@ import { TopBar } from "@/components/TopBar";
 import { useSidebarOpen } from "@/hooks/use-sidebar";
 import { cn } from "@/lib/utils";
 import { PageHeader } from "@/components/PageHeader";
-
-type AssessmentStatus = "completed" | "processing" | "not-started";
-
-type Assessment = {
-  name: string;
-  description: string;
-  status: AssessmentStatus;
-};
-
-const assessments: Assessment[] = [
-  {
-    name: "Âncoras de Carreira",
-    description:
-      "Identifique os valores, motivações e prioridades que orientam suas escolhas profissionais.",
-    status: "completed",
-  },
-  {
-    name: "Clifton Strengths",
-    description:
-      "Conheça seus talentos naturais e descubra como usá-los para trabalhar com mais confiança.",
-    status: "processing",
-  },
-  {
-    name: "HTM",
-    description:
-      "Amplie sua percepção sobre comportamentos e preferências que influenciam sua atuação.",
-    status: "not-started",
-  },
-  {
-    name: "HumanGuide",
-    description:
-      "Explore seu perfil comportamental e encontre caminhos para relações profissionais mais produtivas.",
-    status: "not-started",
-  },
-  {
-    name: "Janusian",
-    description:
-      "Observe como você pensa, cria alternativas e lida com diferentes perspectivas.",
-    status: "completed",
-  },
-  {
-    name: "MBTI",
-    description:
-      "Entenda suas preferências de personalidade e os contextos em que você tende a se desenvolver melhor.",
-    status: "not-started",
-  },
-  {
-    name: "Perfil Caliper",
-    description:
-      "Reconheça características que impactam seu potencial, sua performance e seu estilo de trabalho.",
-    status: "processing",
-  },
-  {
-    name: "Perfil de Gestão: Pipeline de Liderança",
-    description:
-      "Avalie competências essenciais para cada etapa da sua jornada de liderança.",
-    status: "not-started",
-  },
-];
 
 const statusConfig = {
   completed: {
@@ -102,6 +50,14 @@ const statusPriority: Record<AssessmentStatus, number> = {
 };
 
 export function MeuAssessmentPage() {
+  const applications = useAssessments();
+  const contracted = useCompanyTools("testes");
+  const assessments = applications.filter(
+    (item) =>
+      item.toolId &&
+      contracted.includes(item.toolId) &&
+      (item.status === "completed" || item.status === "processing"),
+  );
   const [sidebarOpen, toggleSidebar] = useSidebarOpen();
   const [activeFilter, setActiveFilter] = useState<"all" | AssessmentStatus>(
     "all",
@@ -130,11 +86,12 @@ export function MeuAssessmentPage() {
           sidebarOpen ? "pl-[264px]" : "pl-0",
         )}
       >
+        <MentoriasBreadcrumb />
         <div className="space-y-6 p-6">
           <PageHeader
             section="Meu Desenvolvimento"
             title="Meu Assessment"
-            description="Acompanhe os testes realizados e descubra quais avaliações podem apoiar sua jornada."
+            description="Acompanhe suas avaliações em processamento e seus resultados disponíveis."
           />
 
           {!hasContent ? (
@@ -143,7 +100,7 @@ export function MeuAssessmentPage() {
             <>
               <section className="grid gap-4 sm:grid-cols-3">
                 <SummaryCard
-                  label="Testes disponíveis"
+                  label="Minhas avaliações"
                   value={assessments.length}
                   icon={BarChart3}
                   active={activeFilter === "all"}
@@ -161,15 +118,15 @@ export function MeuAssessmentPage() {
                   onClick={() => setActiveFilter("completed")}
                 />
                 <SummaryCard
-                  label="Aguardando realização"
+                  label="Em processamento"
                   value={
                     assessments.filter(
-                      (assessment) => assessment.status === "not-started",
+                      (assessment) => assessment.status === "processing",
                     ).length
                   }
                   icon={Clock3}
-                  active={activeFilter === "not-started"}
-                  onClick={() => setActiveFilter("not-started")}
+                  active={activeFilter === "processing"}
+                  onClick={() => setActiveFilter("processing")}
                 />
               </section>
 
@@ -183,6 +140,12 @@ export function MeuAssessmentPage() {
                   </span>
                 </div>
 
+                {!filteredAssessments.length && (
+                  <p className="rounded-md border border-border bg-card p-6 text-sm text-muted-foreground">
+                    Nenhuma avaliação contratada em processamento ou com
+                    resultado disponível.
+                  </p>
+                )}
                 <div className="grid gap-4 md:grid-cols-2">
                   {filteredAssessments.map((assessment) => (
                     <AssessmentCard
@@ -276,12 +239,6 @@ function AssessmentCard({ assessment }: { assessment: Assessment }) {
             Assim que a análise for concluída, seu resultado estará disponível
             aqui.
           </p>
-        )}
-
-        {assessment.status === "not-started" && (
-          <button className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-md border border-primary px-4 py-2.5 text-xs text-primary transition-colors hover:bg-primary hover:text-primary-foreground">
-            Tenho interesse em realizar o &quot;{assessment.name}&quot;
-          </button>
         )}
       </div>
     </article>

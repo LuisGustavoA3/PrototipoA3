@@ -1,3 +1,4 @@
+import { MentoriasBreadcrumb } from "@/modules/mentorias/components/MentoriasBreadcrumb";
 import { useMemo, useState } from "react";
 import { useSidebarOpen } from "@/hooks/use-sidebar";
 import { Link } from "react-router-dom";
@@ -216,6 +217,7 @@ export function MinhasEstatisticasPage() {
             sidebarOpen ? "pl-[264px]" : "pl-0",
           )}
         >
+          <MentoriasBreadcrumb />
           <div className="space-y-6 p-6">
             <div className="flex items-center gap-3">
               <Link
