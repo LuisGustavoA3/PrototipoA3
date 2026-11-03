@@ -37,7 +37,7 @@ jobs:
         run: node scripts/generate-monday-snapshot.mjs
 
       - name: Gerar build
-        run: npm run build
+        run: npm run build:pages
 
       - name: Configurar GitHub Pages
         uses: actions/configure-pages@v5
@@ -45,7 +45,7 @@ jobs:
       - name: Fazer upload do build
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "./.output/public"
+          path: "./dist"
 
   deploy:
     environment:

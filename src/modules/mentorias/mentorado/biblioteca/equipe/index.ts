@@ -1,1 +1,0 @@
-export { BibliotecaEquipePage } from "./BibliotecaEquipePage";

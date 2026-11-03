@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="480" viewBox="0 0 360 480">
+  <rect width="360" height="480" rx="16" fill="#f5f1ea"/>
+  <path d="M0 340L360 150V480H0Z" fill="#f47920"/>
+  <circle cx="285" cy="95" r="85" fill="#e4dacc"/>
+  <path d="M54 280L145 212L211 241L304 165" fill="none" stroke="#324d46" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="54" cy="280" r="12" fill="#324d46"/><circle cx="304" cy="165" r="12" fill="#324d46"/>
+  <text x="28" y="54" fill="#324d46" font-family="Arial,sans-serif" font-size="25" letter-spacing="4">A3 DIGITAL</text>
+  <text x="28" y="377" fill="#fff" font-family="Arial,sans-serif" font-size="25" font-weight="bold">DESENVOLVIMENTO</text>
+  <text x="28" y="411" fill="#fff" font-family="Arial,sans-serif" font-size="25" font-weight="bold">PROFISSIONAL</text>
+  <text x="28" y="450" fill="#fff" font-family="Arial,sans-serif" font-size="15">Uma jornada feita para você.</text>
+</svg>

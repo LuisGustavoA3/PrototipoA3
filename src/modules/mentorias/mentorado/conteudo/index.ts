@@ -1,1 +1,0 @@
-export { ConteudoPage } from "./ConteudoPage";

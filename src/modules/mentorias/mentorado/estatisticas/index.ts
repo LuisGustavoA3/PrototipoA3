@@ -1,1 +1,0 @@
-export { MinhasEstatisticasPage } from "./MinhasEstatisticasPage";

@@ -1,7 +1,3 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { AssistantPage } from "@/modules/mentorias/mentorado/ajuda/assistente";
+import { AssistantPage } from "@/modules/mentorias/pages/AssistantPage";
 
-export const Route = createFileRoute("/assistente")({
-  head: () => ({ meta: [{ title: "Assistente | A3 Digital" }] }),
-  component: AssistantPage,
-});
+export default AssistantPage;

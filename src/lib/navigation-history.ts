@@ -1,4 +1,4 @@
-type NavigateFunction = (options: { to: never }) => void;
+import type { NavigateFunction } from "react-router-dom";
 
 const navigationHistory: string[] = [];
 
@@ -21,7 +21,7 @@ export function goBack(navigate: NavigateFunction) {
 
   currentPath = destination;
 
-  navigate({ to: destination as never });
+  navigate(destination);
 }
 
 export function hasPreviousPage() {

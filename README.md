@@ -6,12 +6,11 @@ O projeto reúne as principais áreas de desenvolvimento profissional em uma int
 
 ## Tecnologias
 
-- **React 19** — construção da interface.
+- **React 18** — construção da interface.
 - **TypeScript** — tipagem estática.
-- **TanStack Start** — estrutura da aplicação e gerenciamento de rotas.
-- **TanStack Router** — navegação baseada em arquivos.
-- **Vite** — ambiente de desenvolvimento e build.
-- **Tailwind CSS 4** — estilização.
+- **React Router DOM 6** — navegação SPA e rotas explícitas.
+- **Vite 5 com React SWC** — ambiente de desenvolvimento e build.
+- **Tailwind CSS 3** — estilização.
 - **shadcn/ui e Radix UI** — componentes de interface.
 - **Lucide React** — ícones.
 - **Recharts** — visualização de dados e gráficos.
@@ -25,8 +24,11 @@ A aplicação é organizada em uma arquitetura frontend baseada em componentes e
 - `src/components/ui/` — componentes de interface baseados em Radix UI.
 - `src/lib/` — dados de demonstração, stores e funções auxiliares.
 - `src/hooks/` — hooks reutilizáveis.
-- `src/router.tsx` — configuração do roteador.
-- `src/routeTree.gen.ts` — árvore de rotas gerada automaticamente pelo TanStack Router.
+- `src/main.tsx` — entrada da aplicação e providers.
+- `src/router.tsx` — registro explícito das rotas.
+- `server/` — integração Monday e APIs do ambiente de desenvolvimento.
+
+Detalhes da migração, publicação e limites de integração: [MIGRACAO_PORTAL_A3.md](MIGRACAO_PORTAL_A3.md).
 
 ## Funcionamento atual
 
@@ -60,11 +62,12 @@ O servidor de desenvolvimento será iniciado pelo Vite.
 
 ## Scripts disponíveis
 
-| Comando | Descrição |
-|---|---|
-| `npm run dev` | Inicia o ambiente de desenvolvimento |
-| `npm run build` | Gera a versão de produção |
-| `npm run preview` | Executa uma prévia do build |
-| `npm run lint` | Executa a análise estática do código |
-| `npm run format:check` | Verifica a formatação dos arquivos |
-
+| Comando                | Descrição                                                |
+| ---------------------- | -------------------------------------------------------- |
+| `npm run dev`          | Inicia o ambiente de desenvolvimento                     |
+| `npm run build`        | Gera a versão de produção                                |
+| `npm run build:pages`  | Gera a versão com base `/PrototipoA3/` para GitHub Pages |
+| `npm test`             | Executa os testes de rotas, navegação e APIs             |
+| `npm run preview`      | Executa uma prévia do build                              |
+| `npm run lint`         | Executa a análise estática do código                     |
+| `npm run format:check` | Verifica a formatação dos arquivos                       |

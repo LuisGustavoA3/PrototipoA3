@@ -1,1 +1,0 @@
-export { BibliotecaMercadoPage } from "./BibliotecaMercadoPage";

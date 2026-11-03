@@ -1,1 +1,0 @@
-export { ArquivosCompartilhadosPage } from "./ArquivosCompartilhadosPage";

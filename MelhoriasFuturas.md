@@ -112,3 +112,7 @@ Modular:
 Arquitetura organizada em módulos com responsabilidades bem separadas.
 
 com isso, temos alguma soluções no mercado que se aproximam do que vamos construir, o principal é o microsoft 365 por isso construi um benchmark com ele, mas existem outros como o google workspace, slack, monday, asana, trello, notion, entre outros.
+
+nao deve aparecer todos os assessments
+
+puxar as ações de mentorias para administração

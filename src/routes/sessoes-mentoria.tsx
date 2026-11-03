@@ -1,6 +1,3 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { SessoesMentoriaPage } from "@/modules/mentorias/mentorado/sessoes";
+import { SessoesMentoriaPage } from "@/modules/mentorias/pages/SessoesMentoriaPage";
 
-export const Route = createFileRoute("/sessoes-mentoria")({
-  component: SessoesMentoriaPage,
-});
+export default SessoesMentoriaPage;

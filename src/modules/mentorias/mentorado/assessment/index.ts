@@ -1,1 +1,0 @@
-export { MeuAssessmentPage } from "./MeuAssessmentPage";
