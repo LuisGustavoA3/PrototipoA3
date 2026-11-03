@@ -10,7 +10,7 @@ import {
   type LibraryContent,
   setLibraryContentFinished,
   useLibraryContents,
-} from "@/modules/mentorias/shared/biblioteca";
+} from "@/modules/mentorias/biblioteca";
 import { cn } from "@/lib/utils";
 
 type StatusFilter = "all" | "finished" | "unfinished";

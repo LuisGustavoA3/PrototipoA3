@@ -4,8 +4,8 @@ import { AppSidebar } from "@/components/AppSidebar";
 import { TopBar } from "@/components/TopBar";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/PageHeader";
-import { useSelectedTrail } from "@/modules/mentorias/mentorado/trilhas/use-selected-trail";
-import { TrailEmptyState } from "@/modules/mentorias/mentorado/trilhas/TrailEmptyState";
+import { useSelectedTrail } from "@/modules/mentorias/trilhas/use-selected-trail";
+import { TrailEmptyState } from "@/modules/mentorias/trilhas/TrailEmptyState";
 import {
   Dialog,
   DialogContent,

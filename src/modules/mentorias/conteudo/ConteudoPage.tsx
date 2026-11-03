@@ -7,8 +7,8 @@ import {
   PlayCircle,
   Search,
 } from "lucide-react";
-import { useSelectedTrail } from "@/modules/mentorias/mentorado/trilhas/use-selected-trail";
-import { TrailEmptyState } from "@/modules/mentorias/mentorado/trilhas/TrailEmptyState";
+import { useSelectedTrail } from "@/modules/mentorias/trilhas/use-selected-trail";
+import { TrailEmptyState } from "@/modules/mentorias/trilhas/TrailEmptyState";
 import { useState } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { TopBar } from "@/components/TopBar";
@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
 import {
   type LibraryContent,
   useLibraryContents,
-} from "@/modules/mentorias/shared/biblioteca";
+} from "@/modules/mentorias/biblioteca";
 import { PageHeader } from "@/components/PageHeader";
 
 type Axis = "Todos" | "Indivíduo" | "Equipe" | "Negócio" | "Mercado";

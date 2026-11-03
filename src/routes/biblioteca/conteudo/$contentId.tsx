@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 
-import { ConteudoReaderPage } from "@/modules/mentorias/mentorado/biblioteca/conteudo";
+import { ConteudoReaderPage } from "@/modules/mentorias/biblioteca/conteudo";
 
 export default BibliotecaConteudoRoute;
 

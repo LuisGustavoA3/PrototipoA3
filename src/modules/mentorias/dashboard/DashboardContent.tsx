@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useSelectedTrail } from "@/modules/mentorias/mentorado/trilhas/use-selected-trail";
+import { useSelectedTrail } from "@/modules/mentorias/trilhas/use-selected-trail";
 import {
   ArrowRight,
   CalendarCheck,
@@ -26,10 +26,10 @@ import {
   updatePdiAction,
   useHiddenDashboardActionIds,
   usePdiActions,
-} from "@/modules/mentorias/mentorado/pdi";
-import { useLibraryContents } from "@/modules/mentorias/shared/biblioteca";
-import { useJourneyItems } from "@/modules/mentorias/mentorado/jornada";
-import { useMentorshipSessions } from "@/modules/mentorias/mentorado/sessoes/use-mentorship-sessions";
+} from "@/modules/mentorias/pdi";
+import { useLibraryContents } from "@/modules/mentorias/biblioteca";
+import { useJourneyItems } from "@/modules/mentorias/jornada";
+import { useMentorshipSessions } from "@/modules/mentorias/sessoes/use-mentorship-sessions";
 
 const dailyContentStorageKey = "a3:dashboard-daily-content";
 const statusConfig: Record<

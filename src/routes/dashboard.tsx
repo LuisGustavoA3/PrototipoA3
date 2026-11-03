@@ -1,7 +1,7 @@
 import { AppSidebar } from "@/components/AppSidebar";
 import { useSidebarOpen } from "@/hooks/use-sidebar";
 import { TopBar } from "@/components/TopBar";
-import { DashboardContent } from "@/modules/mentorias/mentorado/dashboard";
+import { DashboardContent } from "@/modules/mentorias/dashboard";
 import { PageHeader } from "@/components/PageHeader";
 import { cn } from "@/lib/utils";
 

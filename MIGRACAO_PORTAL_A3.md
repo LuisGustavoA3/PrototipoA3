@@ -72,6 +72,17 @@ Os testes cobrem renderização das rotas, redirecionamento inicial, parâmetro 
 base do Pages, 404, saída com alterações e contratos dos handlers. Não substituem
 revisão visual em navegador nem validação com o Monday real.
 
+## Simplificação do módulo em 03/11/2026
+
+O conteúdo de `src/modules/mentorias/mentorado/` passou diretamente para
+`src/modules/mentorias/`, mantendo a divisão existente por funcionalidades.
+O estado e a API pública antes em `mentorias/shared/biblioteca/` foram incorporados
+a `mentorias/biblioteca/`, pois seus consumidores pertencem a este módulo.
+Os imports foram atualizados sem alterar URLs, regras ou layouts. A adoção de
+`pages/` e a reorganização interna por tipo de arquivo ficam para outra etapa.
+As referências a `mentorado/` no plano arquitetural anterior representam a proposta
+histórica; para a estrutura atual, prevalecem esta decisão e o código.
+
 ## Validação executada
 
 - 33 testes aprovados; TypeScript e `git diff --check` aprovados.

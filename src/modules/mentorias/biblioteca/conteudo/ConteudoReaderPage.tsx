@@ -23,7 +23,7 @@ import {
   setLibraryContentFinished,
   useLibraryContents,
   type LibraryContent,
-} from "@/modules/mentorias/shared/biblioteca";
+} from "@/modules/mentorias/biblioteca";
 import { cn } from "@/lib/utils";
 
 export function ConteudoReaderPage({ contentId }: { contentId: string }) {

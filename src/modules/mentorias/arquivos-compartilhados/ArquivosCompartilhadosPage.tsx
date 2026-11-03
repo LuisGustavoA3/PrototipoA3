@@ -35,8 +35,8 @@ import {
   useSharedFiles,
   type SharedFile,
 } from "./shared-files-store";
-import { useSelectedTrail } from "@/modules/mentorias/mentorado/trilhas/use-selected-trail";
-import { TrailEmptyState } from "@/modules/mentorias/mentorado/trilhas/TrailEmptyState";
+import { useSelectedTrail } from "@/modules/mentorias/trilhas/use-selected-trail";
+import { TrailEmptyState } from "@/modules/mentorias/trilhas/TrailEmptyState";
 
 type FileFilter = "all" | "received" | "sent";
 

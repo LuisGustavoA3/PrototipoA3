@@ -8,7 +8,7 @@ import {
 import { createMemoryRouter, RouterProvider } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { appRoutes } from "../router";
-import { getLibraryContents } from "@/modules/mentorias/shared/biblioteca/library-store";
+import { getLibraryContents } from "@/modules/mentorias/biblioteca/library-store";
 
 beforeEach(() => {
   vi.stubGlobal(

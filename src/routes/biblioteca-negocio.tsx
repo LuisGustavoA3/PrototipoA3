@@ -1,3 +1,3 @@
-import { BibliotecaNegocioPage } from "@/modules/mentorias/mentorado/biblioteca/negocio";
+import { BibliotecaNegocioPage } from "@/modules/mentorias/biblioteca/negocio";
 
 export default BibliotecaNegocioPage;

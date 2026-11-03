@@ -1,3 +1,3 @@
-import { AssistantPage } from "@/modules/mentorias/mentorado/ajuda/assistente";
+import { AssistantPage } from "@/modules/mentorias/ajuda/assistente";
 
 export default AssistantPage;

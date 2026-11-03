@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import {
   getCompetencyProgress,
   useLibraryContents,
-} from "@/modules/mentorias/shared/biblioteca";
+} from "@/modules/mentorias/biblioteca";
 import {
   ArrowLeft,
   Check,

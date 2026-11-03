@@ -1,3 +1,3 @@
-import { FAQPage } from "@/modules/mentorias/mentorado/ajuda/faq";
+import { FAQPage } from "@/modules/mentorias/ajuda/faq";
 
 export default FAQPage;

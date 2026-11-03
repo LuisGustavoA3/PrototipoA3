@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { TopBar } from "@/components/TopBar";
-import { PersonalInfoForm } from "@/modules/mentorias/mentorado/informacoes-pessoais";
+import { PersonalInfoForm } from "@/modules/mentorias/informacoes-pessoais";
 import { useSidebarOpen } from "@/hooks/use-sidebar";
 import { cn } from "@/lib/utils";
 

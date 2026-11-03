@@ -1,3 +1,3 @@
-import { JornadaDeDesenvolvimentoPage } from "@/modules/mentorias/mentorado/jornada";
+import { JornadaDeDesenvolvimentoPage } from "@/modules/mentorias/jornada";
 
 export default JornadaDeDesenvolvimentoPage;

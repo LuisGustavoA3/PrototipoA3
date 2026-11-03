@@ -1,3 +1,3 @@
-import { ConteudoPage } from "@/modules/mentorias/mentorado/conteudo";
+import { ConteudoPage } from "@/modules/mentorias/conteudo";
 
 export default ConteudoPage;
