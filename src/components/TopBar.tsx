@@ -175,7 +175,7 @@ export function TopBar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
             >
               <IdCard className="size-4 text-primary" /> Informações pessoais
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => navigate("/hub")}>
               <LogOut className="size-4 text-primary" /> Logout
             </DropdownMenuItem>
           </DropdownMenuContent>
