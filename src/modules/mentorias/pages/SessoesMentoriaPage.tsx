@@ -252,8 +252,8 @@ export function SessoesMentoriaPage() {
         <div className="space-y-5 p-6">
           <header className="flex flex-wrap items-start justify-between gap-4">
             <PageHeader
-              title="Sessões de Mentoria"
-              description="Acompanhe suas sessões de mentoria."
+              title="Atendimentos de Mentoria"
+              description="Acompanhe seus atendimentos de mentoria."
             />
 
             <Button

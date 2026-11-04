@@ -62,9 +62,6 @@ export default function AcompanhamentoPage() {
       title={trail?.name ?? person.name}
       description={`${person.name} · ${companyName(person.companyId)} · ${person.email}`}
     >
-      <Link to="/mentor/mentorados" className="text-sm text-primary">
-        ← Mentorados
-      </Link>
       {!trailId && (
         <>
           <h2 className="label-caps text-lg">Trilhas do mentorado</h2>
@@ -111,14 +108,6 @@ export default function AcompanhamentoPage() {
               ))}
           </div>
         </>
-      )}
-      {trailId && (
-        <Link
-          className="text-sm text-primary"
-          to={`/mentor/mentorados/${person.id}`}
-        >
-          ← Trilhas de {person.name}
-        </Link>
       )}
       {!trail ? (
         <EmptySection>

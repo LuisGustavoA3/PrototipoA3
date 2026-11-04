@@ -244,3 +244,13 @@ não aparece no catálogo.
 A listagem de Usuários é uma tabela com ID numérico, foto/avatar, nome, e-mail,
 empresa, perfil e link para a página de gestão individual. A busca aceita ID,
 nome e e-mail. As fotos ainda não cadastradas utilizam avatar padrão.
+
+## Navegação em Mentorados
+
+O breadcrumb superior permanece na listagem e nos acompanhamentos de Mentorados.
+Somente os links laranja inferiores de retorno à listagem e às trilhas foram
+retirados, para todos os usuários. As abas das seções da trilha foram preservadas.
+
+## Assessments por empresa
+
+Luis Gustavo está vinculado à empresa A3, inicialmente com todas as ferramentas de avaliação contratadas. A contratação é editada em Administração > Empresas > A3 e persistida por empresa. Mentorias consulta a empresa da conta atual, mantendo o layout e exibindo somente aplicações contratadas em processamento ou concluídas. O quadro Monday da empresa Testes permanece independente desse vínculo.

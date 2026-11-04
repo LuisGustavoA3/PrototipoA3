@@ -1,11 +1,5 @@
 import { MentoriasBreadcrumb } from "@/modules/mentorias/components/MentoriasBreadcrumb";
-import {
-  CalendarDays,
-  ChevronRight,
-  Plus,
-  Search,
-  Download,
-} from "lucide-react";
+import { CalendarDays, ChevronRight, Plus, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { TopBar } from "@/components/TopBar";
@@ -147,126 +141,6 @@ export function PlanoDeAcaoPage() {
       .sort((first, second) => second.createdAt.localeCompare(first.createdAt));
   }, [actions, search, axisFilter, statusFilter]);
 
-  const exportPdiActionsToExcel = async () => {
-    if (!hasContent || filteredActions.length === 0) return;
-
-    const ExcelJS = (await import("exceljs")).default;
-
-    const workbook = new ExcelJS.Workbook();
-    workbook.creator = "A3 Digital";
-
-    const worksheet = workbook.addWorksheet("Plano de Ação", {
-      views: [{ state: "frozen", ySplit: 1 }],
-    });
-
-    const headers = [
-      "Nº",
-      "Autoria",
-      "Ação",
-      "Eixo",
-      "Competência",
-      "Evidência da ação",
-      "Início",
-      "Fim",
-      "Status",
-      "Observações",
-    ];
-
-    const rows = filteredActions.map((action, index) => [
-      index + 1,
-      action.author,
-      action.name,
-      competencyAxis[action.competency as Competency] ?? "",
-      action.competency,
-      action.evidence,
-      formatDate(action.startDate),
-      formatDate(action.endDate),
-      action.status,
-      action.details,
-    ]);
-
-    // Tabela nativa com filtros do Excel
-    worksheet.addTable({
-      name: "TabelaAcoesPDI",
-      ref: "A1",
-      headerRow: true,
-      totalsRow: false,
-      style: {
-        theme: "TableStyleMedium9",
-        showRowStripes: true,
-      },
-      columns: headers.map((name) => ({
-        name,
-        filterButton: true,
-      })),
-      rows,
-    });
-
-    // Ajusta a largura com base no conteúdo, respeitando limites.
-    const maxWidths = [8, 28, 55, 16, 30, 55, 16, 16, 22, 55];
-
-    headers.forEach((header, index) => {
-      const contentLengths = rows.map((row) =>
-        String(row[index] ?? "")
-          .split(/\r?\n/)
-          .reduce((max, line) => Math.max(max, line.length), 0),
-      );
-
-      const largestLength = Math.max(header.length, ...contentLengths);
-
-      const width = Math.min(
-        Math.max(largestLength + 3, 12),
-        maxWidths[index] ?? 55,
-      );
-
-      worksheet.getColumn(index + 1).width = width;
-    });
-
-    // Alinhamento e quebra de texto
-    worksheet.eachRow((row, rowNumber) => {
-      row.eachCell((cell) => {
-        cell.alignment = {
-          vertical: "middle",
-          wrapText: true,
-        };
-      });
-
-      if (rowNumber === 1) {
-        row.height = 30;
-      } else {
-        const textLength = Math.max(
-          ...[3, 6, 10].map(
-            (column) => String(row.getCell(column).value ?? "").length,
-          ),
-        );
-
-        row.height = Math.min(
-          Math.max(25, Math.ceil(textLength / 48) * 18),
-          90,
-        );
-      }
-    });
-
-    // Criar arquivo XLSX
-    const buffer = await workbook.xlsx.writeBuffer();
-
-    const blob = new Blob([buffer], {
-      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    });
-
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-
-    link.href = url;
-    link.download = `pdi-acoes-${new Date().toISOString().slice(0, 10)}.xlsx`;
-
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-  };
-
   const openCreate = () => {
     setForm(emptyForm);
     setSelectedAction(null);
@@ -278,16 +152,16 @@ export function PlanoDeAcaoPage() {
     setModal("details");
   };
 
-  const openEdit = () => {
-    if (!selectedAction) return;
+  const openEdit = (action: PdiAction) => {
+    setSelectedAction(action);
     setForm({
-      name: selectedAction.name,
-      competency: selectedAction.competency,
-      startDate: selectedAction.startDate,
-      endDate: selectedAction.endDate,
-      status: selectedAction.status,
-      details: selectedAction.details,
-      evidence: selectedAction.evidence,
+      name: action.name,
+      competency: action.competency,
+      startDate: action.startDate,
+      endDate: action.endDate,
+      status: action.status,
+      details: action.details,
+      evidence: action.evidence,
     });
     setModal("edit");
   };
@@ -408,16 +282,6 @@ export function PlanoDeAcaoPage() {
                         </option>
                       ))}
                     </select>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={exportPdiActionsToExcel}
-                      disabled={!hasContent || filteredActions.length === 0}
-                      className="shrink-0"
-                    >
-                      <Download className="size-4" />
-                      Exportar Excel
-                    </Button>
                   </div>
                 </div>
                 {actions.length === 0 ? (
@@ -435,14 +299,130 @@ export function PlanoDeAcaoPage() {
                     message="Nenhuma ação encontrada."
                   />
                 ) : (
-                  <div className="grid gap-4 md:grid-cols-2">
-                    {filteredActions.map((action) => (
-                      <ActionCard
-                        key={action.id}
-                        action={action}
-                        onClick={() => openDetails(action)}
-                      />
-                    ))}
+                  <div className="space-y-8">
+                    <section
+                      aria-labelledby="pdi-table-heading"
+                      className="space-y-4"
+                    >
+                      <h2
+                        id="pdi-table-heading"
+                        className="text-lg font-semibold"
+                      >
+                        Ações em tabela
+                      </h2>
+                      <div className="overflow-x-auto rounded-md border border-border bg-card">
+                        <table className="w-full min-w-[1500px] text-left text-sm">
+                          <caption className="sr-only">
+                            Todas as informações das ações do PDI
+                          </caption>
+                          <thead className="bg-muted text-muted-foreground">
+                            <tr>
+                              {[
+                                "Ação",
+                                "Eixo",
+                                "Competência",
+                                "Status",
+                                "Início",
+                                "Fim",
+                                "Autor",
+                                "Criado em",
+                                "Detalhes",
+                                "Evidência",
+                                "Editar",
+                              ].map((label) => (
+                                <th
+                                  key={label}
+                                  scope="col"
+                                  className="px-4 py-3 font-medium"
+                                >
+                                  {label}
+                                </th>
+                              ))}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {filteredActions.map((action) => (
+                              <tr
+                                key={action.id}
+                                className="border-t border-border align-top"
+                              >
+                                <th
+                                  scope="row"
+                                  className="min-w-56 whitespace-pre-wrap break-words px-4 py-4 font-medium"
+                                >
+                                  {action.name}
+                                </th>
+                                <td className="px-4 py-4">
+                                  {competencyAxis[
+                                    action.competency as Competency
+                                  ] ?? "—"}
+                                </td>
+                                <td className="px-4 py-4">
+                                  {action.competency}
+                                </td>
+                                <td className="px-4 py-4">
+                                  <span
+                                    className={cn(
+                                      "inline-block whitespace-nowrap rounded px-2.5 py-1 text-xs",
+                                      statusStyles[action.status],
+                                    )}
+                                  >
+                                    {action.status}
+                                  </span>
+                                </td>
+                                <td className="whitespace-nowrap px-4 py-4">
+                                  {formatDate(action.startDate)}
+                                </td>
+                                <td className="whitespace-nowrap px-4 py-4">
+                                  {formatDate(action.endDate)}
+                                </td>
+                                <td className="px-4 py-4">{action.author}</td>
+                                <td className="whitespace-nowrap px-4 py-4">
+                                  {formatCreatedAt(action.createdAt)}
+                                </td>
+                                <td className="min-w-64 whitespace-pre-wrap break-words px-4 py-4">
+                                  {action.details ||
+                                    "Nenhum detalhe informado."}
+                                </td>
+                                <td className="min-w-64 whitespace-pre-wrap break-words px-4 py-4">
+                                  {action.evidence ||
+                                    "Nenhuma evidência informada."}
+                                </td>
+                                <td className="px-4 py-4">
+                                  <Button
+                                    variant="outline"
+                                    onClick={() => openEdit(action)}
+                                    aria-label={`Editar ação: ${action.name}`}
+                                  >
+                                    Editar
+                                  </Button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                    <section
+                      aria-labelledby="pdi-cards-heading"
+                      className="space-y-4"
+                    >
+                      <h2
+                        id="pdi-cards-heading"
+                        className="text-lg font-semibold"
+                      >
+                        Ações em cards
+                      </h2>
+                      <div className="grid gap-4 md:grid-cols-2">
+                        {filteredActions.map((action) => (
+                          <ActionCard
+                            key={action.id}
+                            action={action}
+                            onClick={() => openDetails(action)}
+                          />
+                        ))}
+                      </div>
+                    </section>
                   </div>
                 )}
               </section>
@@ -457,7 +437,10 @@ export function PlanoDeAcaoPage() {
       >
         <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
           {modal === "details" && selectedAction ? (
-            <DetailsContent action={selectedAction} onEdit={openEdit} />
+            <DetailsContent
+              action={selectedAction}
+              onEdit={() => openEdit(selectedAction)}
+            />
           ) : (
             <ActionForm
               form={form}

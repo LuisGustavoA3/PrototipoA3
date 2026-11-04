@@ -1,3 +1,4 @@
+import { useBankActions } from "@/modules/mentorias/pdi/pdi-store";
 import { User } from "lucide-react";
 import { TrailStatusBadge } from "@/shared/components/TrailStatusBadge";
 import { currentEnrollmentCount } from "../lib/development-demo";
@@ -283,12 +284,109 @@ export function UsuariosPage() {
 export { default as FerramentasAvaliacaoPage } from "./EvaluationToolsPage";
 
 export function BancoAcoesPage() {
+  const actions = useBankActions();
+  const trails = useAdminTrails();
+  const [search, setSearch] = useState("");
+  const filtered = actions.filter((action) =>
+    [
+      action.name,
+      action.competency,
+      action.details,
+      action.evidence,
+      action.author,
+      demoPeople.find((person) => person.id === action.personId)?.name ?? "",
+    ].some((value) =>
+      value.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase()),
+    ),
+  );
   return (
     <ManagementShell
       title="Banco de Ações"
       description="Repositório de cópias das ações criadas nos PDIs, com autoria e origem."
     >
-      <EmptySection>Nenhuma ação disponível no banco.</EmptySection>
+      <Input
+        aria-label="Buscar ações no banco"
+        placeholder="Buscar por ação, competência, autoria ou mentorado"
+        value={search}
+        onChange={(event) => setSearch(event.target.value)}
+      />
+      <p className="text-sm text-muted-foreground">
+        {filtered.length} ação(ões) encontrada(s)
+      </p>
+      {filtered.length ? (
+        <div className="overflow-x-auto rounded-md border border-border bg-card">
+          <table className="w-full min-w-[1200px] text-left text-sm">
+            <caption className="sr-only">Banco de Ações</caption>
+            <thead className="bg-muted/40">
+              <tr>
+                {[
+                  "Competência",
+                  "Ação",
+                  "Detalhes",
+                  "Evidência",
+                  "Autoria",
+                  "Mentorado",
+                  "Empresa",
+                  "Trilha de origem",
+                  "Criado em",
+                ].map((label) => (
+                  <th key={label} scope="col" className="px-5 py-3 font-medium">
+                    {label}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((action) => {
+                const person = demoPeople.find(
+                  (item) => item.id === action.personId,
+                );
+                const trail = trails.find(
+                  (item) => item.ownTrailId === action.trailId,
+                );
+                return (
+                  <tr
+                    key={action.id}
+                    className="border-t border-border align-top"
+                  >
+                    <td className="px-5 py-4">{action.competency}</td>
+                    <th
+                      scope="row"
+                      className="min-w-56 whitespace-pre-wrap px-5 py-4 font-medium"
+                    >
+                      {action.name}
+                    </th>
+                    <td className="min-w-56 whitespace-pre-wrap px-5 py-4">
+                      {action.details || "—"}
+                    </td>
+                    <td className="min-w-56 whitespace-pre-wrap px-5 py-4">
+                      {action.evidence || "—"}
+                    </td>
+                    <td className="px-5 py-4">{action.author}</td>
+                    <td className="px-5 py-4">{person?.name ?? "—"}</td>
+                    <td className="px-5 py-4">
+                      {person ? companyName(person.companyId) : "—"}
+                    </td>
+                    <td className="px-5 py-4">
+                      <Link
+                        className="text-primary hover:underline"
+                        to={`/mentor/mentorados/${action.personId}/trilhas/trilha-luis-${action.trailId}?secao=PDI`}
+                      >
+                        {trail?.name ?? `Trilha ${action.trailId}`}
+                      </Link>
+                    </td>
+                    <td className="whitespace-nowrap px-5 py-4">
+                      {new Date(action.createdAt).toLocaleDateString("pt-BR")}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <EmptySection>Nenhuma ação encontrada no banco.</EmptySection>
+      )}
     </ManagementShell>
   );
 }

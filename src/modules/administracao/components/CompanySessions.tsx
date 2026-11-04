@@ -46,7 +46,7 @@ export function CompanySessions({ companyId }: { companyId: string }) {
     <section className="space-y-4 rounded-md border border-border bg-card p-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="text-lg font-semibold">Sessões de mentoria</h2>
+          <h2 className="text-lg font-semibold">Atendimentos de mentoria</h2>
           <p className="text-sm text-muted-foreground">
             Quadro da empresa no Monday · Consulta por mentorado
           </p>

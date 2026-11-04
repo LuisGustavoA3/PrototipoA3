@@ -140,8 +140,8 @@ describe("rotas migradas", () => {
   });
 
   it("exibe em Mentorias apenas avaliações contratadas em processamento ou concluídas", async () => {
-    const previous = getCompanyTools("testes");
-    saveCompanyTools("testes", ["ancoras-carreira", "htm"]);
+    const previous = getCompanyTools("a3");
+    saveCompanyTools("a3", ["ancoras-carreira", "htm"]);
     open("/meu-assessment");
     try {
       expect(
@@ -160,7 +160,7 @@ describe("rotas migradas", () => {
         screen.queryByText("Aguardando realização"),
       ).not.toBeInTheDocument();
       await act(async () => {
-        saveCompanyTools("testes", ["clifton-strengths"]);
+        saveCompanyTools("a3", ["clifton-strengths"]);
       });
       expect(
         screen.getByRole("heading", { name: "CliftonStrengths" }),
@@ -170,7 +170,7 @@ describe("rotas migradas", () => {
       ).not.toBeInTheDocument();
     } finally {
       await act(async () => {
-        saveCompanyTools("testes", previous);
+        saveCompanyTools("a3", previous);
       });
     }
   });
@@ -297,6 +297,106 @@ describe("rotas migradas", () => {
     }
   });
 
+  it("vincula Luis à A3 e permite configurar os assessments pela empresa", async () => {
+    const previous = getCompanyTools("a3");
+    const { router } = open("/mentor/empresas/a3");
+    expect(screen.getByText("Luis Gustavo Ribeiro")).toBeInTheDocument();
+    const tools = getEvaluationTools();
+    for (const tool of tools)
+      expect(screen.getByRole("checkbox", { name: tool.name })).toBeChecked();
+    const tool = tools.find((item) => item.id === "ancoras-carreira")!;
+    fireEvent.click(screen.getByRole("checkbox", { name: tool.name }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "Salvar ferramentas contratadas" }),
+    );
+    try {
+      await act(async () => {
+        await router.navigate("/meu-assessment");
+      });
+      expect(
+        screen.queryByRole("heading", { name: tool.name }),
+      ).not.toBeInTheDocument();
+      expect(getCompanyTools("testes")).toContain("ancoras-carreira");
+    } finally {
+      act(() => {
+        saveCompanyTools("a3", previous);
+      });
+    }
+  });
+
+  it("abre os dez arquivos por link e trata IDs ausentes", async () => {
+    const { router } = open("/arquivos-compartilhados/ARQ-001/visualizar");
+    for (let index = 1; index <= 10; index++) {
+      const id = `ARQ-${String(index).padStart(3, "0")}`;
+      await act(async () => {
+        await router.navigate(`/arquivos-compartilhados/${id}/visualizar`);
+      });
+      expect(
+        screen.getByRole("button", { name: "Baixar arquivo" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByText("Arquivo não disponível"),
+      ).not.toBeInTheDocument();
+    }
+    await act(async () => {
+      await router.navigate("/arquivos-compartilhados/inexistente/visualizar");
+    });
+    expect(
+      screen.getByRole("heading", { name: "Arquivo não disponível" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Baixar arquivo" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("exibe todos os detalhes do PDI na tabela e edita mantendo os cards", () => {
+    const previous = { ...getPdiActions()[0]! };
+    open("/plano-de-acao");
+    const table = screen.getByRole("table");
+    const row = within(table)
+      .getByRole("rowheader", { name: previous.name })
+      .closest("tr")!;
+    for (const value of [
+      previous.name,
+      previous.author,
+      previous.competency,
+      previous.status,
+      previous.details,
+    ]) {
+      expect(within(row).getByText(value)).toBeInTheDocument();
+    }
+    expect(
+      within(table).getByText(getPdiActions()[1]!.evidence),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /Exportar Excel/ }),
+    ).not.toBeInTheDocument();
+    fireEvent.click(
+      within(row).getByRole("button", {
+        name: `Editar ação: ${previous.name}`,
+      }),
+    );
+    const dialog = screen.getByRole("dialog");
+    fireEvent.change(within(dialog).getByLabelText("Nome da ação *"), {
+      target: { value: "Ação editada pela tabela" },
+    });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Salvar" }));
+    try {
+      expect(
+        within(table).getByText("Ação editada pela tabela"),
+      ).toBeInTheDocument();
+      expect(
+        within(
+          screen.getByRole("region", { name: "Ações em cards" }),
+        ).getByRole("button", { name: /Ação editada pela tabela/ }),
+      ).toBeInTheDocument();
+    } finally {
+      act(() => {
+        updatePdiAction(previous.id, previous);
+      });
+    }
+  });
+
   it("edita o mesmo PDI de Luis nos dois módulos sem expor as ações a outro mentorado", async () => {
     const previous = { ...getPdiActions()[0]! };
     const { router } = open(
@@ -314,7 +414,9 @@ describe("rotas migradas", () => {
         await router.navigate("/plano-de-acao");
       });
       expect(
-        screen.getByText("Ação compartilhada entre os módulos"),
+        within(screen.getByRole("table")).getByText(
+          "Ação compartilhada entre os módulos",
+        ),
       ).toBeInTheDocument();
       await act(async () => {
         await router.navigate(

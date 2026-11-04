@@ -40,7 +40,7 @@ type Item = {
 const items: Item[] = [
   { label: "Dashboard", icon: LayoutDashboard, to: "/dashboard" },
   {
-    label: "Sessões de Mentoria",
+    label: "Atendimentos de Mentoria",
     icon: CalendarDays,
     to: "/sessoes-mentoria",
   },

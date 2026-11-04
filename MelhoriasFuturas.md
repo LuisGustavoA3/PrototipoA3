@@ -9,6 +9,13 @@ melhorias do prototipo
 - ~~reestruturação da pagina de arquivos compartilhados~~
 - ~~Agenda de Sessões - atualizações do monday~~
 - ~~vamos fazer logo a relação das trilhas~~
+- ~~Ao clicar na ação no dashboard abre os detalhes das ações~~
+- ~~Um conteudo da biblioteca deve estar relacionado a apenas uma competencia na biblioteca? pode ser mais de uma~~
+- ~~O mentor vai poder compartilhar conteúdo externo a a3 para o mentorado? como links de vídeo livro podcast? o link direto não~~
+- ~~colocar status atrasado~~
+- ~~evidencia é opcinal e anexo de documento tmb metor tb~~
+
+- ~~pdi visualização de tabelas editaveis primeiro e visualização de cards depois ou abas separadas~~
 - Bookmarking/Favoritos = O usuário poderia salvar o conteúdo para que pudesse ser acessado diretamente ao entrar no site/aplicativo
 - ultimo conteúdo acessado
 - barra de pesquisa geral
@@ -17,15 +24,7 @@ melhorias do prototipo
 - Quando um arquivo recebido for aberto, como devemos tratar o indicador "Novo"
 - Respostas do faq
 - Não eexibir o botão do faq e dos contatos o tempo todo no assistente
-- Ao clicar na ação no dashboard abre os detalhes das ações
-- Um conteudo da biblioteca deve estar relacionado a apenas uma competencia na biblioteca? pode ser mais de uma
-- ~~O mentor vai poder compartilhar conteúdo externo a a3 para o mentorado? como links de vídeo livro podcast? o link direto não~~
 - ao tiver chegando proximo a data ações atualização de status(notificação)
-
-- colocar status atrasado
-- evidencia é opcinal e anexo de documento tmb metor tb
-
-- pdi visualização de tabelas editaveis primeiro e visualização de cards depois ou abas separadas
 
 - link de compartilhamento de conteudo, notificação de criação e se enviou documentos antes da mentoria
 
@@ -37,22 +36,23 @@ melhorias do prototipo
 
 - notificação de conclusao de conteudo
 
-oraganizar as regras de negocio por areas
+- ~~oraganizar as regras de negocio por areas~~
 
-organizar o banco de dados (escrever)
-insights mais pessoais
+- organizar o banco de dados (escrever)
+- insights mais pessoais
 
-monday
-documentação
-apresentação
+- nao deve aparecer todos os assessments
 
-ver o quadro real sessoes da mentoria com a nat e sobre a jornada de desenvolvimento tmb
+- puxar as ações de mentorias para administração
 
-mostrar o quadro de planejamentos da agenda somente, com a mari, produto mentoria e assessment
+frentes:
+-monday
+-documentação
+-apresentação
 
-todos os mentorados?
-todos ciclos? por ano
-os resultados dos assessments sao pdf abrir visualizador
+- ~~ver o quadro real sessoes da mentoria com a nat e sobre a jornada de desenvolvimento tmb~~
+
+- ~~mostrar o quadro de planejamentos da agenda somente, com a mari, produto mentoria e assessment~~
 
 assistente:
 
@@ -112,7 +112,3 @@ Modular:
 Arquitetura organizada em módulos com responsabilidades bem separadas.
 
 com isso, temos alguma soluções no mercado que se aproximam do que vamos construir, o principal é o microsoft 365 por isso construi um benchmark com ele, mas existem outros como o google workspace, slack, monday, asana, trello, notion, entre outros.
-
-nao deve aparecer todos os assessments
-
-puxar as ações de mentorias para administração

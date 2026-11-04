@@ -69,6 +69,28 @@ const initialActions: PdiAction[] = [
   },
 ];
 
+export type BankAction = PdiAction & {
+  sourceActionId: string;
+  personId: string;
+  trailId: number;
+};
+function copyToBank(action: PdiAction): BankAction {
+  return {
+    ...action,
+    id: `banco-${action.id}`,
+    sourceActionId: action.id,
+    personId: "luis-gustavo",
+    trailId: 601,
+  };
+}
+let bankActions = initialActions.map(copyToBank);
+export function getBankActions() {
+  return bankActions;
+}
+export function useBankActions() {
+  return useSyncExternalStore(subscribePdi, getBankActions, getBankActions);
+}
+
 let actions = initialActions;
 let hiddenDashboardActionIds: string[] = [];
 const listeners = new Set<() => void>();
@@ -102,14 +124,13 @@ export function addPdiAction(action: Omit<PdiAction, "id" | "createdAt">) {
     return;
   }
 
-  actions = [
-    ...actions,
-    {
-      ...action,
-      id: `pdi-${Date.now()}`,
-      createdAt: new Date().toISOString(),
-    },
-  ];
+  const created: PdiAction = {
+    ...action,
+    id: `pdi-${crypto.randomUUID()}`,
+    createdAt: new Date().toISOString(),
+  };
+  actions = [...actions, created];
+  bankActions = [...bankActions, copyToBank(created)];
   notify();
 }
 

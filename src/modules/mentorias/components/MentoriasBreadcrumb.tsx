@@ -1,3 +1,4 @@
+import { useSharedFiles } from "../arquivos-compartilhados/shared-files-store";
 import { Fragment } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
@@ -13,6 +14,7 @@ import { getLibraryContent } from "../biblioteca";
 type Crumb = { label: string; to?: string };
 export function MentoriasBreadcrumb() {
   const { pathname } = useLocation();
+  const files = useSharedFiles();
   const crumbs: Crumb[] = [{ label: "Mentorias", to: "/dashboard" }];
   const development: Record<string, string> = {
     "/meu-assessment": "Meu Assessment",
@@ -31,7 +33,15 @@ export function MentoriasBreadcrumb() {
     Mercado: { label: "Mercado", to: "/biblioteca-mercado" },
     Negócio: { label: "Negócio", to: "/biblioteca-negocio" },
   };
-  if (development[pathname])
+  if (pathname.startsWith("/arquivos-compartilhados/")) {
+    const id = pathname.split("/")[2];
+    const file = files.find((item) => item.id === id);
+    crumbs.push(
+      { label: "Meu Desenvolvimento" },
+      { label: "Arquivos Compartilhados", to: "/arquivos-compartilhados" },
+      { label: file?.name ?? "Arquivo não disponível" },
+    );
+  } else if (development[pathname])
     crumbs.push(
       { label: "Meu Desenvolvimento" },
       { label: development[pathname]! },
@@ -57,7 +67,7 @@ export function MentoriasBreadcrumb() {
   } else {
     const labels: Record<string, string> = {
       "/dashboard": "Dashboard",
-      "/sessoes-mentoria": "Sessões de Mentoria",
+      "/sessoes-mentoria": "Atendimentos de Mentoria",
       "/conteudo": "Biblioteca",
       "/informacoes-pessoais": "Informações Pessoais",
       "/minhas-estatisticas": "Minhas Estatísticas",

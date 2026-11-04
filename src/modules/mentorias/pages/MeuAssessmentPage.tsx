@@ -1,3 +1,4 @@
+import { CURRENT_USER_COMPANY_ID } from "@/shared/lib/current-user-company";
 import { useCompanyTools } from "../assessment/company-tool-contracts";
 import {
   useAssessments,
@@ -51,7 +52,7 @@ const statusPriority: Record<AssessmentStatus, number> = {
 
 export function MeuAssessmentPage() {
   const applications = useAssessments();
-  const contracted = useCompanyTools("testes");
+  const contracted = useCompanyTools(CURRENT_USER_COMPANY_ID);
   const assessments = applications.filter(
     (item) =>
       item.toolId &&

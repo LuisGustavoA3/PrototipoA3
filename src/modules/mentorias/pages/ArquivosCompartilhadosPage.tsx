@@ -1,3 +1,6 @@
+import { Link } from "react-router-dom";
+import { Eye } from "lucide-react";
+import { downloadSharedFile } from "../arquivos-compartilhados/file-preview-data";
 import { MentoriasBreadcrumb } from "@/modules/mentorias/components/MentoriasBreadcrumb";
 import {
   CalendarDays,
@@ -191,24 +194,7 @@ export function ArquivosCompartilhadosPage() {
   };
 
   const downloadFile = (file: SharedFile) => {
-    if (!hasContent) return;
-
-    if (file.contentUrl) {
-      const link = document.createElement("a");
-      link.href = file.contentUrl;
-      link.download = file.name;
-      link.click();
-      return;
-    }
-    const blob = new Blob([`Arquivo demonstrativo: ${file.name}`], {
-      type: "text/plain",
-    });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = file.name;
-    link.click();
-    URL.revokeObjectURL(url);
+    if (hasContent) downloadSharedFile(file);
   };
 
   return (
@@ -362,6 +348,16 @@ export function ArquivosCompartilhadosPage() {
                     </div>
                   )}
                   <DialogFooter>
+                    {selectedFileDetails && (
+                      <Button asChild>
+                        <Link
+                          to={`/arquivos-compartilhados/${encodeURIComponent(selectedFileDetails.id)}/visualizar`}
+                        >
+                          <Eye className="mr-2 size-4" />
+                          Visualizar
+                        </Link>
+                      </Button>
+                    )}
                     <Button
                       variant="outline"
                       onClick={() => {
@@ -452,35 +448,6 @@ export function ArquivosCompartilhadosPage() {
 
           <div className="space-y-4 py-2">
             <div>
-              <label
-                htmlFor="file-title"
-                className="label-caps mb-2 block text-xs text-muted-foreground"
-              >
-                Título
-              </label>
-              <Input
-                id="file-title"
-                value={title}
-                onChange={(event) => setTitle(event.target.value)}
-                placeholder="Dê um título para o arquivo"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="file-description"
-                className="label-caps mb-2 block text-xs text-muted-foreground"
-              >
-                Descrição
-              </label>
-              <textarea
-                id="file-description"
-                value={description}
-                onChange={(event) => setDescription(event.target.value)}
-                placeholder="Descreva brevemente este arquivo"
-                className="min-h-20 w-full resize-y rounded-md border border-input bg-transparent px-3 py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring"
-              />
-            </div>
-            <div>
               <span className="label-caps mb-2 block text-xs text-muted-foreground">
                 Arquivo
               </span>
@@ -521,6 +488,35 @@ export function ArquivosCompartilhadosPage() {
                 accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png"
                 onChange={(event) => chooseFile(event.target.files?.[0])}
                 className="sr-only"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="file-title"
+                className="label-caps mb-2 block text-xs text-muted-foreground"
+              >
+                Título
+              </label>
+              <Input
+                id="file-title"
+                value={title}
+                onChange={(event) => setTitle(event.target.value)}
+                placeholder="Título é preenchido automaticamente, editar título?"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="file-description"
+                className="label-caps mb-2 block text-xs text-muted-foreground"
+              >
+                Descrição
+              </label>
+              <textarea
+                id="file-description"
+                value={description}
+                onChange={(event) => setDescription(event.target.value)}
+                placeholder="Descreva brevemente este arquivo"
+                className="min-h-20 w-full resize-y rounded-md border border-input bg-transparent px-3 py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring"
               />
             </div>
           </div>

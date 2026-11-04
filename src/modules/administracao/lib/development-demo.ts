@@ -1,3 +1,4 @@
+import { CURRENT_USER_COMPANY_ID } from "@/shared/lib/current-user-company";
 import { useMemo } from "react";
 import {
   MENTORADO_TRAILS,
@@ -12,6 +13,7 @@ export const demoCompanies: {
   name: string;
   contracted: number | null;
 }[] = [
+  { id: CURRENT_USER_COMPANY_ID, name: "A3", contracted: null },
   { id: "testes", name: "Testes", contracted: null },
   { id: "empresa-demo-1", name: "Empresa Exemplo", contracted: 10 },
   { id: "empresa-demo-2", name: "Empresa Horizonte", contracted: 5 },
@@ -31,7 +33,7 @@ demoPeople.push({
   photo: "",
   name: "Luis Gustavo Ribeiro",
   email: initialProfile.email,
-  companyId: "testes",
+  companyId: CURRENT_USER_COMPANY_ID,
   role: "Consultor A3",
 });
 const baseTrails: AdminTrail[] = adminDashboardDemoPeople.map(
