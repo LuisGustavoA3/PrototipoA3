@@ -1,5 +1,5 @@
 import { PersonalInfoDetails } from "@/shared/informacoes-pessoais";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { ManagementShell } from "../components/ManagementShell";
 import { demoPeople, companyName } from "../lib/development-demo";
 
@@ -12,7 +12,7 @@ export default function UsuarioPage() {
         title="Usuário não encontrado"
         description="Confira o endereço ou volte à listagem."
       >
-        <Link to="/mentor/usuarios">Voltar aos usuários</Link>
+        {null}
       </ManagementShell>
     );
   return (

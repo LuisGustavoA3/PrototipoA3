@@ -254,3 +254,7 @@ retirados, para todos os usuários. As abas das seções da trilha foram preserv
 ## Assessments por empresa
 
 Luis Gustavo está vinculado à empresa A3, inicialmente com todas as ferramentas de avaliação contratadas. A contratação é editada em Administração > Empresas > A3 e persistida por empresa. Mentorias consulta a empresa da conta atual, mantendo o layout e exibindo somente aplicações contratadas em processamento ou concluídas. O quadro Monday da empresa Testes permanece independente desse vínculo.
+
+## Navegação e edição nas trilhas
+
+A navegação usa breadcrumbs em lugar dos botões Voltar. Páginas independentes possuem breadcrumb para o Hub. PDI, Jornada, documentos e anotações usam modais para criação. Assessments podem ser associados somente a ferramentas contratadas pela empresa, desassociados sem apagar seus resultados, e receber arquivo de resultado PDF/PNG/JPG de até 10 MB. O envio de resultado o disponibiliza ao mentorado; arquivos enviados ficam em memória durante a sessão.

@@ -1,7 +1,10 @@
+import { assessmentImages } from "../assessment/assessment-images";
+import { useEvaluationTools } from "../assessment/evaluation-tools";
 import { CURRENT_USER_COMPANY_ID } from "@/shared/lib/current-user-company";
 import { useCompanyTools } from "../assessment/company-tool-contracts";
 import {
   useAssessments,
+  getAssessmentDisplayStatus,
   type AssessmentStatus,
   type Assessment,
 } from "../assessment/assessment-store";
@@ -25,12 +28,12 @@ import { PageHeader } from "@/components/PageHeader";
 
 const statusConfig = {
   completed: {
-    label: "Resultado disponível",
+    label: "Resultado enviado",
     icon: CheckCircle2,
     color: "text-emerald-600",
   },
   processing: {
-    label: "Resultado em processamento",
+    label: "Aguardando resultado",
     icon: LoaderCircle,
     color: "text-primary",
   },
@@ -53,12 +56,9 @@ const statusPriority: Record<AssessmentStatus, number> = {
 export function MeuAssessmentPage() {
   const applications = useAssessments();
   const contracted = useCompanyTools(CURRENT_USER_COMPANY_ID);
-  const assessments = applications.filter(
-    (item) =>
-      item.toolId &&
-      contracted.includes(item.toolId) &&
-      (item.status === "completed" || item.status === "processing"),
-  );
+  const assessments = applications
+    .filter((item) => item.toolId && contracted.includes(item.toolId))
+    .map((item) => ({ ...item, status: getAssessmentDisplayStatus(item) }));
   const [sidebarOpen, toggleSidebar] = useSidebarOpen();
   const [activeFilter, setActiveFilter] = useState<"all" | AssessmentStatus>(
     "all",
@@ -92,7 +92,7 @@ export function MeuAssessmentPage() {
           <PageHeader
             section="Meu Desenvolvimento"
             title="Meu Assessment"
-            description="Acompanhe suas avaliações em processamento e seus resultados disponíveis."
+            description="Acompanhe os assessments associados à sua trilha e seus resultados."
           />
 
           {!hasContent ? (
@@ -108,7 +108,7 @@ export function MeuAssessmentPage() {
                   onClick={() => setActiveFilter("all")}
                 />
                 <SummaryCard
-                  label="Resultados prontos"
+                  label="Resultados enviados"
                   value={
                     assessments.filter(
                       (assessment) => assessment.status === "completed",
@@ -119,7 +119,7 @@ export function MeuAssessmentPage() {
                   onClick={() => setActiveFilter("completed")}
                 />
                 <SummaryCard
-                  label="Em processamento"
+                  label="Aguardando resultado"
                   value={
                     assessments.filter(
                       (assessment) => assessment.status === "processing",
@@ -143,8 +143,7 @@ export function MeuAssessmentPage() {
 
                 {!filteredAssessments.length && (
                   <p className="rounded-md border border-border bg-card p-6 text-sm text-muted-foreground">
-                    Nenhuma avaliação contratada em processamento ou com
-                    resultado disponível.
+                    Nenhuma avaliação associada disponível neste filtro.
                   </p>
                 )}
                 <div className="grid gap-4 md:grid-cols-2">
@@ -198,6 +197,13 @@ function SummaryCard({
 }
 
 function AssessmentCard({ assessment }: { assessment: Assessment }) {
+  const tools = useEvaluationTools();
+  const tool = tools.find((item) => item.id === assessment.toolId);
+  const image =
+    tool?.image ||
+    (assessment.toolId && assessmentImages[assessment.toolId]
+      ? `${import.meta.env.BASE_URL}images/${encodeURIComponent(assessmentImages[assessment.toolId]!)}`
+      : "");
   const status = statusConfig[assessment.status];
   const StatusIcon = status.icon;
 
@@ -205,7 +211,15 @@ function AssessmentCard({ assessment }: { assessment: Assessment }) {
     <article className="flex flex-col rounded-md border border-border bg-card p-5 shadow-[var(--shadow-card)]">
       <div className="flex gap-4">
         <div className="flex size-20 shrink-0 items-center justify-center rounded-md border border-dashed border-primary/40 bg-primary-soft/40">
-          <FileQuestion className="size-8 text-primary" />
+          {image ? (
+            <img
+              src={image}
+              alt={assessment.name}
+              className="size-full rounded-md bg-white p-1 object-contain"
+            />
+          ) : (
+            <FileQuestion className="size-8 text-primary" />
+          )}
         </div>
         <div className="min-w-0">
           <h3 className="text-lg leading-tight text-foreground">
@@ -229,10 +243,19 @@ function AssessmentCard({ assessment }: { assessment: Assessment }) {
         </div>
 
         {assessment.status === "completed" && (
-          <button className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-md bg-primary px-4 py-2.5 text-xs text-primary-foreground transition-opacity hover:opacity-90">
+          <a
+            href={assessment.resultUrl}
+            target="_blank"
+            rel="noreferrer"
+            aria-disabled={!assessment.resultUrl}
+            onClick={(event) => {
+              if (!assessment.resultUrl) event.preventDefault();
+            }}
+            className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-md bg-primary px-4 py-2.5 text-xs text-primary-foreground transition-opacity hover:opacity-90"
+          >
             Ver resultados
             <ArrowRight className="size-4" />
-          </button>
+          </a>
         )}
 
         {assessment.status === "processing" && (

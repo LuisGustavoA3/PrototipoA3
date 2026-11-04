@@ -1,3 +1,4 @@
+import { getProfilePhoto, saveProfilePhoto } from "../profile-photo-store";
 import { useEffect, useRef, useState } from "react";
 import { useBlocker } from "react-router-dom";
 import { AlertTriangle, Check, Loader2, Save } from "lucide-react";
@@ -78,7 +79,7 @@ const labels: Record<string, string> = {
 export function PersonalInfoForm() {
   const [profile, setProfile] = useState<Profile>(initialProfile);
   const [address, setAddress] = useState<Address>(initialAddress);
-  const [avatar, setAvatar] = useState<string | null>(null);
+  const [avatar, setAvatar] = useState<string | null>(getProfilePhoto);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
@@ -208,6 +209,14 @@ export function PersonalInfoForm() {
   const finishSave = () => {
     if (!stepPassword.trim()) {
       setStepError("Informe sua senha atual para concluir.");
+      return;
+    }
+    try {
+      saveProfilePhoto(avatar);
+    } catch {
+      setStepError(
+        "Não foi possível salvar a foto. O armazenamento do navegador pode estar cheio.",
+      );
       return;
     }
     setStepError(null);

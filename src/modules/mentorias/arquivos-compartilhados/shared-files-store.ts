@@ -1,6 +1,7 @@
 import { useSyncExternalStore } from "react";
 
 export type SharedFile = {
+  allowDownload?: boolean;
   contentUrl?: string;
   id: string;
   name: string;
@@ -192,6 +193,7 @@ export function updateSharedFile(
   id: string,
   changes: Pick<SharedFile, "name" | "description"> & {
     contentUrl?: string;
+    allowDownload?: boolean;
     format?: SharedFile["format"];
   },
 ) {

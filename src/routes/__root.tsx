@@ -1,6 +1,6 @@
+import { HubBreadcrumb } from "@/shared/components/HubBreadcrumb";
 import { useEffect } from "react";
 import {
-  Link,
   Outlet,
   ScrollRestoration,
   useLocation,
@@ -15,7 +15,7 @@ export function NotFoundPage() {
     <main className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background text-foreground">
       <h1 className="text-7xl">404</h1>
       <p>Página não encontrada.</p>
-      <Link to="/">Voltar ao início</Link>
+      <HubBreadcrumb label="Página indisponível" />
     </main>
   );
 }
@@ -29,7 +29,7 @@ export function ErrorPage() {
     <main className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background text-foreground">
       <h1>Não foi possível carregar a página.</h1>
       <button onClick={() => window.location.reload()}>Tentar novamente</button>
-      <Link to="/">Voltar ao início</Link>
+      <HubBreadcrumb label="Página indisponível" />
     </main>
   );
 }

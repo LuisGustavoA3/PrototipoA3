@@ -1,3 +1,5 @@
+import { User } from "lucide-react";
+import { useProfilePhoto } from "@/shared/informacoes-pessoais/profile-photo-store";
 import { CompanyToolsEditor } from "../components/CompanyToolsEditor";
 import { CompanySessions } from "../components/CompanySessions";
 import { useState } from "react";
@@ -12,6 +14,7 @@ import {
 
 export default function EmpresaPage() {
   const demoTrails = useAdminTrails();
+  const profilePhoto = useProfilePhoto();
   const { companyId } = useParams();
   const [search, setSearch] = useState("");
   const company = demoCompanies.find((item) => item.id === companyId);
@@ -21,13 +24,14 @@ export default function EmpresaPage() {
         title="Empresa não encontrada"
         description="Confira o endereço ou retorne à listagem."
       >
-        <Link to="/mentor/empresas">Voltar às empresas</Link>
+        {null}
       </ManagementShell>
     );
   const people = demoPeople.filter((person) => person.companyId === company.id);
   const trails = demoTrails.filter((trail) =>
     people.some((person) => person.id === trail.personId),
   );
+  const used = new Set(trails.map((trail) => trail.personId)).size;
   const filtered = people.filter((person) =>
     `${person.name} ${person.email}`
       .toLocaleLowerCase()
@@ -38,20 +42,17 @@ export default function EmpresaPage() {
       title={company.name}
       description="Usuários associados e utilização das trilhas contratadas."
     >
-      <Link to="/mentor/empresas" className="text-sm text-primary">
-        ← Empresas
-      </Link>
       <section className="rounded-md border border-border bg-card p-5">
         <h2 className="font-semibold">Trilhas contratadas</h2>
         <p className="mt-3 text-2xl">
           {company.contracted == null
             ? "Não informado"
-            : `${trails.length}/${company.contracted} utilizadas`}
+            : `${used}/${company.contracted} utilizadas`}
         </p>
         <p className="mt-2 text-sm text-muted-foreground">
           {company.contracted == null
             ? ""
-            : `${Math.max(0, company.contracted - trails.length)} disponíveis.`}
+            : `${Math.max(0, company.contracted - used)} disponíveis.`}
           Conclusões não liberam vagas para reutilização.
         </p>
       </section>
@@ -70,9 +71,29 @@ export default function EmpresaPage() {
             key={person.id}
             className="flex flex-wrap items-center justify-between gap-4 rounded-md border border-border bg-card p-5"
           >
-            <div>
-              <h3 className="font-semibold">{person.name}</h3>
-              <p className="text-sm text-muted-foreground">{person.email}</p>
+            <div className="flex items-center gap-3">
+              {(person.id === "luis-gustavo" ? profilePhoto : person.photo) ? (
+                <img
+                  src={
+                    (person.id === "luis-gustavo"
+                      ? profilePhoto
+                      : person.photo)!
+                  }
+                  alt={`Foto de ${person.name}`}
+                  className="size-14 shrink-0 rounded-full border border-border object-cover"
+                />
+              ) : (
+                <span
+                  className="flex size-14 shrink-0 items-center justify-center rounded-full bg-muted"
+                  aria-label={`Sem foto de ${person.name}`}
+                >
+                  <User className="size-7 text-muted-foreground" />
+                </span>
+              )}
+              <div>
+                <h3 className="font-semibold">{person.name}</h3>
+                <p className="text-sm text-muted-foreground">{person.email}</p>
+              </div>
             </div>
             <div className="flex flex-wrap gap-4 text-sm text-primary">
               <Link to={`/mentor/usuarios/${person.id}?empresa=${company.id}`}>

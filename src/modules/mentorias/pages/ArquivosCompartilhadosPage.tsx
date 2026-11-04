@@ -360,6 +360,7 @@ export function ArquivosCompartilhadosPage() {
                     )}
                     <Button
                       variant="outline"
+                      disabled={selectedFileDetails?.allowDownload === false}
                       onClick={() => {
                         if (selectedFileDetails) {
                           downloadFile(selectedFileDetails);
@@ -584,8 +585,8 @@ function FileCard({
           </p>
 
           <p className="mt-2 text-xs text-muted-foreground">
-            Autor: <span className="text-foreground">{file.author}</span> ·{" "}
-            {file.dateLabel}
+            Autor: <span className="text-foreground">{file.author}</span> · Data
+            de compartilhamento: {file.dateLabel}
           </p>
         </div>
       </div>
@@ -594,6 +595,7 @@ function FileCard({
         <button
           type="button"
           onClick={() => onDownload(file)}
+          disabled={file.allowDownload === false}
           aria-label={`Baixar ${file.name}`}
           className="flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-primary cursor-pointer"
         >

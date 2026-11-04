@@ -145,9 +145,13 @@ export function EmpresasPage() {
           const people = demoPeople.filter(
             (person) => person.companyId === company.id,
           );
-          const used = demoTrails.filter((trail) =>
-            people.some((person) => person.id === trail.personId),
-          ).length;
+          const used = new Set(
+            demoTrails
+              .filter((trail) =>
+                people.some((person) => person.id === trail.personId),
+              )
+              .map((trail) => trail.personId),
+          ).size;
           return (
             <article
               key={company.id}

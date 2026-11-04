@@ -90,6 +90,7 @@ export const mockFileContents: Record<
 };
 
 export function downloadSharedFile(file: SharedFile) {
+  if (file.allowDownload === false) return;
   const link = document.createElement("a");
   if (file.contentUrl) {
     link.href = file.contentUrl;

@@ -1,3 +1,12 @@
+import { MentorNoteCard } from "@/modules/mentorias/components/MentorNoteCard";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 import { useEvaluationTools } from "@/modules/mentorias/assessment/evaluation-tools";
 import { OwnTrailEditor } from "../components/OwnTrailEditor";
 import { LuisTrailContent } from "../components/LuisTrailContent";
@@ -39,15 +48,19 @@ export default function AcompanhamentoPage() {
     { id: string; trailId: string; name: string }[]
   >([]);
   const [dialog, setDialog] = useState(false);
+  const [noteOpen, setNoteOpen] = useState(false);
+  const [noteShared, setNoteShared] = useState(false);
   const [note, setNote] = useState("");
-  const [notes, setNotes] = useState<{ trailId: string; text: string }[]>([]);
+  const [notes, setNotes] = useState<
+    { trailId: string; text: string; shared: boolean }[]
+  >([]);
   if (!person)
     return (
       <ManagementShell
         title="Mentorado não encontrado"
         description="Confira o endereço ou volte à listagem."
       >
-        <Link to="/mentor/mentorados">Voltar aos mentorados</Link>
+        {null}
       </ManagementShell>
     );
   if (!trailId && params.get("trilha"))
@@ -265,39 +278,82 @@ export default function AcompanhamentoPage() {
               {section === "Anotações" && (
                 <>
                   <p className="text-xs text-muted-foreground">
-                    Anotações privadas.
+                    Anotações privadas por padrão.
                   </p>
-                  <form
-                    className="flex gap-2"
-                    onSubmit={(event) => {
-                      event.preventDefault();
-                      if (note.trim()) {
-                        setNotes((items) => [
-                          ...items,
-                          { trailId: trail.id, text: note.trim() },
-                        ]);
-                        setNote("");
-                      }
+                  <Button
+                    onClick={() => {
+                      setNote("");
+                      setNoteShared(false);
+                      setNoteOpen(true);
                     }}
                   >
-                    <Input
-                      aria-label="Nova anotação"
-                      value={note}
-                      onChange={(event) => setNote(event.target.value)}
-                      placeholder="Registrar anotação privada"
-                      required
-                    />
-                    <Button type="submit">Adicionar</Button>
-                  </form>
+                    Nova anotação
+                  </Button>
+                  <Dialog open={noteOpen} onOpenChange={setNoteOpen}>
+                    <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
+                      <DialogHeader>
+                        <DialogTitle>Nova anotação</DialogTitle>
+                      </DialogHeader>
+                      <form
+                        className="space-y-4"
+                        onSubmit={(event) => {
+                          event.preventDefault();
+                          if (!note.trim()) return;
+                          setNotes((items) => [
+                            ...items,
+                            {
+                              trailId: trail.id,
+                              text: note.trim(),
+                              shared: noteShared,
+                            },
+                          ]);
+                          setNoteOpen(false);
+                          setNote("");
+                        }}
+                      >
+                        <label className="block space-y-2 text-sm">
+                          Anotação
+                          <Textarea
+                            className="min-h-64 resize-y"
+                            value={note}
+                            onChange={(event) => setNote(event.target.value)}
+                            required
+                          />
+                        </label>
+                        <label className="flex items-center gap-2 text-sm">
+                          <input
+                            type="checkbox"
+                            checked={noteShared}
+                            onChange={(event) =>
+                              setNoteShared(event.target.checked)
+                            }
+                          />
+                          Compartilhar com mentorado
+                        </label>
+                        <DialogFooter>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => setNoteOpen(false)}
+                          >
+                            Cancelar
+                          </Button>
+                          <Button type="submit" disabled={!note.trim()}>
+                            Salvar anotação
+                          </Button>
+                        </DialogFooter>
+                      </form>
+                    </DialogContent>
+                  </Dialog>
                   {notes
                     .filter((item) => item.trailId === trail.id)
                     .map((item, i) => (
-                      <p
+                      <MentorNoteCard
                         key={i}
-                        className="rounded-md border border-border p-4 text-sm"
-                      >
-                        {item.text}
-                      </p>
+                        text={item.text}
+                        shared={item.shared}
+                        index={i}
+                      />
                     ))}
                 </>
               )}
