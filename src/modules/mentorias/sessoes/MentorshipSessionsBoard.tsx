@@ -79,8 +79,10 @@ function formatHours(hours: number | null) {
 
 export function MentorshipSessionsBoard({
   readOnly = false,
+  menteeView = false,
 }: {
   readOnly?: boolean;
+  menteeView?: boolean;
 }) {
   const [sessions, setSessions] = useState<MondayMentorshipSession[]>([]);
 
@@ -313,68 +315,70 @@ export function MentorshipSessionsBoard({
         </div>
       </section>
 
-      <section className="rounded-md border border-border bg-card p-5">
-        <h2 className="mb-4 text-sm font-semibold">
-          Informações do acompanhamento
-        </h2>
+      {!menteeView && (
+        <section className="rounded-md border border-border bg-card p-5">
+          <h2 className="mb-4 text-sm font-semibold">
+            Informações do acompanhamento
+          </h2>
 
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          <div>
-            <p className="text-xs text-muted-foreground">Gestor</p>
-            <p className="mt-1 text-sm font-medium">
-              {mentorship?.manager.join(", ") || "—"}
-            </p>
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div>
+              <p className="text-xs text-muted-foreground">Gestor</p>
+              <p className="mt-1 text-sm font-medium">
+                {mentorship?.manager.join(", ") || "—"}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-xs text-muted-foreground">Monitoramento</p>
+              <p className="mt-1 text-sm font-medium">
+                {mentorship?.monitoring.join(", ") || "—"}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-xs text-muted-foreground">Atendimento</p>
+              <p className="mt-1 text-sm font-medium">
+                {mentorship?.attendance.join(", ") || "—"}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-xs text-muted-foreground">Prazo do contrato</p>
+              <p className="mt-1 text-sm font-medium">
+                {formatDate(mentorship?.contractDeadline ?? null)}
+              </p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">
+                Dias restantes do contrato
+              </p>
+
+              <p className="mt-1 text-sm font-medium">
+                {(() => {
+                  const days = getContractDaysRemaining(
+                    mentorship?.contractDeadline ?? null,
+                  );
+
+                  if (days === null) return "—";
+                  if (days < 0) return `Vencido há ${Math.abs(days)} dias`;
+                  if (days === 0) return "Vence hoje";
+
+                  return `${days} dias restantes`;
+                })()}
+              </p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">Cronograma</p>
+              <p className="mt-1 text-sm font-medium">
+                {mentorship?.schedule
+                  ? `${formatDate(mentorship.schedule.from)} até ${formatDate(mentorship.schedule.to)}`
+                  : "—"}
+              </p>
+            </div>
           </div>
-
-          <div>
-            <p className="text-xs text-muted-foreground">Monitoramento</p>
-            <p className="mt-1 text-sm font-medium">
-              {mentorship?.monitoring.join(", ") || "—"}
-            </p>
-          </div>
-
-          <div>
-            <p className="text-xs text-muted-foreground">Atendimento</p>
-            <p className="mt-1 text-sm font-medium">
-              {mentorship?.attendance.join(", ") || "—"}
-            </p>
-          </div>
-
-          <div>
-            <p className="text-xs text-muted-foreground">Prazo do contrato</p>
-            <p className="mt-1 text-sm font-medium">
-              {formatDate(mentorship?.contractDeadline ?? null)}
-            </p>
-          </div>
-          <div>
-            <p className="text-xs text-muted-foreground">
-              Dias restantes do contrato
-            </p>
-
-            <p className="mt-1 text-sm font-medium">
-              {(() => {
-                const days = getContractDaysRemaining(
-                  mentorship?.contractDeadline ?? null,
-                );
-
-                if (days === null) return "—";
-                if (days < 0) return `Vencido há ${Math.abs(days)} dias`;
-                if (days === 0) return "Vence hoje";
-
-                return `${days} dias restantes`;
-              })()}
-            </p>
-          </div>
-          <div>
-            <p className="text-xs text-muted-foreground">Cronograma</p>
-            <p className="mt-1 text-sm font-medium">
-              {mentorship?.schedule
-                ? `${formatDate(mentorship.schedule.from)} até ${formatDate(mentorship.schedule.to)}`
-                : "—"}
-            </p>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {error && (
         <div
@@ -415,7 +419,12 @@ export function MentorshipSessionsBoard({
           aria-label="Tabela de sessões com rolagem horizontal"
           tabIndex={0}
         >
-          <table className="min-w-[1650px] w-full text-left text-sm">
+          <table
+            className={cn(
+              "w-full text-left text-sm",
+              menteeView ? "min-w-[480px]" : "min-w-[1650px]",
+            )}
+          >
             <thead className="bg-muted/50 text-muted-foreground">
               <tr>
                 <th className="whitespace-nowrap px-5 py-3 font-medium">
@@ -427,33 +436,37 @@ export function MentorshipSessionsBoard({
                 <th className="whitespace-nowrap px-5 py-3 font-medium">
                   Data prevista
                 </th>
-                <th className="whitespace-nowrap px-5 py-3 font-medium">
-                  Data realizada
-                </th>
-                <th className="whitespace-nowrap px-5 py-3 font-medium">
-                  Prazo limite
-                </th>
-                <th className="whitespace-nowrap px-5 py-3 font-medium">
-                  Status
-                </th>
-                <th className="whitespace-nowrap px-5 py-3 font-medium">
-                  CH prevista
-                </th>
-                <th className="whitespace-nowrap px-5 py-3 font-medium">
-                  CH realizada
-                </th>
-                <th className="whitespace-nowrap px-5 py-3 font-medium">
-                  Reagendamento
-                </th>
-                <th className="whitespace-nowrap px-5 py-3 font-medium">
-                  Realização
-                </th>
-                <th className="whitespace-nowrap px-5 py-3 font-medium">
-                  Acompanhamento
-                </th>
-                <th className="whitespace-nowrap px-5 py-3 text-center font-medium">
-                  Comentário
-                </th>
+                {!menteeView && (
+                  <>
+                    <th className="whitespace-nowrap px-5 py-3 font-medium">
+                      Data realizada
+                    </th>
+                    <th className="whitespace-nowrap px-5 py-3 font-medium">
+                      Prazo limite
+                    </th>
+                    <th className="whitespace-nowrap px-5 py-3 font-medium">
+                      Status
+                    </th>
+                    <th className="whitespace-nowrap px-5 py-3 font-medium">
+                      CH prevista
+                    </th>
+                    <th className="whitespace-nowrap px-5 py-3 font-medium">
+                      CH realizada
+                    </th>
+                    <th className="whitespace-nowrap px-5 py-3 font-medium">
+                      Reagendamento
+                    </th>
+                    <th className="whitespace-nowrap px-5 py-3 font-medium">
+                      Realização
+                    </th>
+                    <th className="whitespace-nowrap px-5 py-3 font-medium">
+                      Acompanhamento
+                    </th>
+                    <th className="whitespace-nowrap px-5 py-3 text-center font-medium">
+                      Comentário
+                    </th>
+                  </>
+                )}
               </tr>
             </thead>
 
@@ -461,7 +474,7 @@ export function MentorshipSessionsBoard({
               {loading ? (
                 <tr>
                   <td
-                    colSpan={12}
+                    colSpan={menteeView ? 3 : 12}
                     className="px-5 py-8 text-center text-muted-foreground"
                   >
                     Carregando sessões...
@@ -470,7 +483,7 @@ export function MentorshipSessionsBoard({
               ) : sessions.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={12}
+                    colSpan={menteeView ? 3 : 12}
                     className="px-5 py-8 text-center text-muted-foreground"
                   >
                     Nenhuma sessão encontrada.
@@ -494,54 +507,58 @@ export function MentorshipSessionsBoard({
                       {formatDate(session.scheduledDate)}
                     </td>
 
-                    <td className="whitespace-nowrap px-5 py-4">
-                      {formatDate(session.completedDate)}
-                    </td>
+                    {!menteeView && (
+                      <>
+                        <td className="whitespace-nowrap px-5 py-4">
+                          {formatDate(session.completedDate)}
+                        </td>
 
-                    <td className="whitespace-nowrap px-5 py-4">
-                      {formatDate(session.deadline)}
-                    </td>
+                        <td className="whitespace-nowrap px-5 py-4">
+                          {formatDate(session.deadline)}
+                        </td>
 
-                    <td className="px-5 py-4">
-                      <span className="inline-flex whitespace-nowrap rounded-full bg-muted px-2.5 py-1 text-xs font-medium">
-                        {session.status ?? "—"}
-                      </span>
-                    </td>
+                        <td className="px-5 py-4">
+                          <span className="inline-flex whitespace-nowrap rounded-full bg-muted px-2.5 py-1 text-xs font-medium">
+                            {session.status ?? "—"}
+                          </span>
+                        </td>
 
-                    <td className="whitespace-nowrap px-5 py-4">
-                      {formatHours(session.plannedHours)}
-                    </td>
+                        <td className="whitespace-nowrap px-5 py-4">
+                          {formatHours(session.plannedHours)}
+                        </td>
 
-                    <td className="whitespace-nowrap px-5 py-4">
-                      {formatHours(session.completedHours)}
-                    </td>
+                        <td className="whitespace-nowrap px-5 py-4">
+                          {formatHours(session.completedHours)}
+                        </td>
 
-                    <td className="whitespace-nowrap px-5 py-4">
-                      {session.rescheduled ?? "—"}
-                    </td>
+                        <td className="whitespace-nowrap px-5 py-4">
+                          {session.rescheduled ?? "—"}
+                        </td>
 
-                    <td className="whitespace-nowrap px-5 py-4">
-                      {session.realization ?? "—"}
-                    </td>
+                        <td className="whitespace-nowrap px-5 py-4">
+                          {session.realization ?? "—"}
+                        </td>
 
-                    <td className="px-5 py-4">
-                      {session.monitoring.join(", ") || "—"}
-                    </td>
+                        <td className="px-5 py-4">
+                          {session.monitoring.join(", ") || "—"}
+                        </td>
 
-                    <td className="px-5 py-4 text-center">
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => openCommentDialog(session)}
-                        aria-label={`Comentar a sessão ${session.name}`}
-                        disabled={IS_GITHUB_PAGES || readOnly}
-                        title="Mande um comentário sobre a sessão, ele será visível para o gestor e monitoramento do acompanhamento."
-                        className="transition-colors hover:bg-muted"
-                      >
-                        <MessageSquare className="size-4" />
-                      </Button>
-                    </td>
+                        <td className="px-5 py-4 text-center">
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => openCommentDialog(session)}
+                            aria-label={`Comentar a sessão ${session.name}`}
+                            disabled={IS_GITHUB_PAGES || readOnly}
+                            title="Mande um comentário sobre a sessão, ele será visível para o gestor e monitoramento do acompanhamento."
+                            className="transition-colors hover:bg-muted"
+                          >
+                            <MessageSquare className="size-4" />
+                          </Button>
+                        </td>
+                      </>
+                    )}
                   </tr>
                 ))
               )}

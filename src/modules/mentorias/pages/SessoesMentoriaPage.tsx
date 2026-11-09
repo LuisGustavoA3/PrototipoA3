@@ -19,7 +19,7 @@ export function SessoesMentoriaPage() {
       >
         <MentoriasBreadcrumb />
         <div className="p-6">
-          <MentorshipSessionsBoard />
+          <MentorshipSessionsBoard menteeView />
         </div>
       </main>
     </div>

@@ -544,6 +544,21 @@ describe("rotas migradas", () => {
     }
   });
 
+  it("limita a tabela do mentorado a sessão, consultor e data prevista", async () => {
+    open("/sessoes-mentoria");
+    expect(
+      screen.queryByText("Informações do acompanhamento"),
+    ).not.toBeInTheDocument();
+    expect(
+      screen
+        .getAllByRole("columnheader")
+        .map((cell) => cell.textContent?.trim()),
+    ).toEqual(["Sessão", "Consultor", "Data prevista"]);
+    expect(
+      await screen.findByText("Nenhuma sessão encontrada."),
+    ).toHaveAttribute("colspan", "3");
+  });
+
   it("mostra o quadro completo do Monday na trilha de Luis sem permitir comentários administrativos", async () => {
     vi.mocked(fetch).mockResolvedValueOnce({
       ok: true,
@@ -585,6 +600,9 @@ describe("rotas migradas", () => {
     );
     expect(
       await screen.findByText("Atendimento do Luis no Monday"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Informações do acompanhamento"),
     ).toBeInTheDocument();
     for (const name of [
       "Consultor",
