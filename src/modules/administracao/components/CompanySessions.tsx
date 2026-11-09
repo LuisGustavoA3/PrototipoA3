@@ -1,31 +1,14 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useCompanySessions } from "../lib/use-company-sessions";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { companyBoardSchema, companyMentorships } from "@/lib/company-sessions";
+import { companyMentorships } from "@/lib/company-sessions";
 import { EmptySection } from "./ManagementShell";
 
 export function CompanySessions({ companyId }: { companyId: string }) {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
-  const query = useQuery({
-    queryKey: ["company-sessions", companyId],
-    retry: false,
-    refetchInterval: 60_000,
-    refetchOnWindowFocus: false,
-    queryFn: async () => {
-      const url = import.meta.env.PROD
-        ? `${import.meta.env.BASE_URL}data/monday-snapshot.json`
-        : `${import.meta.env.BASE_URL}api/empresas/sessoes?empresa=${encodeURIComponent(companyId)}`;
-      const response = await fetch(url, { cache: "no-store" });
-      if (!response.ok)
-        throw new Error("Não foi possível consultar o quadro da empresa.");
-      const board = companyBoardSchema.parse(await response.json());
-      if (companyId !== "testes" || board.boardId !== "18435417982")
-        throw new Error("Quadro não associado a esta empresa.");
-      return board;
-    },
-  });
+  const query = useCompanySessions(companyId);
   const people = query.data ? companyMentorships(query.data) : [];
   const statuses = Array.from(
     new Set(

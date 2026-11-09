@@ -1,4 +1,8 @@
 import {
+  demoPeople,
+  getAdminTrails,
+} from "@/modules/administracao/lib/development-demo";
+import {
   getProfilePhoto,
   saveProfilePhoto,
 } from "@/shared/informacoes-pessoais/profile-photo-store";
@@ -390,6 +394,35 @@ describe("rotas migradas", () => {
         updateOwnTrail(601, original);
       });
     }
+  });
+
+  it("usa os mentorados cadastrados e contagens atuais no dashboard administrativo", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        boardId: "18435417982",
+        generatedAt: new Date().toISOString(),
+        items: [],
+      }),
+    } as Response);
+    open("/mentor");
+    const table = within(screen.getByRole("table", { name: "Mentorados" }));
+    const trails = getAdminTrails();
+    const people = demoPeople.filter((person) =>
+      trails.some((trail) => trail.personId === person.id),
+    );
+    expect(table.getAllByRole("row")).toHaveLength(people.length + 1);
+    expect(
+      table.getByRole("columnheader", { name: "Status" }),
+    ).toBeInTheDocument();
+    expect(table.getByText("Luis Gustavo Ribeiro")).toBeInTheDocument();
+    const luis = table.getByText("Luis Gustavo Ribeiro").closest("tr")!;
+    expect(within(luis).getByText("Em andamento")).toHaveClass("bg-yellow-50");
+    const concluded = table.getByText("Diego Almeida").closest("tr")!;
+    expect(within(concluded).getByText("Concluído")).toHaveClass(
+      "bg-emerald-50",
+    );
+    expect(await screen.findByText("0")).toBeInTheDocument();
   });
 
   it("mostra a foto de perfil de Luis na empresa e uma única vaga utilizada", () => {

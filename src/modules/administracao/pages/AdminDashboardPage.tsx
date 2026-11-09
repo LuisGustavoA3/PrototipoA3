@@ -3,28 +3,33 @@ import { ArrowRight, CalendarCheck2, Route, UsersRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { PageHeader } from "@/components/PageHeader";
-import {
-  adminDashboardDemoMetrics,
-  adminDashboardDemoPeople,
-} from "@/modules/administracao/dashboard/adminDashboard.mock";
-
-import type {
-  AdminDashboardMetric,
-  AdminDashboardPerson,
-} from "@/modules/administracao/dashboard/types";
+import { demoPeople, useAdminTrails } from "../lib/development-demo";
+import { useCompanySessions } from "../lib/use-company-sessions";
+import { companyMentorships } from "@/lib/company-sessions";
+import type { AdminDashboardMetric } from "../dashboard/types";
+type DashboardPerson = {
+  id: string;
+  name: string;
+  trail: string;
+  status: "Em andamento" | "Concluído" | "Parado";
+};
 const metricIcons = {
   mentees: UsersRound,
   trails: Route,
   sessions: CalendarCheck2,
 };
 
-const statusStyles: Record<AdminDashboardPerson["status"], string> = {
-  "Em andamento": "border-teal-200 bg-teal-50 text-teal-800",
-  Atenção: "border-amber-200 bg-amber-50 text-amber-800",
+const statusStyles: Record<DashboardPerson["status"], string> = {
+  "Em andamento": "border-yellow-200 bg-yellow-50 text-yellow-800",
+  Parado: "border-red-200 bg-red-50 text-red-800",
   Concluído: "border-emerald-200 bg-emerald-50 text-emerald-800",
 };
 
-function MetricCard({ metric }: { metric: AdminDashboardMetric }) {
+function MetricCard({
+  metric,
+}: {
+  metric: Omit<AdminDashboardMetric, "value"> & { value: number | string };
+}) {
   const Icon = metricIcons[metric.icon];
 
   return (
@@ -47,45 +52,78 @@ function MetricCard({ metric }: { metric: AdminDashboardMetric }) {
   );
 }
 
-function PersonRow({ person }: { person: AdminDashboardPerson }) {
+function PersonRow({ person }: { person: DashboardPerson }) {
   return (
-    <li className="grid grid-cols-1 gap-4 border-t border-border/80 px-4 py-4 sm:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_auto_auto] sm:items-center sm:gap-5 sm:px-5">
-      <div className="min-w-0">
-        <p className="font-medium text-foreground">{person.name}</p>
-        <p className="mt-1 text-xs text-muted-foreground sm:hidden">
-          Mentorado
-        </p>
-      </div>
-
-      <div className="min-w-0">
-        <p className="text-[11px] text-muted-foreground sm:hidden">Trilha</p>
-        <p className="truncate text-sm text-foreground">{person.trail}</p>
-      </div>
-
-      <div>
-        <p className="mb-1 text-[11px] text-muted-foreground sm:hidden">
-          Status
-        </p>
+    <tr className="border-t border-border/80">
+      <th scope="row" className="px-5 py-4 text-left font-medium">
+        {person.name}
+      </th>
+      <td className="px-5 py-4 text-sm">{person.trail}</td>
+      <td className="px-5 py-4">
         <span
-          className={`inline-flex rounded-sm border px-2 py-1 text-xs font-medium ${statusStyles[person.status]}`}
+          className={`inline-flex whitespace-nowrap rounded-sm border px-2 py-1 text-xs font-medium ${statusStyles[person.status]}`}
         >
           {person.status}
         </span>
-      </div>
-
-      <div className="sm:justify-self-end">
-        <Button type="button" variant="outline" size="sm" asChild>
+      </td>
+      <td className="px-5 py-4">
+        <Button variant="outline" size="sm" asChild>
           <Link to={`/mentor/mentorados/${person.id}`}>
             Abrir acompanhamento
             <ArrowRight aria-hidden="true" />
           </Link>
         </Button>
-      </div>
-    </li>
+      </td>
+    </tr>
   );
 }
 
 export function AdminDashboardPage() {
+  const trails = useAdminTrails();
+  const board = useCompanySessions("testes");
+  const people: DashboardPerson[] = demoPeople
+    .filter((person) => trails.some((trail) => trail.personId === person.id))
+    .map((person) => {
+      const own = trails.filter((trail) => trail.personId === person.id);
+      const current = own.find((trail) => trail.status === "Ativa") ?? own[0]!;
+      const status = own.some((trail) => trail.status === "Ativa")
+        ? "Em andamento"
+        : own.every((trail) => trail.status === "Concluída")
+          ? "Concluído"
+          : "Parado";
+      return { id: person.id, name: person.name, trail: current.name, status };
+    });
+  const metrics: (Omit<AdminDashboardMetric, "value"> & {
+    value: number | string;
+  })[] = [
+    {
+      label: "Mentorados",
+      value: people.length,
+      detail: "Pessoas cadastradas com trilhas associadas",
+      icon: "mentees",
+    },
+    {
+      label: "Trilhas",
+      value: trails.length,
+      detail: "Trilhas cadastradas na Administração",
+      icon: "trails",
+    },
+    {
+      label: "Sessões",
+      value: board.data
+        ? companyMentorships(board.data).reduce(
+            (total, person) => total + person.sessions.length,
+            0,
+          )
+        : board.isPending
+          ? "Carregando…"
+          : "Indisponível",
+      detail: board.isError
+        ? "Falha ao atualizar o quadro Monday da empresa Testes"
+        : "Sessões do quadro Monday vinculado à empresa Testes",
+      icon: "sessions",
+    },
+  ];
   return (
     <div className="min-h-screen bg-background px-4 py-8 sm:px-6 lg:px-10">
       <div className="mx-auto max-w-7xl">
@@ -101,7 +139,7 @@ export function AdminDashboardPage() {
           <h2 className="text-lg font-semibold text-foreground">Visão geral</h2>
         </div>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          {adminDashboardDemoMetrics.map((metric) => (
+          {metrics.map((metric) => (
             <MetricCard key={metric.icon} metric={metric} />
           ))}
         </div>
@@ -120,22 +158,30 @@ export function AdminDashboardPage() {
               </p>
             </div>
             <span className="text-xs text-muted-foreground">
-              {adminDashboardDemoPeople.length} mentorados na lista
+              {people.length} mentorados na lista
             </span>
           </div>
 
-          <Card className="overflow-hidden rounded-md border-border/80 shadow-none">
-            <div className="hidden grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_auto_auto] gap-5 bg-secondary/70 px-5 py-3 text-[11px] font-semibold uppercase text-muted-foreground sm:grid">
-              <span>Mentorado</span>
-              <span>Trilha</span>
-              <span>Situação</span>
-              <span className="text-right">Ação</span>
-            </div>
-            <ul aria-label="Mentorados">
-              {adminDashboardDemoPeople.map((person) => (
-                <PersonRow key={person.id} person={person} />
-              ))}
-            </ul>
+          <Card className="overflow-x-auto rounded-md border-border/80 shadow-none">
+            <table
+              className="w-full min-w-[650px] text-left"
+              aria-label="Mentorados"
+            >
+              <thead className="bg-secondary/70 text-xs uppercase text-muted-foreground">
+                <tr>
+                  {["Mentorado", "Trilha", "Status", "Ação"].map((label) => (
+                    <th key={label} scope="col" className="px-5 py-3">
+                      {label}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {people.map((person) => (
+                  <PersonRow key={person.id} person={person} />
+                ))}
+              </tbody>
+            </table>
           </Card>
         </section>
       </div>
