@@ -1,8 +1,10 @@
+import { CURRENT_USER_COMPANY_ID } from "@/shared/lib/current-user-company";
 import { useSyncExternalStore } from "react";
 import { getEvaluationTools } from "./evaluation-tools";
 
 const key = "a3-company-assessment-contracts-v1";
 let contracts: Record<string, string[]> = {
+  [CURRENT_USER_COMPANY_ID]: getEvaluationTools().map((tool) => tool.id),
   testes: [
     "ancoras-carreira",
     "clifton-strengths",
@@ -20,7 +22,7 @@ try {
       (ids) => Array.isArray(ids) && ids.every((id) => typeof id === "string"),
     )
   )
-    contracts = saved as Record<string, string[]>;
+    contracts = { ...contracts, ...(saved as Record<string, string[]>) };
 } catch {
   /* Mantém os vínculos iniciais. */
 }

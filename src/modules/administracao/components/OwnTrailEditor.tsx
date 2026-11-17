@@ -8,6 +8,7 @@ import {
 
 export function OwnTrailEditor({ id }: { id: number }) {
   const trail = useOwnTrails().find((item) => item.id === id)!;
+  const [loadingImage, setLoadingImage] = useState(false);
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(trail.name);
   const [image, setImage] = useState(trail.image);
@@ -56,11 +57,55 @@ export function OwnTrailEditor({ id }: { id: number }) {
           <label className="block space-y-2 text-sm">
             <span>Imagem da trilha (URL)</span>
             <Input
-              value={image}
-              required
+              value={image.startsWith("data:") ? "" : image}
+              placeholder={
+                image.startsWith("data:")
+                  ? "Imagem enviada selecionada"
+                  : "URL da imagem"
+              }
               onChange={(event) => setImage(event.target.value)}
             />
           </label>
+          <label className="block space-y-2 text-sm">
+            <span>Enviar imagem da trilha (PNG, JPG ou WebP, até 1 MB)</span>
+            <Input
+              type="file"
+              accept="image/png,image/jpeg,image/webp"
+              disabled={loadingImage}
+              onChange={(event) => {
+                const file = event.target.files?.[0];
+                if (!file) return;
+                if (
+                  !["image/png", "image/jpeg", "image/webp"].includes(
+                    file.type,
+                  ) ||
+                  file.size > 1024 * 1024
+                ) {
+                  setMessage("Envie PNG, JPG ou WebP de até 1 MB.");
+                  return;
+                }
+                setMessage("");
+                setLoadingImage(true);
+                const reader = new FileReader();
+                reader.onload = () => {
+                  setImage(String(reader.result));
+                  setLoadingImage(false);
+                };
+                reader.onerror = () => {
+                  setMessage("Não foi possível ler a imagem.");
+                  setLoadingImage(false);
+                };
+                reader.readAsDataURL(file);
+              }}
+            />
+          </label>
+          {image && (
+            <img
+              src={image}
+              alt="Prévia da capa da trilha"
+              className="h-40 w-28 rounded-md border border-border object-cover"
+            />
+          )}
           <label className="block space-y-2 text-sm">
             <span>Status da trilha</span>
             <select
@@ -73,7 +118,12 @@ export function OwnTrailEditor({ id }: { id: number }) {
             </select>
           </label>
           <div className="flex gap-2">
-            <Button type="submit">Salvar trilha</Button>
+            <Button
+              type="submit"
+              disabled={loadingImage || !image || !name.trim()}
+            >
+              Salvar trilha
+            </Button>
             <Button
               type="button"
               variant="outline"

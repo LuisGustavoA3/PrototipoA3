@@ -74,9 +74,14 @@ export function updateOwnTrail(
   const url = new URL(next.image, window.location.origin);
   if (
     !next.image.startsWith(import.meta.env.BASE_URL + "images/") &&
-    url.protocol !== "https:"
+    url.protocol !== "https:" &&
+    !/^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/]+={0,2}$/.test(
+      next.image,
+    )
   )
-    throw new Error("Use uma imagem local da aplicação ou uma URL HTTPS.");
+    throw new Error(
+      "Use uma imagem PNG, JPG ou WebP, uma imagem local da aplicação ou uma URL HTTPS.",
+    );
   const updated = MENTORADO_TRAILS.map((item) =>
     item.id === id ? next : item,
   );

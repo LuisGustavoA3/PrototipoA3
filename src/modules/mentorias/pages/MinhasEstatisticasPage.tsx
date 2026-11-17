@@ -1,13 +1,11 @@
 import { MentoriasBreadcrumb } from "@/modules/mentorias/components/MentoriasBreadcrumb";
 import { useMemo, useState } from "react";
 import { useSidebarOpen } from "@/hooks/use-sidebar";
-import { Link } from "react-router-dom";
 import {
   getCompetencyProgress,
   useLibraryContents,
 } from "@/modules/mentorias/biblioteca";
 import {
-  ArrowLeft,
   Check,
   MessageCircle,
   Plus,
@@ -220,13 +218,6 @@ export function MinhasEstatisticasPage() {
           <MentoriasBreadcrumb />
           <div className="space-y-6 p-6">
             <div className="flex items-center gap-3">
-              <Link
-                to="/"
-                className="inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-              >
-                <ArrowLeft className="size-4" />
-                Voltar
-              </Link>
               <h1 className="label-caps text-lg text-foreground">
                 Minhas Estatísticas
               </h1>

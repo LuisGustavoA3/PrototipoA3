@@ -7,6 +7,10 @@ import { useSyncExternalStore, useMemo } from "react";
 export type AssessmentStatus = "completed" | "processing" | "not-started";
 
 export type Assessment = {
+  associated?: boolean;
+  performed?: boolean;
+  resultUrl?: string;
+  resultFileName?: string;
   toolId?: string;
   name: string;
   description: string;
@@ -89,11 +93,13 @@ export function useAssessments() {
   );
   return useMemo(
     () =>
-      entries.map((entry) => ({
-        ...entry,
-        name:
-          tools.find((tool) => tool.id === entry.toolId)?.name ?? entry.name,
-      })),
+      entries
+        .filter((entry) => entry.associated !== false)
+        .map((entry) => ({
+          ...entry,
+          name:
+            tools.find((tool) => tool.id === entry.toolId)?.name ?? entry.name,
+        })),
     [entries, tools],
   );
 }
@@ -118,8 +124,63 @@ export function updateAssessment(name: string, changes: Partial<Assessment>) {
 export function addAssessment(item: Assessment) {
   const tool = getEvaluationTools().find((tool) => tool.name === item.name);
   if (!tool) throw new Error("Selecione uma ferramenta do catálogo.");
-  if (assessments.some((entry) => entry.toolId === tool.id))
+  if (
+    assessments.some(
+      (entry) => entry.toolId === tool.id && entry.associated !== false,
+    )
+  )
     throw new Error("Já existe uma aplicação dessa ferramenta.");
-  assessments = [...assessments, { ...item, name: tool.name, toolId: tool.id }];
+  const existing = assessments.find((entry) => entry.toolId === tool.id);
+  if (existing)
+    assessments = assessments.map((entry) =>
+      entry === existing
+        ? {
+            ...entry,
+            ...item,
+            name: tool.name,
+            toolId: tool.id,
+            associated: true,
+          }
+        : entry,
+    );
+  else
+    assessments = [
+      ...assessments,
+      { ...item, name: tool.name, toolId: tool.id, associated: true },
+    ];
   listeners.forEach((notify) => notify());
+}
+
+export function disassociateAssessment(name: string) {
+  assessments = assessments.map((entry) =>
+    entry.name === name || displayName(entry) === name
+      ? { ...entry, associated: false }
+      : entry,
+  );
+  listeners.forEach((notify) => notify());
+}
+
+export function associateAssessment(toolId: string) {
+  const tool = getEvaluationTools().find((item) => item.id === toolId);
+  if (!tool) return;
+  const existing = assessments.find((item) => item.toolId === toolId);
+  if (existing) {
+    assessments = assessments.map((item) =>
+      item === existing ? { ...item, associated: true } : item,
+    );
+    listeners.forEach((notify) => notify());
+  } else
+    addAssessment({
+      toolId,
+      name: tool.name,
+      description: "",
+      status: "not-started",
+    });
+}
+
+export function getAssessmentDisplayStatus(item: Assessment): AssessmentStatus {
+  if (item.resultUrl) return "completed";
+  return (item.performed ?? item.status !== "not-started")
+    ? "processing"
+    : "not-started";
 }

@@ -21,7 +21,7 @@ export function EvaluationToolEditor({
   return (
     <form
       aria-label="Editar ferramenta de avaliação"
-      className="space-y-4 rounded-md border border-primary/30 bg-card p-5"
+      className="space-y-4 py-2"
       onSubmit={(event) => {
         event.preventDefault();
         try {
@@ -35,7 +35,6 @@ export function EvaluationToolEditor({
         }
       }}
     >
-      <h2 className="font-semibold">Dados da ferramenta</h2>
       <label className="block space-y-2 text-sm">
         <span>Nome da ferramenta</span>
         <Input
@@ -129,12 +128,12 @@ export function EvaluationToolEditor({
           {error}
         </p>
       )}
-      <div className="flex gap-2">
-        <Button type="submit" disabled={loading}>
-          Salvar ferramenta
-        </Button>
+      <div className="flex justify-end gap-2 pt-2">
         <Button type="button" variant="outline" onClick={onClose}>
           Cancelar
+        </Button>
+        <Button type="submit" disabled={loading}>
+          Salvar ferramenta
         </Button>
       </div>
     </form>

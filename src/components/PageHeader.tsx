@@ -1,7 +1,4 @@
 import type { ReactNode } from "react";
-import { ChevronLeft } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { goBack } from "@/lib/navigation-history";
 
 interface PageHeaderProps {
   section?: string;
@@ -16,24 +13,8 @@ export function PageHeader({
   description,
   actions,
 }: PageHeaderProps) {
-  const navigate = useNavigate();
-
-  const handleBack = () => {
-    goBack(navigate);
-  };
-
   return (
     <header className="mb-8 border-b border-border/80 pb-6">
-      <button
-        type="button"
-        onClick={handleBack}
-        aria-label="Voltar"
-        className="mb-4 inline-flex items-center gap-2 rounded-md px-2 py-1 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-primary"
-      >
-        <ChevronLeft className="size-4" />
-        <span>Voltar</span>
-      </button>
-
       {section && <p className="label-caps text-xs text-primary">{section}</p>}
 
       <div className="mt- flex flex-wrap items-end justify-between gap-4">

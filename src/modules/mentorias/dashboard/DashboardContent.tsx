@@ -1,3 +1,8 @@
+import { assessmentImages } from "../assessment/assessment-images";
+import { CURRENT_USER_COMPANY_ID } from "@/shared/lib/current-user-company";
+import { useCompanyTools } from "../assessment/company-tool-contracts";
+import { useEvaluationTools } from "../assessment/evaluation-tools";
+
 import { Link, useNavigate } from "react-router-dom";
 import { useSelectedTrail } from "@/modules/mentorias/trilhas/use-selected-trail";
 import {
@@ -151,6 +156,14 @@ function ProgressBar({
 }
 
 export function DashboardContent() {
+  const contractedTools = useCompanyTools(CURRENT_USER_COMPANY_ID);
+  const evaluationTools = useEvaluationTools();
+  const dashboardAssessments = evaluationTools.filter(
+    (tool) =>
+      tool.active &&
+      contractedTools.includes(tool.id) &&
+      assessmentImages[tool.id],
+  );
   const navigate = useNavigate();
   const actions = usePdiActions();
   const contents = useLibraryContents();
@@ -555,6 +568,23 @@ export function DashboardContent() {
           >
             Ver biblioteca <ArrowRight className="size-3" />
           </Link>
+          <nav aria-label="Assessments" className="mt-4 flex flex-wrap gap-2">
+            {dashboardAssessments.map((tool) => (
+              <Link
+                key={tool.id}
+                to="/meu-assessment"
+                aria-label={`Ver assessment ${tool.name}`}
+                title={tool.name}
+                className="flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-md border border-border bg-white p-1.5 transition-colors hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              >
+                <img
+                  src={`${import.meta.env.BASE_URL}images/${encodeURIComponent(assessmentImages[tool.id]!)}`}
+                  alt={tool.name}
+                  className="size-full object-contain"
+                />
+              </Link>
+            ))}
+          </nav>
         </Card>
         <Card>
           <CardHeader

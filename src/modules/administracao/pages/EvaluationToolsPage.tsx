@@ -1,3 +1,10 @@
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { assessmentImages } from "@/modules/mentorias/assessment/assessment-images";
 import { useState } from "react";
 import { CheckCircle2, XCircle, ImageIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -45,14 +52,26 @@ export default function EvaluationToolsPage() {
           Adicionar ferramenta
         </Button>
       </div>
-      {editing && (
-        <EvaluationToolEditor
-          key={editing.id}
-          tool={editing}
-          onClose={() => setEditing(null)}
-          onSaved={() => setMessage("Ferramenta salva.")}
-        />
-      )}
+      <Dialog
+        open={editing !== null}
+        onOpenChange={(open) => !open && setEditing(null)}
+      >
+        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-xl">
+          <DialogHeader>
+            <DialogTitle>
+              {editing?.name ? "Editar ferramenta" : "Adicionar ferramenta"}
+            </DialogTitle>
+          </DialogHeader>
+          {editing && (
+            <EvaluationToolEditor
+              key={editing.id}
+              tool={editing}
+              onClose={() => setEditing(null)}
+              onSaved={() => setMessage("Ferramenta salva.")}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
       {message && <p role="status">{message}</p>}
       <div className="overflow-x-auto rounded-md border border-border bg-card">
         <table className="w-full min-w-[650px] text-left text-sm">
@@ -73,11 +92,14 @@ export default function EvaluationToolsPage() {
                 className="border-b border-border last:border-0"
               >
                 <td className="px-5 py-4">
-                  {tool.image ? (
+                  {tool.image || assessmentImages[tool.id] ? (
                     <img
-                      src={tool.image}
+                      src={
+                        tool.image ||
+                        `${import.meta.env.BASE_URL}images/${encodeURIComponent(assessmentImages[tool.id]!)}`
+                      }
                       alt={`Imagem de ${tool.name}`}
-                      className="size-16 rounded-md border border-border object-contain"
+                      className="size-16 rounded-md border border-border bg-white p-1 object-contain"
                     />
                   ) : (
                     <span className="flex size-16 items-center justify-center rounded-md border border-dashed border-border bg-muted">

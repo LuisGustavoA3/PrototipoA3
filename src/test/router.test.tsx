@@ -1,4 +1,12 @@
 import {
+  demoPeople,
+  getAdminTrails,
+} from "@/modules/administracao/lib/development-demo";
+import {
+  getProfilePhoto,
+  saveProfilePhoto,
+} from "@/shared/informacoes-pessoais/profile-photo-store";
+import {
   act,
   fireEvent,
   render,
@@ -139,17 +147,16 @@ describe("rotas migradas", () => {
     }
   });
 
-  it("exibe em Mentorias apenas avaliações contratadas em processamento ou concluídas", async () => {
-    const previous = getCompanyTools("testes");
-    saveCompanyTools("testes", ["ancoras-carreira", "htm"]);
+  it("exibe em Mentorias avaliações contratadas e associadas com suas imagens", async () => {
+    const previous = getCompanyTools("a3");
+    saveCompanyTools("a3", ["ancoras-carreira", "htm"]);
     open("/meu-assessment");
     try {
       expect(
         screen.getByRole("heading", { name: "Âncoras de Carreira" }),
       ).toBeInTheDocument();
-      expect(
-        screen.queryByRole("heading", { name: "HTM" }),
-      ).not.toBeInTheDocument();
+      expect(screen.getByRole("heading", { name: "HTM" })).toBeInTheDocument();
+      expect(screen.getByRole("img", { name: "HTM" })).toBeInTheDocument();
       expect(
         screen.queryByRole("heading", { name: "CliftonStrengths" }),
       ).not.toBeInTheDocument();
@@ -160,7 +167,7 @@ describe("rotas migradas", () => {
         screen.queryByText("Aguardando realização"),
       ).not.toBeInTheDocument();
       await act(async () => {
-        saveCompanyTools("testes", ["clifton-strengths"]);
+        saveCompanyTools("a3", ["clifton-strengths"]);
       });
       expect(
         screen.getByRole("heading", { name: "CliftonStrengths" }),
@@ -170,7 +177,7 @@ describe("rotas migradas", () => {
       ).not.toBeInTheDocument();
     } finally {
       await act(async () => {
-        saveCompanyTools("testes", previous);
+        saveCompanyTools("a3", previous);
       });
     }
   });
@@ -203,50 +210,142 @@ describe("rotas migradas", () => {
     expect(table.getAllByRole("row")).toHaveLength(2);
     expect(table.getByRole("rowheader", { name: "HTM" })).toBeInTheDocument();
   });
-  it("compartilha a edição de assessments e a criação de itens da Jornada com o mentorado", async () => {
+  it("mostra cards com imagens e interruptores preservando o resultado ao reassociar", async () => {
+    const originalUrl = URL.createObjectURL;
+    URL.createObjectURL = vi.fn(() => "blob:resultado-assessment");
     const { router } = open(
       "/mentor/mentorados/luis-gustavo/trilhas/trilha-luis-601",
     );
-    fireEvent.click(
-      screen.getByRole("button", {
-        name: "Editar assessment Âncoras de Carreira",
-      }),
-    );
-    const previous = (
-      screen.getByLabelText("Descrição do assessment") as HTMLTextAreaElement
-    ).value;
-    fireEvent.change(screen.getByLabelText("Descrição do assessment"), {
-      target: { value: "Descrição editada pela equipe A3" },
+    const name = "Âncoras de Carreira";
+    expect(screen.getByRole("img", { name })).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /Editar assessment/ }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("switch", { name: `Associar ${name}` }),
+    ).toBeChecked();
+    const performed = screen.getByRole("switch", {
+      name: `Assessment feito: ${name}`,
     });
-    fireEvent.click(screen.getByRole("button", { name: "Salvar assessment" }));
+    expect(performed).toBeChecked();
+    fireEvent.click(performed);
+    expect(performed).not.toBeChecked();
+    expect(
+      screen.getByRole("switch", { name: `Associar ${name}` }),
+    ).toBeChecked();
+    fireEvent.click(performed);
+    expect(performed).toBeChecked();
+
     try {
+      fireEvent.click(
+        screen.getByRole("button", { name: `Enviar resultado ${name}` }),
+      );
+      fireEvent.change(
+        screen.getByLabelText(
+          "Arquivo do resultado (PDF, PNG ou JPG, até 10 MB)",
+        ),
+        {
+          target: {
+            files: [
+              new File(["resultado"], "resultado.pdf", {
+                type: "application/pdf",
+              }),
+            ],
+          },
+        },
+      );
+      fireEvent.click(screen.getByRole("button", { name: "Salvar resultado" }));
+      expect(screen.getByText("Resultado enviado")).toBeInTheDocument();
+      fireEvent.click(screen.getByRole("switch", { name: `Associar ${name}` }));
+      expect(
+        screen.getByRole("switch", { name: `Associar ${name}` }),
+      ).not.toBeChecked();
+      expect(getCompanyTools("a3")).toContain("ancoras-carreira");
+      await act(async () => {
+        await router.navigate("/meu-assessment");
+      });
+      expect(screen.queryByRole("heading", { name })).not.toBeInTheDocument();
+      await act(async () => {
+        await router.navigate(
+          "/mentor/mentorados/luis-gustavo/trilhas/trilha-luis-601",
+        );
+      });
+      fireEvent.click(screen.getByRole("switch", { name: `Associar ${name}` }));
+      expect(
+        screen.getByRole("link", { name: "Ver arquivo do resultado" }),
+      ).toHaveAttribute("href", "blob:resultado-assessment");
       await act(async () => {
         await router.navigate("/meu-assessment");
       });
       expect(
-        screen.getByText("Descrição editada pela equipe A3"),
-      ).toBeInTheDocument();
-      await act(async () => {
-        await router.navigate(
-          "/mentor/mentorados/luis-gustavo/trilhas/trilha-luis-601?secao=Jornada",
-        );
-      });
-      fireEvent.change(screen.getByLabelText("Novo item da Jornada"), {
-        target: { value: "Entregável criado no acompanhamento administrativo" },
-      });
-      fireEvent.click(screen.getByRole("button", { name: "Adicionar item" }));
-      await act(async () => {
-        await router.navigate("/jornada-de-desenvolvimento");
-      });
-      expect(
-        screen.getByText("Entregável criado no acompanhamento administrativo"),
-      ).toBeInTheDocument();
+        screen.getByRole("link", { name: "Ver resultados" }),
+      ).toHaveAttribute("href", "blob:resultado-assessment");
     } finally {
-      await act(async () => {
-        updateAssessment("Âncoras de Carreira", { description: previous });
-      });
+      URL.createObjectURL = originalUrl;
+      act(() =>
+        updateAssessment(name, {
+          status: "completed",
+          associated: true,
+          resultUrl: "",
+          resultFileName: "",
+        }),
+      );
     }
   });
+
+  it("cria itens da Jornada pelo modal e compartilha com o mentorado", async () => {
+    const { router } = open(
+      "/mentor/mentorados/luis-gustavo/trilhas/trilha-luis-601?secao=Jornada",
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Adicionar item" }));
+    fireEvent.change(screen.getByLabelText("Novo item da Jornada"), {
+      target: { value: "Entregável criado no acompanhamento administrativo" },
+    });
+    fireEvent.click(
+      within(screen.getByRole("dialog")).getByRole("button", {
+        name: "Salvar item",
+      }),
+    );
+    await act(async () => {
+      await router.navigate("/jornada-de-desenvolvimento");
+    });
+    expect(
+      screen.getByText("Entregável criado no acompanhamento administrativo"),
+    ).toBeInTheDocument();
+  });
+
+  it("permite enviar e salvar imagem na edição da trilha", async () => {
+    const original = { ...MENTORADO_TRAILS.find((item) => item.id === 601)! };
+    open("/mentor/mentorados/luis-gustavo/trilhas/trilha-luis-601");
+    fireEvent.click(screen.getByRole("button", { name: "Editar trilha" }));
+    fireEvent.change(
+      screen.getByLabelText(
+        "Enviar imagem da trilha (PNG, JPG ou WebP, até 1 MB)",
+      ),
+      {
+        target: {
+          files: [new File(["capa"], "capa.png", { type: "image/png" })],
+        },
+      },
+    );
+    await waitFor(() =>
+      expect(
+        screen
+          .getByRole("img", { name: "Prévia da capa da trilha" })
+          .getAttribute("src"),
+      ).toMatch(/^data:image\/png;base64,/),
+    );
+    try {
+      fireEvent.click(screen.getByRole("button", { name: "Salvar trilha" }));
+      expect(MENTORADO_TRAILS.find((item) => item.id === 601)!.image).toMatch(
+        /^data:image\/png;base64,/,
+      );
+      expect(screen.getByText("Trilha atualizada.")).toBeInTheDocument();
+    } finally {
+      act(() => updateOwnTrail(601, original));
+    }
+  });
+
   it("inclui a trilha de Luis na Administração e compartilha sua edição com Mentorias", async () => {
     const original = { ...MENTORADO_TRAILS.find((item) => item.id === 601)! };
     const { router } = open("/mentor/trilhas");
@@ -297,6 +396,151 @@ describe("rotas migradas", () => {
     }
   });
 
+  it("usa os mentorados cadastrados e contagens atuais no dashboard administrativo", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        boardId: "18435417982",
+        generatedAt: new Date().toISOString(),
+        items: [],
+      }),
+    } as Response);
+    open("/mentor");
+    const table = within(screen.getByRole("table", { name: "Mentorados" }));
+    const trails = getAdminTrails();
+    const people = demoPeople.filter((person) =>
+      trails.some((trail) => trail.personId === person.id),
+    );
+    expect(table.getAllByRole("row")).toHaveLength(people.length + 1);
+    expect(
+      table.getByRole("columnheader", { name: "Status" }),
+    ).toBeInTheDocument();
+    expect(table.getByText("Luis Gustavo Ribeiro")).toBeInTheDocument();
+    const luis = table.getByText("Luis Gustavo Ribeiro").closest("tr")!;
+    expect(within(luis).getByText("Em andamento")).toHaveClass("bg-yellow-50");
+    const concluded = table.getByText("Diego Almeida").closest("tr")!;
+    expect(within(concluded).getByText("Concluído")).toHaveClass(
+      "bg-emerald-50",
+    );
+    expect(await screen.findByText("0")).toBeInTheDocument();
+  });
+
+  it("mostra a foto de perfil de Luis na empresa e uma única vaga utilizada", () => {
+    const previous = getProfilePhoto();
+    const image = "data:image/png;base64,Y2FwYQ==";
+    saveProfilePhoto(image);
+    try {
+      open("/mentor/empresas/a3");
+      expect(
+        screen.getByRole("img", { name: "Foto de Luis Gustavo Ribeiro" }),
+      ).toHaveAttribute("src", image);
+      expect(screen.getByText("1/10 utilizadas")).toBeInTheDocument();
+      expect(screen.getByText(/9 disponíveis/)).toBeInTheDocument();
+    } finally {
+      act(() => saveProfilePhoto(previous));
+    }
+  });
+
+  it("vincula Luis à A3 e permite configurar os assessments pela empresa", async () => {
+    const previous = getCompanyTools("a3");
+    const { router } = open("/mentor/empresas/a3");
+    expect(screen.getByText("Luis Gustavo Ribeiro")).toBeInTheDocument();
+    const tools = getEvaluationTools();
+    for (const tool of tools)
+      expect(screen.getByRole("checkbox", { name: tool.name })).toBeChecked();
+    const tool = tools.find((item) => item.id === "ancoras-carreira")!;
+    fireEvent.click(screen.getByRole("checkbox", { name: tool.name }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "Salvar ferramentas contratadas" }),
+    );
+    try {
+      await act(async () => {
+        await router.navigate("/meu-assessment");
+      });
+      expect(
+        screen.queryByRole("heading", { name: tool.name }),
+      ).not.toBeInTheDocument();
+      expect(getCompanyTools("testes")).toContain("ancoras-carreira");
+    } finally {
+      act(() => {
+        saveCompanyTools("a3", previous);
+      });
+    }
+  });
+
+  it("abre os dez arquivos por link e trata IDs ausentes", async () => {
+    const { router } = open("/arquivos-compartilhados/ARQ-001/visualizar");
+    for (let index = 1; index <= 10; index++) {
+      const id = `ARQ-${String(index).padStart(3, "0")}`;
+      await act(async () => {
+        await router.navigate(`/arquivos-compartilhados/${id}/visualizar`);
+      });
+      expect(
+        screen.getByRole("button", { name: "Baixar arquivo" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByText("Arquivo não disponível"),
+      ).not.toBeInTheDocument();
+    }
+    await act(async () => {
+      await router.navigate("/arquivos-compartilhados/inexistente/visualizar");
+    });
+    expect(
+      screen.getByRole("heading", { name: "Arquivo não disponível" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Baixar arquivo" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("exibe todos os detalhes do PDI na tabela e edita mantendo os cards", () => {
+    const previous = { ...getPdiActions()[0]! };
+    open("/plano-de-acao");
+    const table = screen.getByRole("table");
+    const row = within(table)
+      .getByRole("rowheader", { name: previous.name })
+      .closest("tr")!;
+    for (const value of [
+      previous.name,
+      previous.author,
+      previous.competency,
+      previous.status,
+      previous.details,
+    ]) {
+      expect(within(row).getByText(value)).toBeInTheDocument();
+    }
+    expect(
+      within(table).getByText(getPdiActions()[1]!.evidence),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /Exportar Excel/ }),
+    ).not.toBeInTheDocument();
+    fireEvent.click(
+      within(row).getByRole("button", {
+        name: `Editar ação: ${previous.name}`,
+      }),
+    );
+    const dialog = screen.getByRole("dialog");
+    fireEvent.change(within(dialog).getByLabelText("Nome da ação *"), {
+      target: { value: "Ação editada pela tabela" },
+    });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Salvar" }));
+    try {
+      expect(
+        within(table).getByText("Ação editada pela tabela"),
+      ).toBeInTheDocument();
+      expect(
+        within(
+          screen.getByRole("region", { name: "Ações em cards" }),
+        ).getByRole("button", { name: /Ação editada pela tabela/ }),
+      ).toBeInTheDocument();
+    } finally {
+      act(() => {
+        updatePdiAction(previous.id, previous);
+      });
+    }
+  });
+
   it("edita o mesmo PDI de Luis nos dois módulos sem expor as ações a outro mentorado", async () => {
     const previous = { ...getPdiActions()[0]! };
     const { router } = open(
@@ -314,7 +558,9 @@ describe("rotas migradas", () => {
         await router.navigate("/plano-de-acao");
       });
       expect(
-        screen.getByText("Ação compartilhada entre os módulos"),
+        within(screen.getByRole("table")).getByText(
+          "Ação compartilhada entre os módulos",
+        ),
       ).toBeInTheDocument();
       await act(async () => {
         await router.navigate(
@@ -331,6 +577,90 @@ describe("rotas migradas", () => {
     }
   });
 
+  it("limita a tabela do mentorado a sessão, consultor e data prevista", async () => {
+    open("/sessoes-mentoria");
+    expect(
+      screen.queryByText("Informações do acompanhamento"),
+    ).not.toBeInTheDocument();
+    expect(
+      screen
+        .getAllByRole("columnheader")
+        .map((cell) => cell.textContent?.trim()),
+    ).toEqual(["Sessão", "Consultor", "Data prevista"]);
+    expect(
+      await screen.findByText("Nenhuma sessão encontrada."),
+    ).toHaveAttribute("colspan", "3");
+  });
+
+  it("mostra o quadro completo do Monday na trilha de Luis sem permitir comentários administrativos", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        mentorship: {
+          mondayItemId: "13286629656",
+          menteeName: "Luis Gustavo Ribeiro",
+          status: "Andamento",
+          manager: [],
+          monitoring: [],
+          attendance: [],
+          contractDeadline: null,
+          schedule: null,
+          progress: 50,
+        },
+        sessoes: [
+          {
+            mondaySubitemId: "sessao-teste",
+            mondayParentItemId: "13286629656",
+            name: "Atendimento do Luis no Monday",
+            consultant: ["Juliano"],
+            scheduledDate: "2026-11-04",
+            completedDate: null,
+            deadline: null,
+            status: "Previsto",
+            plannedHours: 1,
+            completedHours: 0,
+            rescheduled: null,
+            realization: null,
+            comment: null,
+            monitoring: [],
+            progress: 0,
+          },
+        ],
+      }),
+    } as Response);
+    const { router } = open(
+      "/mentor/mentorados/luis-gustavo/trilhas/trilha-luis-601?secao=Sess%C3%B5es",
+    );
+    expect(
+      await screen.findByText("Atendimento do Luis no Monday"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Informações do acompanhamento"),
+    ).toBeInTheDocument();
+    for (const name of [
+      "Consultor",
+      "Data prevista",
+      "Data realizada",
+      "CH prevista",
+      "CH realizada",
+    ]) {
+      expect(screen.getByRole("columnheader", { name })).toBeInTheDocument();
+    }
+    expect(
+      screen.getByRole("button", {
+        name: "Comentar a sessão Atendimento do Luis no Monday",
+      }),
+    ).toBeDisabled();
+    await act(async () => {
+      await router.navigate(
+        "/mentor/mentorados/demo-1/trilhas/trilha-demo-1?secao=Sess%C3%B5es",
+      );
+    });
+    expect(
+      screen.queryByText("Atendimento do Luis no Monday"),
+    ).not.toBeInTheDocument();
+  });
+
   it("edita documentos da mesma fonte usada nos arquivos do mentorado", async () => {
     const previous = { ...getSharedFiles()[0]! };
     const { router } = open(
@@ -338,6 +668,10 @@ describe("rotas migradas", () => {
     );
     fireEvent.click(
       screen.getByRole("button", { name: `Editar documento ${previous.name}` }),
+    );
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    fireEvent.click(
+      screen.getByRole("checkbox", { name: "Permitir download" }),
     );
     fireEvent.change(screen.getByLabelText("Nome do documento"), {
       target: { value: "Documento atualizado pela Administração.pdf" },
@@ -350,6 +684,19 @@ describe("rotas migradas", () => {
       expect(
         screen.getByText("Documento atualizado pela Administração.pdf"),
       ).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", {
+          name: "Baixar Documento atualizado pela Administração.pdf",
+        }),
+      ).toBeDisabled();
+      await act(async () => {
+        await router.navigate(
+          `/arquivos-compartilhados/${previous.id}/visualizar`,
+        );
+      });
+      expect(
+        screen.getByRole("button", { name: "Baixar arquivo" }),
+      ).toBeDisabled();
     } finally {
       await act(async () => {
         updateSharedFile(previous.id, previous);
@@ -361,7 +708,8 @@ describe("rotas migradas", () => {
     const { router } = open(
       "/mentor/mentorados/luis-gustavo/trilhas/trilha-luis-601?secao=Anota%C3%A7%C3%B5es",
     );
-    fireEvent.change(screen.getByLabelText("Anotação do mentor"), {
+    fireEvent.click(screen.getByRole("button", { name: "Nova anotação" }));
+    fireEvent.change(screen.getByLabelText("Anotação"), {
       target: { value: "Registro privado do acompanhamento" },
     });
     fireEvent.click(screen.getByRole("button", { name: "Salvar anotação" }));
@@ -376,6 +724,9 @@ describe("rotas migradas", () => {
         "/mentor/mentorados/luis-gustavo/trilhas/trilha-luis-601?secao=Anota%C3%A7%C3%B5es",
       );
     });
+    fireEvent.click(
+      screen.getByRole("button", { name: "Abrir anotação do mentor 1" }),
+    );
     fireEvent.click(screen.getByRole("button", { name: "Editar anotação" }));
     fireEvent.click(
       screen.getByRole("checkbox", { name: "Compartilhar com mentorado" }),
@@ -385,7 +736,15 @@ describe("rotas migradas", () => {
       await router.navigate("/jornada-de-desenvolvimento");
     });
     expect(
-      screen.getByText("Registro privado do acompanhamento"),
+      screen.queryByText("Registro privado do acompanhamento"),
+    ).not.toBeInTheDocument();
+    fireEvent.click(
+      screen.getByRole("button", { name: "Abrir anotação do mentor 1" }),
+    );
+    expect(
+      within(screen.getByRole("dialog")).getByText(
+        "Registro privado do acompanhamento",
+      ),
     ).toBeInTheDocument();
   });
   it("marca a trilha selecionada em Minhas trilhas e preserva a marcação ao reabrir", () => {
@@ -493,17 +852,19 @@ describe("rotas migradas", () => {
     expect(nav.getByText(content.name)).toHaveAttribute("aria-current", "page");
   });
 
-  it("abre Informações Pessoais sem navegação de módulo e volta ao Hub", async () => {
+  it("abre Informações Pessoais com breadcrumb para o Hub", async () => {
     const { router } = open("/informacoes-pessoais?modulo=administracao");
-    expect(screen.queryByRole("navigation")).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("navigation", { name: "Navegação estrutural" }),
+    ).toBeInTheDocument();
     expect(
       screen.queryByRole("button", { name: "Perfil" }),
     ).not.toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Voltar" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Hub" })).toHaveAttribute(
       "href",
       "/hub",
     );
-    fireEvent.click(screen.getByRole("link", { name: "Voltar" }));
+    fireEvent.click(screen.getByRole("link", { name: "Hub" }));
     await waitFor(() => expect(router.state.location.pathname).toBe("/hub"));
   });
 
@@ -848,8 +1209,10 @@ describe("rotas migradas", () => {
   });
   it("mantém o formulário pessoal acessível diretamente", () => {
     open("/informacoes-pessoais");
-    expect(screen.queryByRole("navigation")).not.toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Voltar" })).toHaveAttribute(
+    expect(
+      screen.getByRole("navigation", { name: "Navegação estrutural" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Hub" })).toHaveAttribute(
       "href",
       "/hub",
     );

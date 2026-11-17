@@ -1,3 +1,4 @@
+import ArquivoViewerPage from "@/modules/mentorias/pages/ArquivoViewerPage";
 import UsuarioPage from "@/modules/administracao/pages/UsuarioPage";
 import EmpresaPage from "@/modules/administracao/pages/EmpresaPage";
 import MentoradosPage from "@/modules/administracao/pages/MentoradosPage";
@@ -41,6 +42,11 @@ export const appRoutes = [
     element: <RootLayout />,
     errorElement: <ErrorPage />,
     children: [
+      {
+        path: "/arquivos-compartilhados/:fileId/visualizar",
+        element: <ArquivoViewerPage />,
+        handle: { title: "Visualizar arquivo | A3 Digital" },
+      },
       {
         path: "/mentor/usuarios/:userId",
         element: <UsuarioPage />,
@@ -249,7 +255,7 @@ export const appRoutes = [
             {
               name: "description",
               content:
-                "Acompanhe suas trilhas, sessões de mentoria, assessment e plano de ação na plataforma A3 Digital.",
+                "Acompanhe suas trilhas, atendimentos de mentoria, assessment e plano de ação na plataforma A3 Digital.",
             },
             { property: "og:title", content: "Dashboard | A3 Digital" },
             {

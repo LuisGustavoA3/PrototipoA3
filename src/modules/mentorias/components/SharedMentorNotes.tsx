@@ -1,3 +1,4 @@
+import { MentorNoteCard } from "./MentorNoteCard";
 import { useMentorNotes } from "../trilhas/mentor-notes-store";
 export function SharedMentorNotes() {
   const notes = useMentorNotes().filter((note) => note.shared);
@@ -7,14 +8,11 @@ export function SharedMentorNotes() {
       <h2 className="text-lg font-semibold">
         Anotações compartilhadas do mentor
       </h2>
-      {notes.map((note) => (
-        <p
-          key={note.id}
-          className="whitespace-pre-line border-t border-border pt-3 text-sm"
-        >
-          {note.text}
-        </p>
-      ))}
+      <div className="grid gap-4 sm:grid-cols-2">
+        {notes.map((note, index) => (
+          <MentorNoteCard key={note.id} text={note.text} shared index={index} />
+        ))}
+      </div>
     </section>
   );
 }
